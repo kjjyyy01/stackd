@@ -1,3 +1,5 @@
+> ⚠️ **저작권 고지**: 이 저장소는 오픈소스가 아닙니다. All Rights Reserved — 사전 서면 허가 없는 복제·수정·배포·상업적 이용을 금지합니다. 자세한 내용은 [LICENSE](./LICENSE) 참조.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
