@@ -5,11 +5,13 @@
 ## Day 0 잔여 (사용자)
 
 - [x] 시작일 확정 — Day 1 = 2026-08-12(수), Day 20 = 8/31(월), 런칭 게시는 9/1(화) 오전
-- [ ] `/mattpocock-skills:setup-matt-pocock-skills` 직접 실행 (모델 호출 차단 스킬)
+- [x] `/mattpocock-skills:setup-matt-pocock-skills` 실행 — CLAUDE.md Agent skills 블록 + docs/agents/ 3종 생성
+- [x] `gh auth login` + 라벨 14종(카테고리 9 + triage 5) 등록 완료
 - [x] GA4 계정 생성
 - [x] GitHub repo 생성
-- [ ] 로컬 연결 + push: `git remote add origin <repo URL> && git push -u origin main`
-- [ ] Vercel 연결 → main 자동 배포 확인
+- [x] 로컬 연결 + push (Day 0 문서 포함, 커밋 228ff5b)
+- [x] Vercel 연결
+- [ ] Vercel 대시보드에서 228ff5b 자동 배포 성공 눈으로 확인
 - [x] 월 고정비 상한 결정 — 4만원/월
 - [ ] 세션 재시작 (플러그인 disable 18개는 이미 완료 — 재시작 시 적용)
 

@@ -48,3 +48,17 @@
 
 - create-next-app 기본 구조 (`app/` 라우터, src 디렉토리 없음)
 - (Day 3 PRD 확정 후 실제 구조 반영)
+
+## Agent skills
+
+### Issue tracker
+
+이슈는 GitHub Issues(`kjjyyy01/solo-project`)에서 관리, `gh` CLI 사용. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+triage 상태 라벨은 캐노니컬 5종 그대로, 분류용 카테고리 라벨 9종(Feature/BugFix 등) 병용. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context — 루트 `CONTEXT.md` + `docs/adr/`. See `docs/agents/domain.md`.
