@@ -53,7 +53,7 @@
 
 ### Issue tracker
 
-이슈는 GitHub Issues(`kjjyyy01/solo-project`)에서 관리, `gh` CLI 사용. See `docs/agents/issue-tracker.md`.
+이슈는 GitHub Issues(`kjjyyy01/stackd`)에서 관리, `gh` CLI 사용. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 

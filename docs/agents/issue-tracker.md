@@ -1,6 +1,6 @@
 # Issue tracker: GitHub
 
-Issues and specs for this repo live as GitHub issues (`kjjyyy01/solo-project`). Use the `gh` CLI for all operations.
+Issues and specs for this repo live as GitHub issues (`kjjyyy01/stackd`). Use the `gh` CLI for all operations.
 
 ## Conventions
 
