@@ -24,6 +24,7 @@
 - [ ] 검수: 0번 카드(본인 스택)가 카탈로그만으로 전부 담기는지 확인
 - [ ] GA4 초기화 (`NEXT_PUBLIC_GA_ID` env + gtag 셋업)
 - [ ] 공통: 레이아웃·푸터(`/privacy` + 문의·피드백 dialog)·디자인 토큰 (DESIGN.md 기준)
+- [ ] **테마 결정** — UI 단일 테마(라이트/다크) vs 둘 다 → DESIGN.md 기록 / 카드는 테마 비의존 고정 팔레트 명시 / `globals.css` create-next-app 잔재 `prefers-color-scheme: dark` 제거 (2026-08-15 논의, Day 4 결정)
 - [ ] 폼 서비스 선정·연동 (OQ-005) — 신고·문의·피드백 dialog 전송용
 - [ ] shadcn/ui 초기화 + 필요 컴포넌트만 add (버튼·입력·탭·배지·textarea) — 기본 테마 금지, DESIGN.md 토큰으로 재스킨
 - [ ] sonner 토스트 셋업
