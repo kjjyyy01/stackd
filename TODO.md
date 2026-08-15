@@ -14,7 +14,58 @@
 - [x] Vercel 자동 배포 성공 눈으로 확인 (7683245)
 - [x] 월 고정비 상한 결정 — 4만원/월
 - [x] 세션 재시작 (플러그인 disable 18개 적용) — **Day 0 전체 완료** ✅
+- [x] 도메인 구매·연결 — `stackd.kr` (가비아 → Vercel A/CNAME, www→apex 308, 2026-08-15) + `metadataBase` 반영
 
-## SCR 작업 목록
+## SCR 작업 목록 (기준: `docs/prd/` — Draft, 사용자 확정 시 Approved 전환)
 
-(Day 3 PRD 확정 후 기입)
+### 선행 (Day 4 — 빌더가 이 데이터에 의존, 최우선)
+
+- [ ] 카탈로그 수집 → `data/catalog.json` (스키마 PRD-05, Claude Code 한정 100~200개, day2 판정 ② 실행 순서대로)
+- [ ] 검수: 0번 카드(본인 스택)가 카탈로그만으로 전부 담기는지 확인
+- [ ] GA4 초기화 (`NEXT_PUBLIC_GA_ID` env + gtag 셋업)
+- [ ] 공통: 레이아웃·푸터(`/privacy` + 문의·피드백 dialog)·디자인 토큰 (DESIGN.md 기준)
+- [ ] 폼 서비스 선정·연동 (OQ-005) — 신고·문의·피드백 dialog 전송용
+- [ ] shadcn/ui 초기화 + 필요 컴포넌트만 add (버튼·입력·탭·배지·textarea) — 기본 테마 금지, DESIGN.md 토큰으로 재스킨
+- [ ] sonner 토스트 셋업
+- [ ] 제한 유틸 1개 (BR-001~004·007 — 빌더·디코드·OG 공용, tdd 대상)
+
+### SCR-001 홈 `/` (PRD-SCR-001)
+
+- [ ] 히어로 (h1 CPY-HOME-001 + 예시 카드 이미지 priority)
+- [ ] 빌더: 검색 + 카테고리 필터 + 카탈로그 그리드
+- [ ] 직접 입력 폼 (BR-002 검증)
+- [ ] 담은 스택 바 (칩 해제·카운터 n/12·CTA 게이트)
+- [ ] EVT-BLDR-001 발화
+- [ ] 메타데이터 + 반응형 + 스크린샷·눈 확인
+
+### SCR-002 붙여넣기 파싱 (PRD-SCR-002 — 컷 1순위, 뒤로 미룸)
+
+- [ ] 탭 UI + textarea + 추출 버튼
+- [ ] 파싱 로직 2형식 (BR-005 — tdd 대상)
+- [ ] 폴백 안내 + EVT-PARSE-001
+
+### SCR-003 카드 `/card` (PRD-SCR-003)
+
+- [ ] 카드 컴포넌트 (영어 출력·카테고리 그룹핑·워터마크) — SCR-004와 공용
+- [ ] **시그니처 템플릿 1종** 시안 (명함 톤) + 액센트 컬러 2~3택 + 12개 꽉 찬 레이아웃 검증 — 레퍼런스: DESIGN.md §카드 디자인 레퍼런스 (참고용, 복제 금지)
+- [ ] 닉네임(필수)·소속/역할(선택) 입력 + 게이트 (BR-003·008)
+- [ ] PNG 다운로드 (OQ-002 라이브러리 선정) + 링크 복사 (인코딩 유틸 — tdd 대상)
+- [ ] QR로 건네기 다이얼로그 (utm_medium=qr — 생성은 경량 라이브러리 or SVG 함수, 구현 시 선정)
+- [ ] EVT-CARD-001/002 발화
+- [ ] 메타데이터(noindex) + 반응형 + 확인
+
+### SCR-004 공유 카드 `/stack` (PRD-SCR-004)
+
+- [ ] 서버 컴포넌트 디코드·렌더 (카드 컴포넌트 재사용, BR-006/007)
+- [ ] `generateMetadata` 동적 title/OG
+- [ ] `/api/og` ImageResponse (PRD-06 — 폴백·캐시·한글 폰트 OQ-003 해소)
+- [ ] CTA (utm_source=card&utm_medium=share) + 신고 dialog (EL-SHARE-004)
+- [ ] 카톡/X 미리보기 육안 확인
+
+### SCR-005 분석 고지 `/privacy` (PRD-SCR-005)
+
+- [ ] 정적 본문 4개 내용 + 메타데이터 (30분 컷)
+
+### 위생 항목 (SCR 밖 — Day 4~9 내)
+
+- [ ] 404 페이지 / favicon / robots.txt / 정적 OG 이미지 / sitemap(`/`·`/privacy`만)
