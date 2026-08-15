@@ -3,6 +3,7 @@
 # 프로젝트 규칙
 
 > **매 세션 시작 시 `docs/PLAN.md`의 현재 Day 섹션을 확인할 것.** PLAN.md가 3주간 유일한 계획서다. 추가 아이디어는 전부 `backlog.md`로.
+> **PLAN.md 구간별 지정 스킬(make-plan/make-prd/grill-me/sequential-thinking 등)은 작성·수정 모두 필수** — 운용 원칙 4번. 건너뛴 작업은 해당 스킬로 재검증.
 
 ## 프로젝트 개요
 
