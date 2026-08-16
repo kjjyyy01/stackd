@@ -32,11 +32,11 @@
 
 ### SCR-001 홈 `/` (PRD-SCR-001)
 
-- [ ] 히어로 (h1 CPY-HOME-001 + 예시 카드 이미지 priority)
+- [ ] 히어로 (h1 CPY-HOME-001 "스택으로, 인사를 건넨다" + 부제 CPY-HOME-008 + 예시 카드 이미지 priority)
 - [ ] 빌더: 검색 + 카테고리 필터 + 카탈로그 그리드
 - [ ] 직접 입력 폼 (BR-002 검증)
 - [ ] 담은 스택 바 (칩 해제·카운터 n/12·CTA 게이트)
-- [ ] localStorage 자동 저장·복원 + 이어서 편집/새로 만들기 + `/?s=` 프리필 (F-008)
+- [ ] localStorage 내 카드 저장·복원 + "내 카드 수정하기 / 새로 만들기" 버튼 (F-008, BR-009 — `/?s=` 프리필 없음)
 - [ ] EVT-BLDR-001 발화
 - [ ] 메타데이터 + 반응형 + 스크린샷·눈 확인
 
@@ -61,7 +61,7 @@
 - [ ] 서버 컴포넌트 디코드·렌더 (카드 컴포넌트 재사용, BR-006/007)
 - [ ] `generateMetadata` 동적 title/OG
 - [ ] `/api/og` ImageResponse (PRD-06 — 폴백·캐시·한글 폰트 OQ-003 해소)
-- [ ] CTA (utm_source=card&utm_medium=share) + "이 카드로 편집하기" 링크 (F-008) + 신고 dialog (EL-SHARE-004)
+- [ ] CTA (utm_source=card&utm_medium=share) + "내 카드 수정하기" 링크(BR-009 일치 시만, F-008) + 신고 dialog (EL-SHARE-004)
 - [ ] 카톡/X 미리보기 육안 확인
 
 ### SCR-005 분석 고지 `/privacy` (PRD-SCR-005)
