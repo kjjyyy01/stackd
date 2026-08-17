@@ -16,7 +16,7 @@
 - [x] 세션 재시작 (플러그인 disable 18개 적용) — **Day 0 전체 완료** ✅
 - [x] 도메인 구매·연결 — `stackd.kr` (가비아 → Vercel A/CNAME, www→apex 308, 2026-08-15) + `metadataBase` 반영
 
-## SCR 작업 목록 (기준: `docs/prd/` v2 — **Approved 2026-08-17**)
+## SCR 작업 목록 (기준: `docs/prd/` v2 — Draft, **사용자 최종 확정 시 Approved 전환**)
 
 > 2026-08-17 v2 재작성. 컷 순서(Day 11): 라이브러리 → 내 카드 수정 → `/admin` → 소속·역할.
 
