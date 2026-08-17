@@ -3,7 +3,7 @@ doc_id: PRD-OPS-001
 title: 운영 — 신고·문의 처리 (admin)
 page_code: ADMIN
 version: 1.0.0
-status: Draft
+status: Approved
 owner: Jongyeon
 last_updated: 2026-08-17
 depends_on: [PRD-04, PRD-05, PRD-06, PRD-08, PRD-09, PRD-10, PRD-11, PRD-13, PRD-14, PRD-17]
@@ -13,15 +13,15 @@ implements: [F-014, F-011]
 ## 1. 개요
 - **목적**: 신고·문의·피드백(`feedback`)을 보고 처리하는 **운영 화면** — 사용자 노출 없음, 헤더 링크 없음, noindex(PRD-04). 라우트 `/admin`. SCR 밖(OPS-001)
 - **게이트**: BR-022 — 세션 uid ∈ env `ADMIN_USER_IDS`(PRD-17), 아니면 **404**(ERR-ADMIN-001). 페이지·서버 액션 **모두**(PRD-09)
-- **역할**: Discord 웹훅(F-011)은 알림 채널일 뿐, **이 화면이 최종 처리 경로**(PRD-13). Supabase 대시보드 미사용(사용자 결정)
-- **컷 3순위**(Day 11): 컷 시 대체 = 웹훅 알림 + DB 직접 조치(SQL 편집기에서 `workflows.hidden`·`feedback.resolved` update). F-011의 저장·웹훅은 유지
+- **역할**: Slack 웹훅(F-011)은 알림 채널일 뿐, **이 화면이 최종 처리 경로**(PRD-13). Supabase 대시보드 미사용(사용자 결정)
+- **컷 불가** (2026-08-17 최종 점검): 대시보드 미사용 결정상 이 화면이 `hidden`·`resolved` 처리의 **유일 경로** — 컷 대상에서 제외(Day 11 컷 순서: 라이브러리 → 수정 기능 → 소속·역할). F-011 저장·웹훅과 한 묶음
 
 ## 2. 레이아웃 & 구성 요소
 | EL-ID | 요소 | 컴포넌트 | 필수 | 조건/참조 |
 |---|---|---|---|---|
 | EL-ADMIN-001 | h1 | 서버 렌더 헤딩 | Y | CPY-ADMIN-001 |
 | EL-ADMIN-002 | 필터 | 미처리(기본) ↔ 전체 — 링크형 토글, searchParams `?all=1` | Y | `resolved` 기준. 라벨 CPY 미정의(최종 응답) |
-| EL-ADMIN-003 | feedback 목록 | 최신순 행: `created_at`·`type`·`body`·`reporter_id` 유무·`resolved` + 대상 워크플로우 요약(`title`·`author_handle`·`is_public`·`hidden` 배지, 펼치면 `situation`·`steps` 전문 텍스트, `/workflows/{id}` 링크) | Y | service role 조회 — 비공개·hidden도 여기서 열람(PRD-09). 상한 100건, 페이지네이션 없음(v1) |
+| EL-ADMIN-003 | feedback 목록 | 최신순 행: `created_at`·`type`·`body`·`reporter_id` 유무·`resolved` + 대상 워크플로우 요약(`title`·`author_handle`·`is_public`·`hidden` 배지, 펼치면 `situation`·`steps` 전문 텍스트, `/card-detail/{id}` 링크) | Y | service role 조회 — 비공개·hidden도 여기서 열람(PRD-09). 상한 100건, 페이지네이션 없음(v1) |
 | EL-ADMIN-004 | 행 액션 | 버튼 2개: hidden 토글(현재 `hidden`에 따라 라벨 1개, `workflow_id` 있을 때만) · resolve(`resolved=false`일 때) | Y | CPY-ADMIN-002 (3라벨) |
 | EL-ADMIN-006 | 숨김 사유 입력 | 텍스트 입력 (1~200자) — 숨기기 클릭 시 인라인 노출 | 조건 | CPY-ADMIN-005, BR-018 필수 → 미입력 시 ERR-ADMIN-002 |
 | EL-ADMIN-005 | 빈 상태 | 텍스트 | Y | 미처리 0건. CPY 미정의(최종 응답) |
@@ -68,11 +68,11 @@ implements: [F-014, F-011]
 |---|---|---|
 | hidden 토글 | EL-ADMIN-004 | `adminSetHidden` → `revalidatePath('/admin')`(상세·라이브러리는 dynamic 렌더라 즉시 반영) |
 | resolve | EL-ADMIN-004 | `adminResolve` → 목록 갱신 |
-| 대상 보기 | EL-ADMIN-003 링크 | `/workflows/{id}` 새 탭 — 공개·!hidden일 때만 열림(admin도 일반 user로 열람, PRD-09). 내용 판단은 EL-ADMIN-003 펼치기로 |
+| 대상 보기 | EL-ADMIN-003 링크 | `/card-detail/{id}` 새 탭 — 공개·!hidden일 때만 열림(admin도 일반 user로 열람, PRD-09). 내용 판단은 EL-ADMIN-003 펼치기로 |
 | 필터 전환 | EL-ADMIN-002 | `?all=1` ↔ 기본 |
 
 ## 6. 화면 전환
-- **진입**: 직접 URL만(헤더 링크 없음). Discord 알림 메시지에 `/admin` 링크 포함 권장(웹훅 페이로드는 F-011 구현 몫)
+- **진입**: 직접 URL만(헤더 링크 없음). Slack 알림 메시지에 `/admin` 링크 포함 권장(웹훅 페이로드는 F-011 구현 몫)
 - **이탈**: 대상 상세(새 탭) · 헤더 로고 → `/`
 - **리다이렉트**: 없음 — 비허용은 404
 - **뒤로가기**: 브라우저 기본

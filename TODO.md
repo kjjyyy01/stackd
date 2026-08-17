@@ -16,13 +16,13 @@
 - [x] 세션 재시작 (플러그인 disable 18개 적용) — **Day 0 전체 완료** ✅
 - [x] 도메인 구매·연결 — `stackd.kr` (가비아 → Vercel A/CNAME, www→apex 308, 2026-08-15) + `metadataBase` 반영
 
-## SCR 작업 목록 (기준: `docs/prd/` v2 — Draft, **사용자 최종 확정 시 Approved 전환**)
+## SCR 작업 목록 (기준: `docs/prd/` v2 — **Approved 2026-08-17**)
 
-> 2026-08-17 v2 재작성. 컷 순서(Day 11): 라이브러리 → 내 카드 수정 → `/admin` → 소속·역할.
+> 2026-08-17 v2 재작성. 컷 순서(Day 11): 라이브러리 → 내 카드 수정 → 소속·역할. `/admin`은 **컷 불가**(대시보드 미사용 결정 — 신고 처리 유일 경로, 2026-08-17).
 
 ### Day 4~5 (8/18~19) — 백엔드 선배정 + 카탈로그 병행
 
-- [ ] **[본인]** Supabase 프로젝트 생성(Free) · GitHub OAuth App 등록(Client ID/Secret) · Supabase Auth Providers·URL Configuration(Site URL·Redirect: prod/preview/localhost) · Discord 웹훅 URL 발급
+- [ ] **[본인]** Supabase 프로젝트 생성(Free) · GitHub OAuth App 등록(Client ID/Secret) · Supabase Auth Providers·URL Configuration(Site URL·Redirect: prod/preview/localhost) · Slack 앱 Incoming Webhook URL 발급
 - [ ] `supabase/schema.sql` — workflows·feedback·인덱스·RLS (PRD-05) → 대시보드 SQL 1회 실행 → 커밋
 - [ ] `@supabase/ssr` 연결: 서버/브라우저 클라이언트·미들웨어 세션 갱신·`/auth/callback` (PRD-06)
 - [ ] env 7종 (PRD-17) — `.env.local` + Vercel Production/Preview
@@ -44,16 +44,16 @@
 ### SCR-003 카드 `/card` (PRD-SCR-003)
 
 - [ ] 카드 컴포넌트 (요약: 상황 라벨·제목·@핸들/소속·WORKFLOW 단계 목록·STACK 태그·워터마크·유도 버튼) — SCR-004·라이브러리·OG 공용
-- [ ] **시그니처 템플릿 1종** 시안 + 액센트 2~3 + 단계 8·태그 4 꽉 찬 검증 (OQ-006) + **비율 1200×630 = OG 재사용 결정 (OQ-008)**
+- [ ] **시그니처 템플릿 1종** 시안 + 액센트 2~3 + 단계 8·태그 4 꽉 찬 검증 + **세로형 비율 확정** (OQ-006) — PNG는 클라이언트 렌더(OQ-002 라이브러리 선정)
 - [ ] 공개/비공개 스위치 · 저장 버튼(로그인 게이트 → OAuth 왕복 → 자동 저장) · `saveWorkflow` 서버 액션 (id 생성 BR-023·서버 검증)
-- [ ] EVT-CARD-002 `card_preview`(진입) · 저장 성공 → EVT-CARD-001 `card_create`(H-01)/003 `card_edit` → `/workflows/{id}`
+- [ ] EVT-CARD-002 `card_preview`(진입) · 저장 성공 → EVT-CARD-001 `card_create`(H-01)/003 `card_edit` → `/card-detail/{id}`
 - [ ] 메타데이터(noindex) + 반응형 + 확인
 
-### SCR-004 상세 `/workflows/{id}` (PRD-SCR-004)
+### SCR-004 상세 `/card-detail/{id}` (PRD-SCR-004)
 
 - [ ] 서버 컴포넌트 조회·404 규칙(BR-006) · 카드 + 상황 상세 + 단계별 설명 + 작성자
-- [ ] `generateMetadata` 동적 title/OG + `/api/og?id=&v=` ImageResponse (폴백·캐시·한글 폰트 + 이모지 옵션 OQ-003, hidden=false 필터)
-- [ ] PNG 저장(OG 재사용 or OQ-002) · 링크 복사 · EVT-SHARE-001(소유자, H-02)/002(타인) · CTA(utm_source=card&utm_medium=share)
+- [ ] `generateMetadata` 동적 title/OG + `/api/og?id=&v=` ImageResponse (폴백·캐시·한글 폰트 + 이모지 옵션 OQ-003, hidden=false 필터, 가로 별도 구성 OQ-012)
+- [ ] PNG 저장(클라이언트 렌더, OQ-002) · 링크 복사 · EVT-SHARE-001(소유자, H-02)/002(타인) · CTA(utm_source=card&utm_medium=share)
 - [ ] 신고 dialog(`submitFeedback` report) · 소유자 액션(수정·삭제·공개 전환) · 비공개 배지 · **hidden = 타인에게 블러 플레이스홀더 + 사유(내용 HTML 미포함)**
 - [ ] 카톡/X 미리보기 육안 확인 · 비공개 타인 404 확인
 
@@ -74,7 +74,7 @@
 
 - [ ] 원문 2편 작성(PRD-14 PII 표 기준) + 메타데이터 (Day 4~11 내, 1시간 컷)
 
-### OPS-001 admin `/admin` (컷 3순위)
+### OPS-001 admin `/admin` (**컷 불가** — 신고 처리 유일 경로)
 
 - [ ] env 게이트(BR-022) · feedback 목록(미처리 필터) · hidden 토글(**사유 1~200자 필수**)·처리 완료 (service role)
 
