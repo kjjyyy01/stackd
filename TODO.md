@@ -16,7 +16,7 @@
 - [x] 세션 재시작 (플러그인 disable 18개 적용) — **Day 0 전체 완료** ✅
 - [x] 도메인 구매·연결 — `stackd.kr` (가비아 → Vercel A/CNAME, www→apex 308, 2026-08-15) + `metadataBase` 반영
 
-## SCR 작업 목록 (기준: `docs/prd/` v2 — Draft, 사용자 확정 시 Approved 전환)
+## SCR 작업 목록 (기준: `docs/prd/` v2 — **Approved 2026-08-17**)
 
 > 2026-08-17 v2 재작성. 컷 순서(Day 11): 라이브러리 → 내 카드 수정 → `/admin` → 소속·역할.
 
@@ -28,7 +28,7 @@
 - [ ] env 7종 (PRD-17) — `.env.local` + Vercel Production/Preview
 - [ ] 헤더 로그인/로그아웃 왕복을 **배포 URL**에서 확인 (Day 5 게이트)
 - [ ] 카탈로그 수집 → `data/catalog.json` (AI agent 100~200 + 개발 스택 60~80, enum 7종) — 에이전트 작업, 병행
-- [ ] 제한 유틸 1개 (BR-001~004·008·010~015·021, 화이트리스트 — 빌더·서버 액션·OG 공용, `tdd`)
+- [ ] 제한 유틸 1개 (BR-001·002·004·008·010~016·021 — 길이·개수·필수, 이모지 허용 — 빌더·서버 액션·OG 공용, `tdd`)
 - [ ] GA4 초기화 (`NEXT_PUBLIC_GA_ID`, gtag) · sonner · shadcn(버튼·입력·textarea·dialog·switch·badge·tabs) DESIGN 토큰 재스킨
 - [ ] **테마 결정** — UI 단일(라이트/다크) vs 둘 다 → DESIGN.md / 카드 테마 비의존 / `globals.css` dark 잔재 제거
 - [ ] 공통 레이아웃: 헤더(로고·라이브러리·로그인|내 카드·설정)·푸터(`/privacy` `/terms`·문의 dialog → `submitFeedback` + 웹훅)
@@ -38,7 +38,7 @@
 - [ ] 히어로 (h1 CPY-HOME-001 · 부제 CPY-HOME-008 · 예시 카드 이미지 priority)
 - [ ] 빌더: 제목·상황·상황 상세 / 단계 목록(도구 카탈로그 검색·선택|직접 입력 + 메모 + 상세, 순서 이동·삭제) / 개발 스택 태그 / 소속·역할(기본값 자동)
 - [ ] 초안 localStorage 저장·복원 배너 + 수정 모드 `?edit=` 로드 (BR-019)
-- [ ] CTA 게이트(제목·상황·단계≥2) + EVT-BLDR-001
+- [ ] CTA 게이트(제목·상황·단계≥2 각 메모·상세 필수, BR-016) + EVT-BLDR-001
 - [ ] 메타데이터 + 반응형 + 스크린샷·눈 확인
 
 ### SCR-003 카드 `/card` (PRD-SCR-003)
@@ -46,15 +46,15 @@
 - [ ] 카드 컴포넌트 (요약: 상황 라벨·제목·@핸들/소속·WORKFLOW 단계 목록·STACK 태그·워터마크·유도 버튼) — SCR-004·라이브러리·OG 공용
 - [ ] **시그니처 템플릿 1종** 시안 + 액센트 2~3 + 단계 8·태그 4 꽉 찬 검증 (OQ-006) + **비율 1200×630 = OG 재사용 결정 (OQ-008)**
 - [ ] 공개/비공개 스위치 · 저장 버튼(로그인 게이트 → OAuth 왕복 → 자동 저장) · `saveWorkflow` 서버 액션 (id 생성 BR-023·서버 검증)
-- [ ] EVT-CARD-001(로그인 전)·EVT-CARD-002 · 저장 성공 → `/workflows/{id}`
+- [ ] EVT-CARD-002 `card_preview`(진입) · 저장 성공 → EVT-CARD-001 `card_create`(H-01)/003 `card_edit` → `/workflows/{id}`
 - [ ] 메타데이터(noindex) + 반응형 + 확인
 
 ### SCR-004 상세 `/workflows/{id}` (PRD-SCR-004)
 
 - [ ] 서버 컴포넌트 조회·404 규칙(BR-006) · 카드 + 상황 상세 + 단계별 설명 + 작성자
-- [ ] `generateMetadata` 동적 title/OG + `/api/og?id=&v=` ImageResponse (폴백·캐시·한글 폰트 OQ-003)
-- [ ] PNG 저장(OG 재사용 or OQ-002) · 링크 복사 · EVT-SHARE-001 · CTA(utm_source=card&utm_medium=share)
-- [ ] 신고 dialog(`submitFeedback` report) · 소유자 액션(수정·삭제·공개 전환) · 비공개/hidden 배지
+- [ ] `generateMetadata` 동적 title/OG + `/api/og?id=&v=` ImageResponse (폴백·캐시·한글 폰트 + 이모지 옵션 OQ-003, hidden=false 필터)
+- [ ] PNG 저장(OG 재사용 or OQ-002) · 링크 복사 · EVT-SHARE-001(소유자, H-02)/002(타인) · CTA(utm_source=card&utm_medium=share)
+- [ ] 신고 dialog(`submitFeedback` report) · 소유자 액션(수정·삭제·공개 전환) · 비공개 배지 · **hidden = 타인에게 블러 플레이스홀더 + 사유(내용 HTML 미포함)**
 - [ ] 카톡/X 미리보기 육안 확인 · 비공개 타인 404 확인
 
 ### SCR-006 라이브러리 `/workflows` (PRD-SCR-006 — 컷 1순위)
@@ -76,7 +76,7 @@
 
 ### OPS-001 admin `/admin` (컷 3순위)
 
-- [ ] env 게이트(BR-022) · feedback 목록(미처리 필터) · hidden 토글·처리 완료 (service role)
+- [ ] env 게이트(BR-022) · feedback 목록(미처리 필터) · hidden 토글(**사유 1~200자 필수**)·처리 완료 (service role)
 
 ### 위생 항목 (SCR 밖 — Day 4~11 내)
 

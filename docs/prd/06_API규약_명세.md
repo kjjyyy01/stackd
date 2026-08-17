@@ -2,7 +2,7 @@
 doc_id: PRD-06
 title: API 규약·명세 (06+07 통합)
 version: 2.0.0
-status: Draft
+status: Approved
 owner: Jongyeon
 last_updated: 2026-08-17
 ---

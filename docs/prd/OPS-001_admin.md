@@ -3,7 +3,7 @@ doc_id: PRD-OPS-001
 title: 운영 — 신고·문의 처리 (admin)
 page_code: ADMIN
 version: 1.0.0
-status: Draft
+status: Approved
 owner: Jongyeon
 last_updated: 2026-08-17
 depends_on: [PRD-04, PRD-05, PRD-06, PRD-08, PRD-09, PRD-10, PRD-11, PRD-13, PRD-14, PRD-17]
