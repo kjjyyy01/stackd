@@ -1,6 +1,6 @@
 # Day 2 — MVP 기획서 (Stackd)
 
-> 상태: **확정** (2026-08-13 grill 통과 — 문답 원문: `docs/grill-log.md`). Day 1 결정(`docs/day1-decisions.md`)이 상위 소스.
+> 상태: **v1 — 2026-08-16 `docs/day3-mvp-spec.md`(v2)로 대체됨.** 기록 보존용. 2026-08-13 grill 통과(원문 `docs/grill-log.md`). Day 1 결정(`docs/day1-decisions.md`)이 상위 소스.
 > **기능 목록 확정 완료** — 이후 추가 아이디어는 전부 `backlog.md`.
 
 ## 제품 한 줄 (Day 1 재확인 + Day 2 확정)

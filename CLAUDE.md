@@ -7,13 +7,13 @@
 
 ## 프로젝트 개요
 
-- 3주 출시 프로젝트 — **Stackd(스택드, stackd.kr)**: AI 스택 카드 생성기 — 설정을 붙여넣으면 공유하고 싶어지는 스택 카드 생성 (한국어 UI·영어 카드, 비로그인). 상세: `docs/day1-decisions.md`
+- 3주 출시 프로젝트 — **Stackd(스택드, stackd.kr)**: **AI 워크플로우 카드** — 내 Agentic workflow(상황+단계+도구)를 카드+상세 페이지로 만들어 공유하고 갤러리에서 예시를 본다 (한국어 UI, 저장부터 GitHub 로그인, Supabase). 상세: `docs/day3-mvp-spec.md` (v2, 8/16 재판정) · `docs/day1-decisions.md`
 - 일정: Day 1 = 2026-08-12(수) / **Day 20 런칭 = 2026-09-02(수)** — 게시 9/3(목) 오전, 판정일 9/16(수). *(8/16 리사이즈 +2일 — 매핑표는 `docs/PLAN.md` §일정 매핑)*
 - 월 고정비 상한: **4만원/월** (도메인+DB+호스팅 합산)
 
 ## 기술 스택
 
-- Next.js(App Router) / TypeScript / Tailwind CSS / GSAP
+- Next.js(App Router) / TypeScript / Tailwind CSS / GSAP / **Supabase**(Auth GitHub OAuth·Postgres·RLS)
 
 ## 개발 명령어
 
