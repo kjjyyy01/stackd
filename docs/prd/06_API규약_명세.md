@@ -27,8 +27,8 @@ last_updated: 2026-08-17
 
 | 화면 | 쿼리 | 비고 |
 |---|---|---|
-| SCR-004 | `workflows` by id — RLS "public read" (비공개·hidden은 소유자만 통과, 아니면 `notFound()`) | ERR-SHARE-001 |
-| SCR-006 | `workflows` where is_public && !hidden order created_at desc limit 12 offset n | ERR-LIB-001 |
+| SCR-004 | `workflows` by id — RLS "public read" (비공개는 소유자만 통과, 아니면 `notFound()`). **hidden이면 행은 오지만 내용 미렌더 → 블러 플레이스홀더 + `hidden_reason`** (BR-018) | ERR-SHARE-001 |
+| SCR-006 | `workflows` where is_public && **hidden = false(명시)** order created_at desc limit 12 offset n | ERR-LIB-001 |
 | SCR-007 | `workflows` where user_id = 세션 (RLS) | 로그인 필수 |
 | SCR-001 수정 모드 | `workflows` by id — 소유자 아니면 빈 빌더 + 안내 없음 | |
 | OPS-001 | `feedback` + 대상 workflows — **service role** | admin 게이트 후 |
@@ -37,14 +37,14 @@ last_updated: 2026-08-17
 
 | 액션 | 화면 | 입력 | 처리 | 실패 코드 |
 |---|---|---|---|---|
-| `saveWorkflow(draft, editId?)` | SCR-003 | 빌더 상태 | 세션 확인 → 제한 유틸 검증(BR-001~004·008·010~015) → editId 있으면 소유자 확인 후 update(+updated_at) / 없으면 id 생성(BR-023, 충돌 시 재시도 3회) insert → author_handle/avatar 스냅샷 → `{ok, id}` | ERR-AUTH-001 / ERR-CARD-001(검증) / ERR-CARD-004(DB) |
+| `saveWorkflow(draft, editId?)` | SCR-003 | 빌더 상태 | 세션 확인 → 제한 유틸 검증(BR-001·002·004·008·010~016 — 단계 메모·상세 필수) → editId 있으면 소유자 확인 후 update(+updated_at) / 없으면 id 생성(BR-023, 충돌 시 재시도 3회) insert → author_handle/avatar 스냅샷 → `{ok, id}` | ERR-AUTH-001 / ERR-CARD-001(검증) / ERR-CARD-004(DB) |
 | `deleteWorkflow(id)` | SCR-004·007 | id | 소유자 확인 → delete | ERR-ME-001 |
 | `togglePublic(id, is_public)` | SCR-004·007 | | 소유자 확인 → update (SCR-003은 저장 전이라 `saveWorkflow` 입력에 포함) | ERR-ME-001 |
 | `submitFeedback(type, body, workflowId?)` | SCR-004·푸터 | | 길이 검증(BR-021) → **service role** insert(reporter_id = 세션 or null) → Discord 웹훅 POST(실패 무시) | ERR-FB-001 |
 | `signOut()` | SCR-008·헤더 | | Supabase signOut → `/` | — |
 | `deleteAccount(confirmHandle)` | SCR-008 | 확인 문구(핸들) | 세션 확인 → 핸들 서버 재대조 → **service role** `auth.admin.deleteUser(uid)` → cascade → signOut → `/` | ERR-SET-001 |
 | `updateRoleDefault(role)` | SCR-008 | | BR-008 검증 → `auth.updateUser({data:{role_default}})` | ERR-SET-002 |
-| `adminSetHidden(id, hidden)` / `adminResolve(feedbackId)` | OPS-001 | | admin 게이트(BR-022) → **service role** update (`adminSetHidden`은 `updated_at`도 갱신 — OG `v` 버스팅) | ERR-ADMIN-001 / ERR-ADMIN-002 |
+| `adminSetHidden(id, hidden, reason?)` / `adminResolve(feedbackId)` | OPS-001 | hidden=true면 `reason` 1~200자 필수 | admin 게이트(BR-022) → **service role** update `hidden`·`hidden_reason`(false면 null)·`updated_at`(OG `v` 버스팅) | ERR-ADMIN-001 / ERR-ADMIN-002 |
 
 ## 라우트 핸들러
 
@@ -54,7 +54,7 @@ Supabase `exchangeCodeForSession(code)` → `next`(허용: 사이트 내부 경�
 ### GET `/api/og?id=`
 | 항목 | 내용 |
 |---|---|
-| 구현 | next/og `ImageResponse`. anon 클라이언트로 `workflows` 조회 → RLS상 공개·비hidden만 반환 |
+| 구현 | next/og `ImageResponse`. anon 클라이언트로 `workflows` 조회 + **`hidden = false` 명시 필터** → 공개·비hidden만 렌더. `emoji` 옵션(twemoji)으로 이모지 렌더 (BR-003) |
 | 출력 | 1200×630 PNG — 카드 렌더 (제목·@핸들·상황·단계 목록·태그·워터마크). 카드 DOM 컴포넌트와 같은 데이터·같은 레이아웃 규칙 |
 | 실패 | id 없음·비공개·렌더 예외 → **정적 기본 OG 이미지** (ERR-OG-001, 5xx 금지) |
 | 캐시 | `Cache-Control: public, max-age=31536000, immutable` + `generateMetadata`가 `?id=…&v={updated_at epoch}`로 버스팅 |

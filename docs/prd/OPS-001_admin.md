@@ -23,6 +23,7 @@ implements: [F-014, F-011]
 | EL-ADMIN-002 | 필터 | 미처리(기본) ↔ 전체 — 링크형 토글, searchParams `?all=1` | Y | `resolved` 기준. 라벨 CPY 미정의(최종 응답) |
 | EL-ADMIN-003 | feedback 목록 | 최신순 행: `created_at`·`type`·`body`·`reporter_id` 유무·`resolved` + 대상 워크플로우 요약(`title`·`author_handle`·`is_public`·`hidden` 배지, 펼치면 `situation`·`steps` 전문 텍스트, `/workflows/{id}` 링크) | Y | service role 조회 — 비공개·hidden도 여기서 열람(PRD-09). 상한 100건, 페이지네이션 없음(v1) |
 | EL-ADMIN-004 | 행 액션 | 버튼 2개: hidden 토글(현재 `hidden`에 따라 라벨 1개, `workflow_id` 있을 때만) · resolve(`resolved=false`일 때) | Y | CPY-ADMIN-002 (3라벨) |
+| EL-ADMIN-006 | 숨김 사유 입력 | 텍스트 입력 (1~200자) — 숨기기 클릭 시 인라인 노출 | 조건 | CPY-ADMIN-005, BR-018 필수 → 미입력 시 ERR-ADMIN-002 |
 | EL-ADMIN-005 | 빈 상태 | 텍스트 | Y | 미처리 0건. CPY 미정의(최종 응답) |
 | EL-ADMIN-006 | 토스트 | sonner | Y | 액션 DB 실패 — ERR 미정의(최종 응답) |
 
@@ -40,8 +41,8 @@ implements: [F-014, F-011]
 - **AC-4 (오프라인)**: 해당 없음 — 서버 렌더
 
 ### REQ-ADMIN-003: hidden 토글 (P0)
-- **AC-1 (정상)**: Given 행에 `workflow_id`, When hidden 토글(→true), Then `adminSetHidden(id, true)` → 게이트 재확인(BR-022) → service role update `hidden=true` + `updated_at` 갱신(OG `v` 버스팅, PRD-05) → 상세는 소유자 외 404(BR-006·018)·`/api/og` 기본 이미지(ERR-OG-001)·라이브러리·사이트맵 제외 → 목록 배지 갱신. →false는 역(`is_public` 불변)
-- **AC-2 (검증 실패)**: Given `workflow_id` null(문의) 또는 대상 삭제됨(FK set null) 또는 id 형식 위반(BR-023), Then 버튼 미노출 / 서버 거부
+- **AC-1 (정상)**: Given 행에 `workflow_id`, When 사유(EL-ADMIN-006, 1~200자) 입력 후 hidden 토글(→true), Then `adminSetHidden(id, true, reason)` → 게이트 재확인(BR-022) → service role update `hidden=true`·`hidden_reason` + `updated_at` 갱신(OG `v` 버스팅, PRD-05) → 상세는 타인에게 블러 플레이스홀더 + 사유(BR-018)·`/api/og` 기본 이미지(ERR-OG-001)·라이브러리·사이트맵 제외 → 목록 배지 갱신. →false는 역(`is_public` 불변)
+- **AC-2 (검증 실패)**: Given `workflow_id` null(문의) 또는 대상 삭제됨(FK set null) 또는 id 형식 위반(BR-023), Then 버튼 미노출 / 서버 거부. Given 사유 빈 값·201자+, Then ERR-ADMIN-002 인라인, 토글 미실행
 - **AC-3 (서버 오류)**: Given update 실패, Then 토스트 + 상태 유지(ERR 미정의 — 최종 응답)
 - **AC-4 (오프라인)**: 서버 액션 실패 → AC-3와 동일
 
@@ -92,7 +93,7 @@ implements: [F-014, F-011]
 | 호출 | 비고 | 실패 코드 |
 |---|---|---|
 | OPS-001 읽기 | PRD-06 §읽기 — service role, 게이트 후 | — |
-| `adminSetHidden(id, hidden)` | PRD-06 §쓰기 | ERR-ADMIN-001(게이트) |
+| `adminSetHidden(id, hidden, reason?)` | PRD-06 §쓰기 | ERR-ADMIN-001(게이트) / ERR-ADMIN-002(사유) |
 | `adminResolve(feedbackId)` | PRD-06 §쓰기 | ERR-ADMIN-001(게이트) |
 - service role 키·`ADMIN_USER_IDS`는 서버 액션 안에서만(PRD-14·17)
 
@@ -123,7 +124,7 @@ CPY-ADMIN-001·002 · CPY-COMMON-004(404). 필터 라벨·빈 상태·실패 토
 |---|---|---|---|
 | TC-ADMIN-001-01 | 미로그인·비허용 uid로 `/admin` | 404, 로그인 유도 없음 | Y — 유닛(게이트 함수: uid·env → boolean) + 수동 |
 | TC-ADMIN-001-02 | env 비어 있음 | 전원 404 | Y — 유닛 |
-| TC-ADMIN-003-01 | hidden=true → 타인 상세·`/api/og`·라이브러리 | 404 · 기본 OG · 미노출 | N — Day 16 실링크 확인(PRD-19) |
+| TC-ADMIN-003-01 | hidden=true(+사유) → 타인 상세·`/api/og`·라이브러리 | 블러+사유 · 기본 OG · 미노출 | N — Day 16 실링크 확인(PRD-19) |
 | TC-ADMIN-003-02 | hidden=false 복귀 | 원 상태 복귀(`is_public` 유지) | N — 수동 |
 | TC-ADMIN-003-03 | 비허용 세션으로 액션 직접 호출 | ERR-ADMIN-001 거부, DB 불변 | Y — 유닛(액션 게이트) |
 | TC-ADMIN-004-01 | resolve → 기본 필터 / `?all=1` | 사라짐 / resolved 표시 | N — 수동 |
