@@ -4,7 +4,7 @@
 
 ## Day 0 잔여 (사용자)
 
-- [x] 시작일 확정 — Day 1 = 2026-08-12(수), Day 20 = 8/31(월), 런칭 게시는 9/1(화) 오전
+- [x] 시작일 확정 — Day 1 = 2026-08-12(수), ~~Day 20 = 8/31(월)~~ → **Day 20 = 9/2(수), 게시 9/3(목)** (8/16 리사이즈 +2일, PLAN §일정 매핑)
 - [x] `/mattpocock-skills:setup-matt-pocock-skills` 실행 — CLAUDE.md Agent skills 블록 + docs/agents/ 3종 생성
 - [x] `gh auth login` + 라벨 14종(카테고리 9 + triage 5) 등록 완료
 - [x] GA4 계정 생성
