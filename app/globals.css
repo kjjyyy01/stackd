@@ -1,26 +1,115 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* 라이트 단일 테마 — .dark 조상이 없으므로 shadcn 컴포넌트의 dark: 유틸이 전부 무력화된다.
+   (이 줄을 지우면 dark:가 prefers-color-scheme로 되살아나 라이트 단일이 깨짐) */
+@custom-variant dark (&:is(.dark *));
+
+/* 페이지 컨테이너 — DESIGN.md "컨테이너는 단 하나". 헤더·본문·푸터가 이 축을 공유 */
+@utility container-page {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--container-5xl);
+  padding-inline: --spacing(4);
+  @variant sm { padding-inline: --spacing(6); }
+  @variant lg { padding-inline: --spacing(8); }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-plex-kr);
+  --font-mono: var(--font-plex-mono);
+  --font-heading: var(--font-plex-kr);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 토큰 SSOT = DESIGN.md §컬러 토큰. 값 변경은 그 문서를 먼저 고칠 것 */
+:root {
+  --radius: 0.5rem;
+
+  --background: oklch(0.985 0.002 265);
+  --foreground: oklch(0.19 0.012 265);
+
+  --card: oklch(1 0 0);
+  --card-foreground: var(--foreground);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--foreground);
+
+  --muted: oklch(0.965 0.004 265);
+  --muted-foreground: oklch(0.52 0.015 265);
+  --secondary: var(--muted);
+  --secondary-foreground: var(--foreground);
+  --accent: var(--muted);
+  --accent-foreground: var(--foreground);
+
+  --border: oklch(0.912 0.006 265);   /* 헤어라인 — 구분용 */
+  --input: oklch(0.64 0.014 265);     /* 입력 경계 — 배경 대비 3.22:1 (WCAG 1.4.11) */
+
+  --primary: oklch(0.52 0.19 262);    /* 유일한 액센트 — 행동·상태에만 */
+  --primary-foreground: oklch(1 0 0);
+  --ring: var(--primary);
+  --destructive: oklch(0.52 0.19 25);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* 한글 본문 행간 1.75 — 라틴 기준 1.5는 한글에서 답답하다 (DESIGN.md §한글 조판) */
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    text-wrap: pretty;
+    /* 한글 필수 — 없으면 어절 한가운데("어떻 / 게")서 잘린다 */
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  /* 제목: 한글도 28px 이상에서는 벌어져 보이므로 음수 자간 허용 */
+  h1, h2, h3 {
+    @apply font-semibold;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  h1 {
+    line-height: 1.15;
+    letter-spacing: -0.025em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 모션은 상태 전이만 — 그것도 끄고 싶다는 사용자는 끈다 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

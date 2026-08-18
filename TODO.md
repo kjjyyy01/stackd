@@ -29,9 +29,11 @@
 - [x] **[본인 눈]** 헤더 로그인/로그아웃 왕복을 **배포 URL**에서 확인 (Day 5 게이트) ← **8/18 프리뷰 URL(`stackd-git-feat-day4-supabase-…vercel.app`, 커밋 c071882 Redeploy)에서 홈·로그인·로그아웃 전부 확인(사용자 눈) — 게이트 하루 선행.** 프리뷰는 Vercel Deployment Protection(비로그인 302→SSO, 500 아님)으로 소유자만 접근. **main 머지(`ec205e7`, PR 없이 직접) 후 `stackd.kr` 프로덕션에서도 로그인 왕복 정상(사용자 확인 8/18 저녁)** — 로컬·프리뷰·프로덕션 3환경 전부 통과
 - [ ] 카탈로그 수집 → `data/catalog.json` (AI agent 100~200 + 개발 스택 60~80, enum 7종) — 에이전트 작업, 병행 ← 8/18 초안 262개(agent 28·skill 46·plugin 50·mcp 55 / language 15·framework 32·tool 36, 60KB, URL 209/214 실측 200) — **[본인 눈]** 스팟체크(0번 카드가 카탈로그만으로 담기는지) 대기
 - [x] 제한 유틸 1개 (BR-001·002·004·008·010~016·021 — 길이·개수·필수, 이모지 허용 — 빌더·서버 액션·OG 공용, `tdd`) ← 8/18 `lib/limits.ts` + 테스트 13건(`npm test`, node --test)
-- [ ] GA4 초기화 (`NEXT_PUBLIC_GA_ID`, gtag) · sonner · shadcn(버튼·입력·textarea·dialog·switch·badge·tabs) DESIGN 토큰 재스킨 ← **8/18 저녁 세션 2에서 진행(사용자 결정)** — 선행: ① `DESIGN.md` 토큰 섹션(그리드·정렬 축·스페이싱·타이포·컬러)이 아직 `(Day 1 확정 후 기입)` 플레이스홀더 → frontend-design·미학 스킬로 먼저 기입 ② 테마 결정(아래) → 그 다음 shadcn init·재스킨·sonner·GA4·헤더 내비·푸터. shadcn·sonner 미설치, `globals.css`에 `prefers-color-scheme: dark` 블록 잔재 있음
-- [ ] **[본인] 테마 결정** — UI 단일(라이트/다크) vs 둘 다 → DESIGN.md / 카드 테마 비의존 / `globals.css` dark 잔재 제거
-- [ ] 공통 레이아웃: 헤더(로고·라이브러리·로그인|내 카드·설정)·푸터(`/privacy` `/terms`·문의 dialog → `submitFeedback` + 웹훅) ← 8/18 헤더 최소판(로고+로그인/로그아웃) `components/site-header.tsx`, 내비·푸터는 화면·테마 확정 후
+- [x] GA4 초기화 (`NEXT_PUBLIC_GA_ID`, gtag) · sonner · shadcn 재스킨 ← **8/18 세션 2 완료**(브랜치 `feat/day4-ui-base`). `DESIGN.md` 토큰 섹션 확정 → `globals.css` 토큰 구현(dark 블록 제거) → `shadcn init`(radix-nova, 라이트 단일) + button·dialog·textarea·sonner. GA4는 `components/analytics.tsx`(next/script, 측정 ID 없으면 미주입) + `lib/analytics.ts` `track()`(EVT 7종 union 타입) — **EVT-AUTH-001 `login` 발화까지 실측 확인**. **⚠️ `.env.local`의 `NEXT_PUBLIC_GA_ID`가 빈 값(`.env.example` 주석줄 그대로) — 실제 측정 ID 미입력. Vercel Production/Preview도 같은지 확인 필요** ← **[본인]**
+- [ ] shadcn 나머지 4종(input·switch·badge·tabs) — 쓰는 화면 생길 때 `npx shadcn add`. 토큰이 CSS 변수라 나중에 붙여도 재스킨 자동 상속 (input=SCR-001 빌더, switch=SCR-003 공개 스위치, badge=SCR-004·007 상태, tabs=사용처 미정 → 없으면 컷)
+- [x] **[본인] 테마 결정** — **라이트 단일**(8/18 사용자 결정). DESIGN.md 반영 · `globals.css`의 `prefers-color-scheme: dark` 블록·shadcn `.dark` 토큰 블록 제거 · `@custom-variant dark (&:is(.dark *))`만 남겨 shadcn 컴포넌트의 `dark:` 유틸을 무력화(이 줄을 지우면 라이트 단일이 깨짐). 다크는 backlog 행 — 토큰이 CSS 변수라 `.dark` 블록 1개로 복구 가능
+- [x] 공통 레이아웃: 헤더(로고·라이브러리·로그인|내 카드·설정)·푸터(`/privacy` `/terms`·문의 dialog → `submitFeedback` + 웹훅) ← **8/18 세션 2 완료**. `site-header.tsx`(sticky, 로그인 상태별 분기, 설정·@핸들은 `sm:` 이상) · `site-footer.tsx` · `feedback-dialog.tsx`(신고·문의 공용) · `app/actions/feedback.ts`(서버 재검증 → service role insert → Slack 웹훅은 `after()`로 응답 뒤) · `lib/supabase/admin.ts`(`server-only` 가드). **실측: 실패 경로 ERR-FB-001 토스트+dialog 유지·입력 보존 / 성공 경로 DB insert 확인(feedback id 1·2, 테스트 행이라 resolved 처리) / `after()` 도입으로 액션 응답 1658ms → 294ms**
+- [x] 404 페이지 (`app/not-found.tsx`, CPY-COMMON-004 + noindex) ← 위생 항목 선처리 — 푸터·내비가 아직 없는 라우트를 가리키므로 착지가 필요했음
 
 ### SCR-001 홈 `/` (PRD-SCR-001)
 
@@ -80,5 +82,5 @@
 
 ### 위생 항목 (SCR 밖 — Day 4~11 내)
 
-- [ ] 404 / favicon / robots(noindex 규칙) / 정적 기본 OG / sitemap 동적
+- [ ] ~~404~~(8/18 완료) / favicon / robots(noindex 규칙) / 정적 기본 OG / sitemap 동적
 - [ ] **[본인]** 시드 워크플로우 3~5장 작성 (Day 11까지, 프로덕션에서)

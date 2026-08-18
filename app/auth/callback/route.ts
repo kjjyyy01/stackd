@@ -19,7 +19,10 @@ export async function GET(request: Request) {
         process.env.NODE_ENV === "development" || !forwardedHost
           ? origin
           : `https://${forwardedHost}`;
-      return NextResponse.redirect(`${base}${next}`);
+      // EVT-AUTH-001 표식 — 착지 페이지에서 1회 발화 후 URL에서 지운다
+      const dest = new URL(next, base);
+      dest.searchParams.set("login", "github");
+      return NextResponse.redirect(dest);
     }
   }
 

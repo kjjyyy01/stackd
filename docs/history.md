@@ -113,3 +113,35 @@
 - **결정 — Drizzle 미도입 유지 (8/18 오후, 사용자 확정)**: "Drizzle을 도입한다면?" 검토 → v1은 계획(순수 SQL + `@supabase/ssr`)대로. 근거: ① supabase-js는 PostgREST가 JWT로 `auth.uid()`를 채워 RLS가 자동이지만 Drizzle은 Postgres 직접 접속이라 매 쿼리를 `set_config('request.jwt.claims')`+`set local role` 트랜잭션 래퍼로 감싸야 하고 한 번 빼먹으면 조용히 IDOR — PRD-09 "RLS 1차 방어" 설계와 충돌 ② `DATABASE_URL`(RLS 우회 가능한 시크릿) 추가 → PRD-17 SSOT 수정(make-prd) ③ Vercel 서버리스 × 직접 접속은 Supavisor 트랜잭션 풀러·`prepare:false` 함정 ④ 테이블 2·쿼리 ~8개에 ORM은 YAGNI, 백엔드 2일 예산 반나절 잠식 ⑤ Auth는 어차피 supabase-js라 의존성 "대체"가 아니라 "추가". 얻는 것(타입)은 `supabase gen types`로 대체 가능. **재검토 발동 조건(v2)**: 테이블 ≥4·조인 발생 / Supabase 이탈 결정 / 로컬 DB+통합 테스트 도입 — 전환 시 `drizzle-kit introspect`로 schema.sql을 그대로 뽑을 수 있어 지금 SQL로 가도 매몰비용 낮음
 - **EOD TIL 후보(Day 4)**: ① ORM 도입 판단 기준 = 타입이 아니라 "누가 auth.uid()를 채우느냐"(RLS 자동성) ② Next 16 middleware→proxy 리네임 + `getClaims()` 조기 호출 패턴 ③ 시크릿 경계로 사람/에이전트 역할 분리(U/C 체크리스트) ④ Node 26 네이티브 TS로 테스트 러너 0 의존 ⑤ RLS 자기참조 서브셀렉트가 재귀 에러를 피하는 조건 ⑥ Supabase Redirect URL은 쿼리스트링 포함 glob 매칭(트러블슈팅) ⑦ 동적 렌더 앱은 env 누락이 빌드가 아니라 런타임에서 터진다 — 배포 "성공" 표시만 믿지 말고 URL을 열어볼 것 / Vercel 프리뷰 보호 302는 장애가 아님
 - 잔여(Claude, 세션 2): C9 카탈로그 검수 · C10 GA4·sonner·shadcn + 공통 레이아웃 내비·푸터(선행: DESIGN.md 토큰 기입·테마 결정) / (사용자) U9 테마 결정 · U11 ADMIN_USER_IDS · EOD 기록 세션
+
+## Day 4 세션 2 — 디자인 토큰·GA4·shadcn 재스킨·공통 레이아웃 (2026-08-18 저녁, 브랜치 `feat/day4-ui-base`)
+
+**무엇을 / 어떻게 / 왜**
+
+- **미커밋 문서 처리 (사용자 선택)**: main에 남아 있던 TODO·history 변경(Day 4 마무리 4줄)을 새 브랜치 `feat/day4-ui-base`로 가져와 단독 커밋 `f5e772f`. Git 전략(main 직커밋은 핫픽스만)과 직전 패턴(`315f414`) 정합
+- **테마 결정 = 라이트 단일 (사용자)**: 3주 일정에서 화면 검증이 2배가 되는 걸 막는 게 이유. `globals.css`의 `prefers-color-scheme: dark` 잔재와 shadcn이 깔아준 `.dark` 토큰 블록을 제거하되 **`@custom-variant dark (&:is(.dark *))` 한 줄은 남겼다** — `.dark` 조상이 영원히 없으므로 shadcn 컴포넌트 곳곳의 `dark:` 유틸이 전부 무력화된다. 이 줄을 지우면 `dark:`가 `prefers-color-scheme`로 되살아나 라이트 단일이 깨진다(Tailwind v4 기본 동작). 다크 복구 비용은 `.dark` 블록 1개
+- **DESIGN.md 토큰 확정** (`(Day 1 확정 후 기입)` 플레이스홀더 5개 → 실값): 컨테이너 단일화(`max-w-5xl` + `container-page` 유틸) · 정렬 축(좌측 고정, 본문·헤딩 중앙 정렬 금지, 예외 3곳) · 스페이싱(4px 배수만) · radius 단일(`0.5rem`) · 타이포(IBM Plex Sans KR + IBM Plex Mono) · 컬러(oklch). **컬러는 눈대중이 아니라 oklch→sRGB→WCAG 대비비를 스크립트로 실측해서 골랐다** — `--input`은 3:1(1.4.11)을 넘기려고 `L=0.64`까지 어둡게, `--primary`는 흰 글씨 4.5:1을 넘기려고 `L=0.52`. 전 토큰 AA 통과 수치를 문서에 박아뒀다
+- **폰트 = IBM Plex Sans KR + IBM Plex Mono**: 한국 devtool 기본값(Pretendard)을 의도적으로 피함. 트레이드오프도 기록 — Google Fonts가 한글을 `unicode-range` 슬라이스 ~94개로 쪼개 주는데 `next/font`는 이름 있는 subset(`latin`)만 preload하므로 **한글은 preload되지 않는다**. `display:swap` + `adjustFontFallback`로 CLS는 막고 LCP는 오히려 유리하지만 짧은 FOUT은 남는다(없애려면 Pretendard 자체 호스팅 — v1은 안 함)
+- **shadcn init + 4개만**: `shadcn init -d -b radix`(신버전은 `-b`가 baseColor가 아니라 radix/base/aria) → button·dialog·textarea·sonner. **나머지 4종(input·switch·badge·tabs)은 일부러 안 깔았다** — 쓰는 화면이 없어 speculative scaffolding이고, 토큰이 CSS 변수라 나중에 `npx shadcn add` 해도 재스킨이 자동 상속된다. `sonner.tsx`는 `next-themes` 의존을 걷어내고 `theme="light"` 고정
+- **GA4**: `@next/third-parties` 대신 `next/script` 직접(TODO 문구가 "gtag", 의존성 0). `components/analytics.tsx`는 **측정 ID가 없으면 아무것도 심지 않는다**(로컬·프리뷰 오염 방지). `lib/analytics.ts`의 `track()`은 EVT 7종 union 타입 + `window.gtag?.()` — PRD-15 "발화 실패는 침묵"이 optional chaining으로 공짜
+- **EVT-AUTH-001 `login` 배선**: 트리거(`/auth/callback`)가 이미 존재하는 유일한 이벤트라 지금 붙였다. 콜백이 `?login=github`을 붙이고 → `login-event.tsx`가 1회 발화 후 `history.replaceState`로 파라미터를 지운다. 나머지 6종은 각자 화면에서
+- **공통 레이아웃**: `site-header.tsx`(sticky, 로고/라이브러리/로그인 or 내 카드·설정·@핸들·로그아웃, 설정·@핸들은 `sm:` 이상에서만 노출해 390px에서도 한 줄) · `site-footer.tsx`(`/privacy` `/terms` + 문의 dialog) · `feedback-dialog.tsx`(신고·문의 공용 — 푸터는 `contact`, SCR-004는 `report`) · `app/actions/feedback.ts` · `lib/supabase/admin.ts`
+- **404**(`app/not-found.tsx`): 위생 항목이지만 지금 했다 — 푸터·내비가 아직 없는 라우트(`/privacy` `/terms` `/workflows` `/me` `/settings`)를 가리키므로 착지점이 필요했다
+
+**작업 결과 (실측 검증)**
+
+- `npm run lint` 0 · `npx tsc --noEmit` 0 · `npm test` 13/13 · `npm run build` 성공
+- **문의 dialog 실패 경로**: 공백만 입력 → 서버 액션 0ms 조기 반환(DB 미접근) → ERR-FB-001 토스트 + **dialog 유지 + 입력 보존**(PRD-10 그대로). `<form action>` 대신 `onSubmit`을 쓴 이유가 이것 — React 19의 form action은 완료 시 폼을 리셋해 실패 때 사용자 글이 날아간다
+- **문의 dialog 성공 경로**: Supabase `feedback` 테이블 insert 확인(id 1·2, `type=contact`·`reporter_id=null` 익명). 테스트 행이라 `resolved=true` 처리 — **삭제는 사용자 판단으로 남겨둠**
+- **`after()` 도입으로 액션 응답 1658ms → 294ms**: Slack 웹훅(3초 타임아웃)을 `await`하면 사용자가 왕복을 그대로 기다린다. `next/server`의 `after()`로 응답 뒤로 미룸. "웹훅 실패는 저장 성공에 영향 없음"(BR-021)이 지연에도 적용돼야 한다는 해석
+- **GA4 실측**: `.env.local`에 값이 없어 미주입 → 임시 ID로 dev 재기동해 검증 → `gtag('event','login',{method:'github'})` 1회 발화 + URL에서 `?login=github` 제거까지 확인
+- **시각 확인**(chrome-devtools 390px·1280px + 스크린샷): 비로그인/로그인 헤더 양쪽, 푸터, dialog, 토스트, 404. 정렬 축(로고·h1·푸터 좌측 x좌표 일치) 통과
+- **고친 것 3건**: ① **`word-break: keep-all` 누락** — 한글 h1이 "어떻 / 게"로 어절 한가운데서 잘렸다. 한글 웹 조판의 필수 규칙이라 `body`에 전역 + DESIGN.md 규칙으로 승격 ② **한글에 mono 적용** — 홈 eyebrow를 mono로 썼더니 IBM Plex Mono에 한글 글리프가 없어 대체 폰트로 떨어지고 자간이 어긋났다. eyebrow 자체를 삭제(헤드라인만으로 충분) + "mono는 영문 기계 식별자에만" 규칙 명문화 ③ 터치 타깃 — shadcn radix-nova 기본 버튼이 28px이라 `size="lg"`(36px)로, 본문 CTA는 44px로
+
+**⚠️ 사용자 확인 필요 (블로킹 아님)**
+
+- **`.env.local`의 `NEXT_PUBLIC_GA_ID`가 빈 값**이다. `.env.example`의 `NEXT_PUBLIC_GA_ID=                    # GA4 측정 ID (G-XXXXXXXXXX)` 줄을 그대로 복사해 값이 안 채워진 상태 — dotenv가 인라인 주석을 떼고 트림하면 빈 문자열. 같은 형태의 `ADMIN_USER_IDS`도 빈 값(U11로 이미 추적 중). **Vercel Production/Preview에도 같은 누락이 있는지 확인 필요** — 이대로면 프로덕션에서 GA4가 한 건도 안 잡히고, 그건 판정일(9/17) 킬 크라이테리아를 통째로 못 재는 사고다
+- 배포 URL 확인은 이 브랜치를 push해 Vercel 프리뷰가 뜬 뒤
+
+**교훈(EOD 후보 추가)**: ⑧ 한글 웹 조판은 라틴과 다른 규칙이 최소 3개(`word-break: keep-all`, 행간 1.75, 본문 자간 0) — 영어권 디자인 시스템을 그대로 가져오면 h1부터 깨진다 ⑨ 대비비는 눈이 아니라 계산으로 — oklch L값 0.02 차이가 WCAG 통과/탈락을 가른다 ⑩ `.env.example`에 인라인 주석을 쓰면 "채웠다고 착각한 빈 값"이 생긴다(값 없는 키는 주석을 윗줄로) ⑪ 서버 액션에서 외부 웹훅은 `after()`로 — `await`하면 그 지연이 그대로 사용자 대기 시간
+
