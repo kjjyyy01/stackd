@@ -1,0 +1,1836 @@
+[
+  {
+    "id": "aider",
+    "name": "Aider",
+    "category": "agent",
+    "description": "AI pair programming in your terminal that edits code in your local git repo.",
+    "source": "https://github.com/Aider-AI/aider"
+  },
+  {
+    "id": "amp",
+    "name": "Amp",
+    "category": "agent",
+    "description": "Agentic coding tool from Sourcegraph for editor and CLI.",
+    "source": "https://ampcode.com"
+  },
+  {
+    "id": "chatgpt",
+    "name": "ChatGPT",
+    "category": "agent",
+    "description": "OpenAI's conversational AI assistant.",
+    "source": "https://chatgpt.com"
+  },
+  {
+    "id": "claude",
+    "name": "Claude",
+    "category": "agent",
+    "description": "Anthropic's AI assistant at claude.ai for chat, analysis, writing, and coding.",
+    "source": "https://claude.ai"
+  },
+  {
+    "id": "claude-agent-sdk",
+    "name": "Claude Agent SDK",
+    "category": "agent",
+    "description": "SDK for building custom agents on the same harness that powers Claude Code (Python/TypeScript).",
+    "source": "https://github.com/anthropics/claude-agent-sdk-typescript"
+  },
+  {
+    "id": "claude-api",
+    "name": "Claude API",
+    "category": "agent",
+    "description": "Anthropic's Messages API and SDKs for calling Claude models directly.",
+    "source": "https://docs.anthropic.com"
+  },
+  {
+    "id": "claude-code",
+    "name": "Claude Code",
+    "category": "agent",
+    "description": "Anthropic's agentic coding tool that runs in your terminal and edits code, runs commands, and manages git.",
+    "source": "https://github.com/anthropics/claude-code"
+  },
+  {
+    "id": "claude-code-action",
+    "name": "Claude Code GitHub Action",
+    "category": "agent",
+    "description": "Run Claude Code inside GitHub Actions via @claude mentions on issues and PRs.",
+    "source": "https://github.com/anthropics/claude-code-action"
+  },
+  {
+    "id": "claude-desktop",
+    "name": "Claude Desktop",
+    "category": "agent",
+    "description": "Native macOS/Windows Claude app with MCP server support and Cowork.",
+    "source": "https://claude.ai/download"
+  },
+  {
+    "id": "cline",
+    "name": "Cline",
+    "category": "agent",
+    "description": "Autonomous coding agent extension for VS Code with MCP support.",
+    "source": "https://github.com/cline/cline"
+  },
+  {
+    "id": "codex-cli",
+    "name": "Codex CLI",
+    "category": "agent",
+    "description": "OpenAI's open-source coding agent that runs in your terminal.",
+    "source": "https://github.com/openai/codex"
+  },
+  {
+    "id": "crewai",
+    "name": "CrewAI",
+    "category": "agent",
+    "description": "Framework for orchestrating role-playing, collaborative AI agents.",
+    "source": "https://github.com/crewAIInc/crewAI"
+  },
+  {
+    "id": "cursor",
+    "name": "Cursor",
+    "category": "agent",
+    "description": "AI-native code editor with agent mode, tab completion, and background agents.",
+    "source": "https://www.cursor.com"
+  },
+  {
+    "id": "devin",
+    "name": "Devin",
+    "category": "agent",
+    "description": "Cognition's autonomous AI software engineer that works in its own sandbox.",
+    "source": "https://devin.ai"
+  },
+  {
+    "id": "gemini",
+    "name": "Gemini",
+    "category": "agent",
+    "description": "Google's AI assistant app powered by Gemini models.",
+    "source": "https://gemini.google.com"
+  },
+  {
+    "id": "gemini-cli",
+    "name": "Gemini CLI",
+    "category": "agent",
+    "description": "Google's open-source AI agent that brings Gemini into the terminal.",
+    "source": "https://github.com/google-gemini/gemini-cli"
+  },
+  {
+    "id": "github-copilot",
+    "name": "GitHub Copilot",
+    "category": "agent",
+    "description": "GitHub's AI pair programmer with chat, agent mode, and coding agent for issues.",
+    "source": "https://github.com/features/copilot"
+  },
+  {
+    "id": "goose",
+    "name": "Goose",
+    "category": "agent",
+    "description": "Block's open-source, extensible AI agent that runs locally with MCP.",
+    "source": "https://github.com/block/goose"
+  },
+  {
+    "id": "kiro",
+    "name": "Kiro",
+    "category": "agent",
+    "description": "AWS's agentic IDE built around spec-driven development.",
+    "source": "https://kiro.dev"
+  },
+  {
+    "id": "langgraph",
+    "name": "LangGraph",
+    "category": "agent",
+    "description": "Low-level orchestration framework for building stateful, multi-actor agents.",
+    "source": "https://github.com/langchain-ai/langgraph"
+  },
+  {
+    "id": "lovable",
+    "name": "Lovable",
+    "category": "agent",
+    "description": "AI app builder that generates full-stack web apps from natural language.",
+    "source": "https://lovable.dev"
+  },
+  {
+    "id": "mastra",
+    "name": "Mastra",
+    "category": "agent",
+    "description": "TypeScript agent framework with workflows, RAG, and evals.",
+    "source": "https://github.com/mastra-ai/mastra"
+  },
+  {
+    "id": "openai-agents-sdk",
+    "name": "OpenAI Agents SDK",
+    "category": "agent",
+    "description": "OpenAI's lightweight framework for multi-agent workflows.",
+    "source": "https://github.com/openai/openai-agents-python"
+  },
+  {
+    "id": "opencode",
+    "name": "OpenCode",
+    "category": "agent",
+    "description": "Open-source terminal coding agent supporting many model providers.",
+    "source": "https://opencode.ai"
+  },
+  {
+    "id": "pydantic-ai",
+    "name": "Pydantic AI",
+    "category": "agent",
+    "description": "Python agent framework bringing Pydantic's type safety to LLM apps.",
+    "source": "https://github.com/pydantic/pydantic-ai"
+  },
+  {
+    "id": "roo-code",
+    "name": "Roo Code",
+    "category": "agent",
+    "description": "VS Code AI coding agent with modes, MCP support, and browser automation.",
+    "source": "https://github.com/RooCodeInc/Roo-Code"
+  },
+  {
+    "id": "v0",
+    "name": "v0",
+    "category": "agent",
+    "description": "Vercel's generative UI agent that builds React/Next.js interfaces from prompts.",
+    "source": "https://v0.app"
+  },
+  {
+    "id": "windsurf",
+    "name": "Windsurf",
+    "category": "agent",
+    "description": "Agentic IDE by Codeium with Cascade agent and flows.",
+    "source": "https://windsurf.com"
+  },
+  {
+    "id": "a11y-debugging",
+    "name": "a11y-debugging",
+    "category": "skill",
+    "description": "Chrome DevTools skill for accessibility auditing based on web.dev guidelines.",
+    "source": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  },
+  {
+    "id": "autopilot",
+    "name": "autopilot",
+    "category": "skill",
+    "description": "oh-my-claudecode skill: full autonomous execution from idea to working code.",
+    "source": "https://github.com/Yeachan-Heo/oh-my-claudecode"
+  },
+  {
+    "id": "brainstorming",
+    "name": "brainstorming",
+    "category": "skill",
+    "description": "Superpowers skill: explore intent and design before any creative or feature work.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "chrome-devtools-skill",
+    "name": "chrome-devtools",
+    "category": "skill",
+    "description": "Chrome DevTools MCP skill for debugging, automation, and performance analysis.",
+    "source": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  },
+  {
+    "id": "claude-md-improver",
+    "name": "claude-md-improver",
+    "category": "skill",
+    "description": "Anthropic skill to audit and improve CLAUDE.md files.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management"
+  },
+  {
+    "id": "debug-optimize-lcp",
+    "name": "debug-optimize-lcp",
+    "category": "skill",
+    "description": "Chrome DevTools skill for debugging and optimizing Largest Contentful Paint.",
+    "source": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  },
+  {
+    "id": "diagnosing-bugs",
+    "name": "diagnosing-bugs",
+    "category": "skill",
+    "description": "Matt Pocock skill: diagnosis loop for hard bugs and performance regressions.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "dispatching-parallel-agents",
+    "name": "dispatching-parallel-agents",
+    "category": "skill",
+    "description": "Superpowers skill: fan out independent tasks to parallel agents.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "do",
+    "name": "do",
+    "category": "skill",
+    "description": "claude-mem skill: execute a phased plan using subagents.",
+    "source": "https://github.com/thedotmack/claude-mem"
+  },
+  {
+    "id": "docx",
+    "name": "docx",
+    "category": "skill",
+    "description": "Anthropic skill for creating and editing Word documents.",
+    "source": "https://github.com/anthropics/skills"
+  },
+  {
+    "id": "domain-modeling",
+    "name": "domain-modeling",
+    "category": "skill",
+    "description": "Matt Pocock skill: pin down domain terminology and record architecture decisions.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "executing-plans",
+    "name": "executing-plans",
+    "category": "skill",
+    "description": "Superpowers skill: execute a written plan with review checkpoints.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "frontend-design",
+    "name": "frontend-design",
+    "category": "skill",
+    "description": "Anthropic skill for distinctive, non-templated UI design direction and typography.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/frontend-design"
+  },
+  {
+    "id": "grilling",
+    "name": "grilling",
+    "category": "skill",
+    "description": "Matt Pocock skill: relentlessly interview the user to stress-test a plan or idea.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "learn-codebase",
+    "name": "learn-codebase",
+    "category": "skill",
+    "description": "claude-mem skill: prime a codebase by reading every source file.",
+    "source": "https://github.com/thedotmack/claude-mem"
+  },
+  {
+    "id": "make-plan",
+    "name": "make-plan",
+    "category": "skill",
+    "description": "claude-mem skill: create a phased implementation plan with documentation discovery.",
+    "source": "https://github.com/thedotmack/claude-mem"
+  },
+  {
+    "id": "mcp-builder",
+    "name": "mcp-builder",
+    "category": "skill",
+    "description": "Anthropic skill for designing and building MCP servers.",
+    "source": "https://github.com/anthropics/skills"
+  },
+  {
+    "id": "mem-search",
+    "name": "mem-search",
+    "category": "skill",
+    "description": "claude-mem skill: search persistent cross-session memory.",
+    "source": "https://github.com/thedotmack/claude-mem"
+  },
+  {
+    "id": "notion-spec-to-implementation",
+    "name": "notion-spec-to-implementation",
+    "category": "skill",
+    "description": "Notion skill: turn product specs into concrete tasks Claude Code can implement.",
+    "source": "https://github.com/makenotion/claude-code-notion-plugin"
+  },
+  {
+    "id": "obsidian-bases",
+    "name": "obsidian-bases",
+    "category": "skill",
+    "description": "Obsidian skill for creating .base files with views, filters, and formulas.",
+    "source": "https://github.com/kepano/obsidian-skills"
+  },
+  {
+    "id": "obsidian-markdown",
+    "name": "obsidian-markdown",
+    "category": "skill",
+    "description": "Obsidian skill for wikilinks, embeds, callouts, and properties.",
+    "source": "https://github.com/kepano/obsidian-skills"
+  },
+  {
+    "id": "pdf",
+    "name": "pdf",
+    "category": "skill",
+    "description": "Anthropic skill for reading, creating, and manipulating PDF files.",
+    "source": "https://github.com/anthropics/skills"
+  },
+  {
+    "id": "ponytail-review",
+    "name": "ponytail-review",
+    "category": "skill",
+    "description": "Ponytail skill: review a diff exclusively for over-engineering.",
+    "source": "https://github.com/DietrichGebert/ponytail"
+  },
+  {
+    "id": "pptx",
+    "name": "pptx",
+    "category": "skill",
+    "description": "Anthropic skill for creating and editing PowerPoint presentations.",
+    "source": "https://github.com/anthropics/skills"
+  },
+  {
+    "id": "prototype",
+    "name": "prototype",
+    "category": "skill",
+    "description": "Matt Pocock skill: build a throwaway prototype to answer a design question.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "ralph",
+    "name": "ralph",
+    "category": "skill",
+    "description": "oh-my-claudecode skill: self-referential loop until the task is verified complete.",
+    "source": "https://github.com/Yeachan-Heo/oh-my-claudecode"
+  },
+  {
+    "id": "receiving-code-review",
+    "name": "receiving-code-review",
+    "category": "skill",
+    "description": "Superpowers skill: evaluate review feedback with rigor instead of blind agreement.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "requesting-code-review",
+    "name": "requesting-code-review",
+    "category": "skill",
+    "description": "Superpowers skill: request a review of finished work against requirements.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "research",
+    "name": "research",
+    "category": "skill",
+    "description": "Matt Pocock skill: investigate a question against primary sources into a Markdown file.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "sentry-debug-issue",
+    "name": "sentry-debug-issue",
+    "category": "skill",
+    "description": "Sentry skill: find an issue, pull full context, and fix the root cause.",
+    "source": "https://github.com/getsentry/plugin-claude"
+  },
+  {
+    "id": "skill-creator",
+    "name": "skill-creator",
+    "category": "skill",
+    "description": "Anthropic skill to create, improve, and evaluate skills.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/skill-creator"
+  },
+  {
+    "id": "subagent-driven-development",
+    "name": "subagent-driven-development",
+    "category": "skill",
+    "description": "Superpowers skill: run plan tasks through fresh subagents with review.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "systematic-debugging",
+    "name": "systematic-debugging",
+    "category": "skill",
+    "description": "Superpowers skill: root-cause bugs methodically before proposing fixes.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "tdd",
+    "name": "tdd",
+    "category": "skill",
+    "description": "Matt Pocock skill: build features and fix bugs test-first with integration tests.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "test-driven-development",
+    "name": "test-driven-development",
+    "category": "skill",
+    "description": "Superpowers skill: red-green-refactor discipline for features and bugfixes.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "to-spec",
+    "name": "to-spec",
+    "category": "skill",
+    "description": "Matt Pocock skill: turn a conversation into a spec in the issue tracker.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "to-tickets",
+    "name": "to-tickets",
+    "category": "skill",
+    "description": "Matt Pocock skill: break a plan or spec into tracer-bullet tickets.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "ui-ux-pro-max",
+    "name": "ui-ux-pro-max",
+    "category": "skill",
+    "description": "UI/UX design intelligence skill with a searchable database of styles and palettes.",
+    "source": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+  },
+  {
+    "id": "using-git-worktrees",
+    "name": "using-git-worktrees",
+    "category": "skill",
+    "description": "Superpowers skill: isolate feature work in git worktrees.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "verification-before-completion",
+    "name": "verification-before-completion",
+    "category": "skill",
+    "description": "Superpowers skill: run verification and show evidence before claiming done.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "webapp-testing",
+    "name": "webapp-testing",
+    "category": "skill",
+    "description": "Anthropic skill for testing web apps with Playwright.",
+    "source": "https://github.com/anthropics/skills"
+  },
+  {
+    "id": "wizard",
+    "name": "wizard",
+    "category": "skill",
+    "description": "Matt Pocock skill: generate an interactive bash wizard for human-only setup steps.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "writing-for-agents",
+    "name": "writing-for-agents",
+    "category": "skill",
+    "description": "Matt Pocock skill: write skills, AGENTS.md, and CLAUDE.md that agents follow.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "writing-plans",
+    "name": "writing-plans",
+    "category": "skill",
+    "description": "Superpowers skill: turn a spec into a step-by-step implementation plan before coding.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "writing-skills",
+    "name": "writing-skills",
+    "category": "skill",
+    "description": "Superpowers skill: create and test new Claude Code skills.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "xlsx",
+    "name": "xlsx",
+    "category": "skill",
+    "description": "Anthropic skill for creating and analyzing Excel spreadsheets.",
+    "source": "https://github.com/anthropics/skills"
+  },
+  {
+    "id": "agent-sdk-dev",
+    "name": "agent-sdk-dev",
+    "category": "plugin",
+    "description": "Anthropic plugin: development kit for the Claude Agent SDK.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/agent-sdk-dev"
+  },
+  {
+    "id": "atlassian-plugin",
+    "name": "atlassian",
+    "category": "plugin",
+    "description": "Atlassian plugin for Jira and Confluence via the Rovo MCP server.",
+    "source": "https://github.com/atlassian/atlassian-mcp-server"
+  },
+  {
+    "id": "aws-core",
+    "name": "aws-core",
+    "category": "plugin",
+    "description": "AWS Core plugin: infrastructure-as-code and core service skills.",
+    "source": "https://github.com/aws/agent-toolkit-for-aws"
+  },
+  {
+    "id": "chrome-devtools-mcp-plugin",
+    "name": "Chrome DevTools Plugin",
+    "category": "plugin",
+    "description": "Chrome DevTools MCP plugin for browser debugging, performance, and a11y.",
+    "source": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  },
+  {
+    "id": "claude-code-setup",
+    "name": "claude-code-setup",
+    "category": "plugin",
+    "description": "Anthropic plugin: analyze a codebase and recommend hooks, skills, and MCP servers.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-code-setup"
+  },
+  {
+    "id": "claude-code-templates",
+    "name": "claude-code-templates",
+    "category": "plugin",
+    "description": "CLI and catalog of agents, commands, hooks, and MCPs for Claude Code.",
+    "source": "https://github.com/davila7/claude-code-templates"
+  },
+  {
+    "id": "claude-md-management",
+    "name": "claude-md-management",
+    "category": "plugin",
+    "description": "Anthropic plugin: audit and improve CLAUDE.md files, capture session learnings.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-md-management"
+  },
+  {
+    "id": "claude-mem",
+    "name": "claude-mem",
+    "category": "plugin",
+    "description": "Persistent memory system for Claude Code with cross-session context compression.",
+    "source": "https://github.com/thedotmack/claude-mem"
+  },
+  {
+    "id": "claude-security",
+    "name": "claude-security",
+    "category": "plugin",
+    "description": "Anthropic plugin: deep vulnerability scanning inside your Claude Code session.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/claude-security"
+  },
+  {
+    "id": "cloudflare-plugin",
+    "name": "Cloudflare Plugin",
+    "category": "plugin",
+    "description": "Cloudflare skills plugin for Workers, Pages, and edge services.",
+    "source": "https://github.com/cloudflare/skills"
+  },
+  {
+    "id": "code-review",
+    "name": "code-review",
+    "category": "plugin",
+    "description": "Anthropic plugin: automated multi-agent PR review with confidence scoring.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-review"
+  },
+  {
+    "id": "code-simplifier",
+    "name": "code-simplifier",
+    "category": "plugin",
+    "description": "Anthropic plugin: agent that simplifies code for clarity while preserving behavior.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/code-simplifier"
+  },
+  {
+    "id": "commit-commands",
+    "name": "commit-commands",
+    "category": "plugin",
+    "description": "Anthropic plugin: simple commands for committing, pushing, and opening PRs.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/commit-commands"
+  },
+  {
+    "id": "compound-engineering",
+    "name": "compound-engineering",
+    "category": "plugin",
+    "description": "Every's plugin for planning, working, and reviewing with compounding knowledge.",
+    "source": "https://github.com/EveryInc/compound-engineering-plugin"
+  },
+  {
+    "id": "context7-plugin",
+    "name": "context7 Plugin",
+    "category": "plugin",
+    "description": "Upstash Context7 plugin for up-to-date library documentation lookup.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/context7"
+  },
+  {
+    "id": "desktop-commander",
+    "name": "desktop-commander",
+    "category": "plugin",
+    "description": "Desktop Commander plugin for terminal control and file operations.",
+    "source": "https://github.com/wonderwhy-er/DesktopCommanderMCP"
+  },
+  {
+    "id": "everything-claude-code",
+    "name": "everything-claude-code",
+    "category": "plugin",
+    "description": "ECC: large collection of agents, skills, hooks, and rules for Claude Code.",
+    "source": "https://github.com/affaan-m/everything-claude-code"
+  },
+  {
+    "id": "exa-plugin",
+    "name": "exa",
+    "category": "plugin",
+    "description": "Exa plugin for AI-native web search and content retrieval.",
+    "source": "https://github.com/exa-labs/exa-mcp-server"
+  },
+  {
+    "id": "feature-dev",
+    "name": "feature-dev",
+    "category": "plugin",
+    "description": "Anthropic plugin: feature development workflow with exploration and review agents.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/feature-dev"
+  },
+  {
+    "id": "figma-plugin",
+    "name": "Figma Plugin",
+    "category": "plugin",
+    "description": "Figma plugin guiding design-to-code via the Figma MCP server.",
+    "source": "https://github.com/figma/mcp-server-guide"
+  },
+  {
+    "id": "firebase-plugin",
+    "name": "Firebase Plugin",
+    "category": "plugin",
+    "description": "Google Firebase MCP plugin for Firestore, auth, and cloud functions.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/firebase"
+  },
+  {
+    "id": "firecrawl-plugin",
+    "name": "firecrawl",
+    "category": "plugin",
+    "description": "Firecrawl plugin for scraping and crawling websites into LLM-ready data.",
+    "source": "https://github.com/firecrawl/firecrawl-claude-plugin"
+  },
+  {
+    "id": "github-plugin",
+    "name": "GitHub Plugin",
+    "category": "plugin",
+    "description": "Official GitHub MCP plugin for repos, issues, and pull requests.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/github"
+  },
+  {
+    "id": "hookify",
+    "name": "hookify",
+    "category": "plugin",
+    "description": "Anthropic plugin: create hooks that prevent unwanted behaviors from conversation patterns.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/hookify"
+  },
+  {
+    "id": "linear-plugin",
+    "name": "Linear Plugin",
+    "category": "plugin",
+    "description": "Linear plugin to create issues, manage projects, and update statuses.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/linear"
+  },
+  {
+    "id": "mattpocock-skills",
+    "name": "mattpocock-skills",
+    "category": "plugin",
+    "description": "Matt Pocock's engineering skills for Claude Code: TDD, grilling, specs, tickets.",
+    "source": "https://github.com/mattpocock/skills"
+  },
+  {
+    "id": "mcp-server-dev",
+    "name": "mcp-server-dev",
+    "category": "plugin",
+    "description": "Anthropic plugin: skills for designing and building MCP servers.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/mcp-server-dev"
+  },
+  {
+    "id": "notion-plugin",
+    "name": "Notion Plugin",
+    "category": "plugin",
+    "description": "Notion plugin with MCP server and knowledge/spec skills.",
+    "source": "https://github.com/makenotion/claude-code-notion-plugin"
+  },
+  {
+    "id": "obsidian-skills",
+    "name": "obsidian-skills",
+    "category": "plugin",
+    "description": "Kepano's Claude skills for Obsidian markdown, Bases, and JSON Canvas.",
+    "source": "https://github.com/kepano/obsidian-skills"
+  },
+  {
+    "id": "oh-my-claudecode",
+    "name": "oh-my-claudecode",
+    "category": "plugin",
+    "description": "Multi-agent orchestration plugin with model routing, autopilot, and ralph loops.",
+    "source": "https://github.com/Yeachan-Heo/oh-my-claudecode"
+  },
+  {
+    "id": "playwright-plugin",
+    "name": "Playwright Plugin",
+    "category": "plugin",
+    "description": "Microsoft Playwright MCP plugin for browser automation and E2E testing.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/playwright"
+  },
+  {
+    "id": "plugin-dev",
+    "name": "plugin-dev",
+    "category": "plugin",
+    "description": "Anthropic plugin: toolkit for building agents, commands, hooks, and MCP integrations.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/plugin-dev"
+  },
+  {
+    "id": "pm-skills",
+    "name": "pm-skills",
+    "category": "plugin",
+    "description": "Product management skills for Claude Code: discovery, strategy, PRDs, GTM.",
+    "source": "https://github.com/phuryn/pm-skills"
+  },
+  {
+    "id": "ponytail",
+    "name": "ponytail",
+    "category": "plugin",
+    "description": "Plugin that forces the laziest working solution: YAGNI, stdlib first, shortest diff.",
+    "source": "https://github.com/DietrichGebert/ponytail"
+  },
+  {
+    "id": "posthog-plugin",
+    "name": "posthog",
+    "category": "plugin",
+    "description": "PostHog plugin for product analytics, feature flags, and session replay.",
+    "source": "https://github.com/PostHog/ai-plugin"
+  },
+  {
+    "id": "pr-review-toolkit",
+    "name": "pr-review-toolkit",
+    "category": "plugin",
+    "description": "Anthropic plugin: PR review agents for comments, tests, error handling, and types.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/pr-review-toolkit"
+  },
+  {
+    "id": "prisma-plugin",
+    "name": "Prisma Plugin",
+    "category": "plugin",
+    "description": "Prisma plugin for ORM schema, migrations, and Prisma Postgres.",
+    "source": "https://github.com/prisma/claude-plugin"
+  },
+  {
+    "id": "ralph-loop",
+    "name": "ralph-loop",
+    "category": "plugin",
+    "description": "Anthropic plugin: continuous self-referential loops for iterative development.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/ralph-loop"
+  },
+  {
+    "id": "security-guidance",
+    "name": "security-guidance",
+    "category": "plugin",
+    "description": "Anthropic plugin: security review of Claude-generated code with pattern warnings.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/security-guidance"
+  },
+  {
+    "id": "sentry-plugin",
+    "name": "Sentry Plugin",
+    "category": "plugin",
+    "description": "Sentry plugin for debugging issues, instrumenting apps, and monitoring.",
+    "source": "https://github.com/getsentry/plugin-claude"
+  },
+  {
+    "id": "serena-plugin",
+    "name": "Serena Plugin",
+    "category": "plugin",
+    "description": "Serena semantic code analysis MCP plugin for symbol-level navigation.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/serena"
+  },
+  {
+    "id": "slack-plugin",
+    "name": "Slack Plugin",
+    "category": "plugin",
+    "description": "Slack MCP plugin for reading and posting in Slack workspaces.",
+    "source": "https://github.com/slackapi/slack-mcp-plugin"
+  },
+  {
+    "id": "stripe-plugin",
+    "name": "Stripe Plugin",
+    "category": "plugin",
+    "description": "Stripe plugin with agent toolkit for payments integration.",
+    "source": "https://github.com/stripe/ai"
+  },
+  {
+    "id": "supabase-plugin",
+    "name": "Supabase Plugin",
+    "category": "plugin",
+    "description": "Supabase plugin for database, auth, and edge functions via MCP.",
+    "source": "https://github.com/supabase-community/supabase-plugin"
+  },
+  {
+    "id": "superclaude",
+    "name": "SuperClaude",
+    "category": "plugin",
+    "description": "Configuration framework adding commands, personas, and MCP orchestration to Claude Code.",
+    "source": "https://github.com/SuperClaude-Org/SuperClaude_Framework"
+  },
+  {
+    "id": "superpowers",
+    "name": "superpowers",
+    "category": "plugin",
+    "description": "Jesse Vincent's core skills library for Claude Code: TDD, debugging, planning, subagents.",
+    "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "terraform-plugin",
+    "name": "Terraform Plugin",
+    "category": "plugin",
+    "description": "HashiCorp Terraform MCP plugin for registry and IaC workflows.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/external_plugins/terraform"
+  },
+  {
+    "id": "typescript-lsp",
+    "name": "typescript-lsp",
+    "category": "plugin",
+    "description": "Anthropic plugin: TypeScript language server integration for Claude Code.",
+    "source": "https://github.com/anthropics/claude-plugins-official/tree/main/plugins/typescript-lsp"
+  },
+  {
+    "id": "ui-ux-pro-max-skill",
+    "name": "ui-ux-pro-max-skill",
+    "category": "plugin",
+    "description": "UI/UX design intelligence plugin with searchable style and palette database.",
+    "source": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill"
+  },
+  {
+    "id": "vercel-plugin",
+    "name": "Vercel Plugin",
+    "category": "plugin",
+    "description": "Vercel plugin for deployments and project management.",
+    "source": "https://github.com/vercel/vercel-plugin"
+  },
+  {
+    "id": "magic-mcp",
+    "name": "21st.dev Magic MCP",
+    "category": "mcp",
+    "description": "MCP server generating UI components from natural language.",
+    "source": "https://github.com/21st-dev/magic-mcp"
+  },
+  {
+    "id": "apify-mcp",
+    "name": "Apify MCP",
+    "category": "mcp",
+    "description": "Apify's MCP server exposing thousands of Actors for scraping and automation.",
+    "source": "https://github.com/apify/actors-mcp-server"
+  },
+  {
+    "id": "atlassian-mcp",
+    "name": "Atlassian Rovo MCP",
+    "category": "mcp",
+    "description": "Atlassian's MCP server for Jira and Confluence.",
+    "source": "https://github.com/atlassian/atlassian-mcp-server"
+  },
+  {
+    "id": "aws-mcp",
+    "name": "AWS MCP Servers",
+    "category": "mcp",
+    "description": "AWS Labs' collection of MCP servers for AWS services and docs.",
+    "source": "https://github.com/awslabs/mcp"
+  },
+  {
+    "id": "azure-mcp",
+    "name": "Azure MCP Server",
+    "category": "mcp",
+    "description": "Microsoft's MCP server for Azure resources and services.",
+    "source": "https://github.com/Azure/azure-mcp"
+  },
+  {
+    "id": "brave-search-mcp",
+    "name": "Brave Search MCP",
+    "category": "mcp",
+    "description": "Archived reference MCP server for web and local search via Brave Search API.",
+    "source": "https://github.com/modelcontextprotocol/servers-archived/tree/main/src/brave-search"
+  },
+  {
+    "id": "browserbase-mcp",
+    "name": "Browserbase MCP",
+    "category": "mcp",
+    "description": "Cloud browser automation MCP server powered by Stagehand.",
+    "source": "https://github.com/browserbase/mcp-server-browserbase"
+  },
+  {
+    "id": "chrome-devtools-mcp",
+    "name": "chrome-devtools-mcp",
+    "category": "mcp",
+    "description": "Google's MCP server giving agents control of a live Chrome via DevTools.",
+    "source": "https://github.com/ChromeDevTools/chrome-devtools-mcp"
+  },
+  {
+    "id": "cloudflare-mcp",
+    "name": "Cloudflare MCP",
+    "category": "mcp",
+    "description": "Cloudflare's suite of MCP servers for Workers, docs, and account resources.",
+    "source": "https://github.com/cloudflare/mcp-server-cloudflare"
+  },
+  {
+    "id": "context7",
+    "name": "context7",
+    "category": "mcp",
+    "description": "Upstash MCP server delivering up-to-date, version-specific library docs into prompts.",
+    "source": "https://github.com/upstash/context7"
+  },
+  {
+    "id": "desktop-commander-mcp",
+    "name": "Desktop Commander MCP",
+    "category": "mcp",
+    "description": "MCP server for terminal control, file search, and diff editing.",
+    "source": "https://github.com/wonderwhy-er/DesktopCommanderMCP"
+  },
+  {
+    "id": "docker-mcp",
+    "name": "Docker MCP Gateway",
+    "category": "mcp",
+    "description": "Docker's MCP toolkit and gateway for running containerized MCP servers.",
+    "source": "https://github.com/docker/mcp-gateway"
+  },
+  {
+    "id": "elasticsearch-mcp",
+    "name": "Elasticsearch MCP",
+    "category": "mcp",
+    "description": "Elastic's MCP server for querying Elasticsearch indices.",
+    "source": "https://github.com/elastic/mcp-server-elasticsearch"
+  },
+  {
+    "id": "mcp-everything",
+    "name": "Everything MCP",
+    "category": "mcp",
+    "description": "Reference test server exercising all MCP features.",
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/everything"
+  },
+  {
+    "id": "exa-mcp",
+    "name": "Exa MCP",
+    "category": "mcp",
+    "description": "Exa's MCP server for AI-native web search.",
+    "source": "https://github.com/exa-labs/exa-mcp-server"
+  },
+  {
+    "id": "mcp-fetch",
+    "name": "Fetch MCP",
+    "category": "mcp",
+    "description": "Reference MCP server for fetching web content and converting it for LLMs.",
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/fetch"
+  },
+  {
+    "id": "figma-mcp",
+    "name": "Figma MCP",
+    "category": "mcp",
+    "description": "Figma's Dev Mode MCP server for design context in code generation.",
+    "source": "https://github.com/figma/mcp-server-guide"
+  },
+  {
+    "id": "mcp-filesystem",
+    "name": "Filesystem MCP",
+    "category": "mcp",
+    "description": "Reference MCP server for secure file operations with configurable access.",
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem"
+  },
+  {
+    "id": "firebase-mcp",
+    "name": "Firebase MCP",
+    "category": "mcp",
+    "description": "Firebase CLI's built-in MCP server for Firestore, Auth, and Hosting.",
+    "source": "https://firebase.google.com/docs/cli/mcp-server"
+  },
+  {
+    "id": "firecrawl-mcp",
+    "name": "Firecrawl MCP",
+    "category": "mcp",
+    "description": "MCP server for scraping, crawling, and extracting web data.",
+    "source": "https://github.com/firecrawl/firecrawl-mcp-server"
+  },
+  {
+    "id": "mcp-git",
+    "name": "Git MCP",
+    "category": "mcp",
+    "description": "Reference MCP server to read, search, and manipulate Git repositories.",
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/git"
+  },
+  {
+    "id": "github-mcp-server",
+    "name": "GitHub MCP Server",
+    "category": "mcp",
+    "description": "GitHub's official MCP server for repos, issues, PRs, and Actions.",
+    "source": "https://github.com/github/github-mcp-server"
+  },
+  {
+    "id": "google-drive-mcp",
+    "name": "Google Drive MCP",
+    "category": "mcp",
+    "description": "Archived reference MCP server for Google Drive file access and search.",
+    "source": "https://github.com/modelcontextprotocol/servers-archived/tree/main/src/gdrive"
+  },
+  {
+    "id": "grafana-mcp",
+    "name": "Grafana MCP",
+    "category": "mcp",
+    "description": "Grafana's MCP server for dashboards, datasources, and incidents.",
+    "source": "https://github.com/grafana/mcp-grafana"
+  },
+  {
+    "id": "kubernetes-mcp",
+    "name": "Kubernetes MCP",
+    "category": "mcp",
+    "description": "Community MCP server for managing Kubernetes clusters.",
+    "source": "https://github.com/Flux159/mcp-server-kubernetes"
+  },
+  {
+    "id": "laravel-boost",
+    "name": "Laravel Boost",
+    "category": "mcp",
+    "description": "Laravel's MCP server and guidelines for AI-assisted Laravel development.",
+    "source": "https://github.com/laravel/boost"
+  },
+  {
+    "id": "linear-mcp",
+    "name": "Linear MCP",
+    "category": "mcp",
+    "description": "Linear's hosted MCP server for issues, projects, and cycles.",
+    "source": "https://linear.app/docs/mcp"
+  },
+  {
+    "id": "markitdown-mcp",
+    "name": "MarkItDown MCP",
+    "category": "mcp",
+    "description": "Microsoft's MCP server converting files and Office docs to Markdown.",
+    "source": "https://github.com/microsoft/markitdown"
+  },
+  {
+    "id": "mcp-memory",
+    "name": "Memory MCP",
+    "category": "mcp",
+    "description": "Reference MCP server for knowledge-graph-based persistent memory.",
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/memory"
+  },
+  {
+    "id": "mongodb-mcp",
+    "name": "MongoDB MCP",
+    "category": "mcp",
+    "description": "MongoDB's official MCP server for Atlas and database operations.",
+    "source": "https://github.com/mongodb-js/mongodb-mcp-server"
+  },
+  {
+    "id": "neon-mcp",
+    "name": "Neon MCP",
+    "category": "mcp",
+    "description": "Neon's MCP server for serverless Postgres projects and branches.",
+    "source": "https://github.com/neondatabase/mcp-server-neon"
+  },
+  {
+    "id": "notion-mcp",
+    "name": "Notion MCP",
+    "category": "mcp",
+    "description": "Notion's official MCP server for pages, databases, and search.",
+    "source": "https://github.com/makenotion/notion-mcp-server"
+  },
+  {
+    "id": "mcp-obsidian",
+    "name": "Obsidian MCP",
+    "category": "mcp",
+    "description": "Community MCP server for Obsidian vaults via the Local REST API plugin.",
+    "source": "https://github.com/MarkusPfundstein/mcp-obsidian"
+  },
+  {
+    "id": "playwright-mcp",
+    "name": "Playwright MCP",
+    "category": "mcp",
+    "description": "Microsoft's MCP server for browser automation using Playwright accessibility trees.",
+    "source": "https://github.com/microsoft/playwright-mcp"
+  },
+  {
+    "id": "postgres-mcp-pro",
+    "name": "Postgres MCP Pro",
+    "category": "mcp",
+    "description": "Community MCP server for Postgres with index tuning and health checks.",
+    "source": "https://github.com/crystaldba/postgres-mcp"
+  },
+  {
+    "id": "mcp-postgres",
+    "name": "PostgreSQL MCP",
+    "category": "mcp",
+    "description": "Archived reference MCP server for read-only Postgres access and schema inspection.",
+    "source": "https://github.com/modelcontextprotocol/servers-archived/tree/main/src/postgres"
+  },
+  {
+    "id": "posthog-mcp",
+    "name": "PostHog MCP",
+    "category": "mcp",
+    "description": "PostHog's MCP server for analytics, flags, and errors.",
+    "source": "https://github.com/PostHog/mcp"
+  },
+  {
+    "id": "mcp-puppeteer",
+    "name": "Puppeteer MCP",
+    "category": "mcp",
+    "description": "Archived reference MCP server for browser automation via Puppeteer.",
+    "source": "https://github.com/modelcontextprotocol/servers-archived/tree/main/src/puppeteer"
+  },
+  {
+    "id": "qdrant-mcp",
+    "name": "Qdrant MCP",
+    "category": "mcp",
+    "description": "Qdrant's MCP server for vector memory storage and retrieval.",
+    "source": "https://github.com/qdrant/mcp-server-qdrant"
+  },
+  {
+    "id": "redis-mcp",
+    "name": "Redis MCP",
+    "category": "mcp",
+    "description": "Redis's official MCP server for key-value data operations.",
+    "source": "https://github.com/redis/mcp-redis"
+  },
+  {
+    "id": "sentry-mcp",
+    "name": "Sentry MCP",
+    "category": "mcp",
+    "description": "Sentry's MCP server for issues, errors, and performance data.",
+    "source": "https://github.com/getsentry/sentry-mcp"
+  },
+  {
+    "id": "sequential-thinking",
+    "name": "Sequential Thinking MCP",
+    "category": "mcp",
+    "description": "Reference MCP server for dynamic, reflective step-by-step problem solving.",
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking"
+  },
+  {
+    "id": "serena",
+    "name": "Serena",
+    "category": "mcp",
+    "description": "Semantic code analysis MCP server with LSP-powered symbol tools.",
+    "source": "https://github.com/oraios/serena"
+  },
+  {
+    "id": "shadcn-mcp",
+    "name": "shadcn MCP",
+    "category": "mcp",
+    "description": "shadcn/ui MCP server for browsing and installing registry components.",
+    "source": "https://ui.shadcn.com/docs/mcp"
+  },
+  {
+    "id": "mcp-slack",
+    "name": "Slack MCP",
+    "category": "mcp",
+    "description": "Archived reference MCP server for Slack channels and messaging.",
+    "source": "https://github.com/modelcontextprotocol/servers-archived/tree/main/src/slack"
+  },
+  {
+    "id": "mcp-sqlite",
+    "name": "SQLite MCP",
+    "category": "mcp",
+    "description": "Archived reference MCP server for SQLite database interaction.",
+    "source": "https://github.com/modelcontextprotocol/servers-archived/tree/main/src/sqlite"
+  },
+  {
+    "id": "stripe-mcp",
+    "name": "Stripe MCP",
+    "category": "mcp",
+    "description": "Stripe's agent toolkit MCP server for payments, customers, and products.",
+    "source": "https://github.com/stripe/agent-toolkit"
+  },
+  {
+    "id": "supabase-mcp",
+    "name": "Supabase MCP",
+    "category": "mcp",
+    "description": "Supabase's MCP server for managing projects, tables, and SQL.",
+    "source": "https://github.com/supabase-community/supabase-mcp"
+  },
+  {
+    "id": "task-master",
+    "name": "Task Master",
+    "category": "mcp",
+    "description": "AI task management system for Claude Code, Cursor, and other agents via MCP.",
+    "source": "https://github.com/eyaltoledano/claude-task-master"
+  },
+  {
+    "id": "tavily-mcp",
+    "name": "Tavily MCP",
+    "category": "mcp",
+    "description": "Tavily's MCP server for real-time web search and extraction.",
+    "source": "https://github.com/tavily-ai/tavily-mcp"
+  },
+  {
+    "id": "terraform-mcp",
+    "name": "Terraform MCP",
+    "category": "mcp",
+    "description": "HashiCorp's MCP server for Terraform registry and IaC.",
+    "source": "https://github.com/hashicorp/terraform-mcp-server"
+  },
+  {
+    "id": "mcp-time",
+    "name": "Time MCP",
+    "category": "mcp",
+    "description": "Reference MCP server for time and timezone conversion.",
+    "source": "https://github.com/modelcontextprotocol/servers/tree/main/src/time"
+  },
+  {
+    "id": "vercel-mcp",
+    "name": "Vercel MCP",
+    "category": "mcp",
+    "description": "Vercel's hosted MCP server for projects, deployments, and docs.",
+    "source": "https://vercel.com/docs/mcp"
+  },
+  {
+    "id": "zapier-mcp",
+    "name": "Zapier MCP",
+    "category": "mcp",
+    "description": "Zapier's MCP server connecting agents to thousands of apps.",
+    "source": "https://github.com/zapier/zapier-mcp"
+  },
+  {
+    "id": "zen-mcp",
+    "name": "Zen MCP Server",
+    "category": "mcp",
+    "description": "MCP server letting Claude Code consult Gemini, OpenAI, and other models.",
+    "source": "https://github.com/BeehiveInnovations/zen-mcp-server"
+  },
+  {
+    "id": "bash",
+    "name": "Bash",
+    "category": "language",
+    "description": "Unix shell and command language for scripting.",
+    "source": "https://www.gnu.org/software/bash/"
+  },
+  {
+    "id": "csharp",
+    "name": "C#",
+    "category": "language",
+    "description": "Microsoft's modern object-oriented language for .NET.",
+    "source": "https://learn.microsoft.com/dotnet/csharp/"
+  },
+  {
+    "id": "cpp",
+    "name": "C++",
+    "category": "language",
+    "description": "High-performance systems and application programming language.",
+    "source": "https://isocpp.org"
+  },
+  {
+    "id": "go",
+    "name": "Go",
+    "category": "language",
+    "description": "Google's statically typed, compiled language for simple, fast services.",
+    "source": "https://go.dev"
+  },
+  {
+    "id": "html-css",
+    "name": "HTML/CSS",
+    "category": "language",
+    "description": "Markup and styling languages of the web platform.",
+    "source": "https://developer.mozilla.org/docs/Web"
+  },
+  {
+    "id": "java",
+    "name": "Java",
+    "category": "language",
+    "description": "Object-oriented language running on the JVM.",
+    "source": "https://www.java.com"
+  },
+  {
+    "id": "javascript",
+    "name": "JavaScript",
+    "category": "language",
+    "description": "The language of the web, standardized as ECMAScript.",
+    "source": "https://developer.mozilla.org/docs/Web/JavaScript"
+  },
+  {
+    "id": "kotlin",
+    "name": "Kotlin",
+    "category": "language",
+    "description": "JetBrains' concise JVM language, official for Android.",
+    "source": "https://kotlinlang.org"
+  },
+  {
+    "id": "php",
+    "name": "PHP",
+    "category": "language",
+    "description": "Server-side scripting language powering much of the web.",
+    "source": "https://www.php.net"
+  },
+  {
+    "id": "python",
+    "name": "Python",
+    "category": "language",
+    "description": "General-purpose language popular for scripting, data, and AI.",
+    "source": "https://www.python.org"
+  },
+  {
+    "id": "ruby",
+    "name": "Ruby",
+    "category": "language",
+    "description": "Dynamic language focused on simplicity and developer happiness.",
+    "source": "https://www.ruby-lang.org"
+  },
+  {
+    "id": "rust",
+    "name": "Rust",
+    "category": "language",
+    "description": "Memory-safe systems language with zero-cost abstractions.",
+    "source": "https://www.rust-lang.org"
+  },
+  {
+    "id": "sql",
+    "name": "SQL",
+    "category": "language",
+    "description": "Standard language for querying and managing relational databases.",
+    "source": "https://en.wikipedia.org/wiki/SQL"
+  },
+  {
+    "id": "swift",
+    "name": "Swift",
+    "category": "language",
+    "description": "Apple's language for iOS, macOS, and server development.",
+    "source": "https://www.swift.org"
+  },
+  {
+    "id": "typescript",
+    "name": "TypeScript",
+    "category": "language",
+    "description": "Typed superset of JavaScript that compiles to plain JavaScript.",
+    "source": "https://www.typescriptlang.org"
+  },
+  {
+    "id": "angular",
+    "name": "Angular",
+    "category": "framework",
+    "description": "Google's TypeScript-first web application framework.",
+    "source": "https://angular.dev"
+  },
+  {
+    "id": "astro",
+    "name": "Astro",
+    "category": "framework",
+    "description": "Content-focused web framework with islands architecture.",
+    "source": "https://astro.build"
+  },
+  {
+    "id": "django",
+    "name": "Django",
+    "category": "framework",
+    "description": "High-level Python web framework for rapid, secure development.",
+    "source": "https://www.djangoproject.com"
+  },
+  {
+    "id": "drizzle",
+    "name": "Drizzle ORM",
+    "category": "framework",
+    "description": "Lightweight TypeScript ORM with SQL-like query builder.",
+    "source": "https://orm.drizzle.team"
+  },
+  {
+    "id": "expo",
+    "name": "Expo",
+    "category": "framework",
+    "description": "Framework and platform for universal React Native apps.",
+    "source": "https://expo.dev"
+  },
+  {
+    "id": "express",
+    "name": "Express",
+    "category": "framework",
+    "description": "Minimal, unopinionated web framework for Node.js.",
+    "source": "https://expressjs.com"
+  },
+  {
+    "id": "fastapi",
+    "name": "FastAPI",
+    "category": "framework",
+    "description": "Modern, high-performance Python web framework with type hints.",
+    "source": "https://fastapi.tiangolo.com"
+  },
+  {
+    "id": "fastmcp",
+    "name": "FastMCP",
+    "category": "framework",
+    "description": "Pythonic framework for building MCP servers and clients.",
+    "source": "https://github.com/jlowin/fastmcp"
+  },
+  {
+    "id": "flutter",
+    "name": "Flutter",
+    "category": "framework",
+    "description": "Google's UI toolkit for natively compiled multi-platform apps.",
+    "source": "https://flutter.dev"
+  },
+  {
+    "id": "graphql",
+    "name": "GraphQL",
+    "category": "framework",
+    "description": "Query language and runtime for APIs.",
+    "source": "https://graphql.org"
+  },
+  {
+    "id": "gsap",
+    "name": "GSAP",
+    "category": "framework",
+    "description": "Professional-grade JavaScript animation library.",
+    "source": "https://gsap.com"
+  },
+  {
+    "id": "hono",
+    "name": "Hono",
+    "category": "framework",
+    "description": "Ultrafast web framework built on Web Standards for any runtime.",
+    "source": "https://hono.dev"
+  },
+  {
+    "id": "jest",
+    "name": "Jest",
+    "category": "framework",
+    "description": "Delightful JavaScript testing framework.",
+    "source": "https://jestjs.io"
+  },
+  {
+    "id": "nestjs",
+    "name": "NestJS",
+    "category": "framework",
+    "description": "Progressive Node.js framework for scalable server-side apps.",
+    "source": "https://nestjs.com"
+  },
+  {
+    "id": "nextjs",
+    "name": "Next.js",
+    "category": "framework",
+    "description": "React framework with App Router, server components, and Vercel-first deployment.",
+    "source": "https://nextjs.org"
+  },
+  {
+    "id": "nuxt",
+    "name": "Nuxt",
+    "category": "framework",
+    "description": "Intuitive Vue framework for full-stack web apps.",
+    "source": "https://nuxt.com"
+  },
+  {
+    "id": "playwright",
+    "name": "Playwright",
+    "category": "framework",
+    "description": "Reliable end-to-end testing and browser automation for modern web apps.",
+    "source": "https://playwright.dev"
+  },
+  {
+    "id": "prisma",
+    "name": "Prisma",
+    "category": "framework",
+    "description": "Next-generation TypeScript ORM with schema and migrations.",
+    "source": "https://www.prisma.io"
+  },
+  {
+    "id": "react",
+    "name": "React",
+    "category": "framework",
+    "description": "Library for building user interfaces with components.",
+    "source": "https://react.dev"
+  },
+  {
+    "id": "react-native",
+    "name": "React Native",
+    "category": "framework",
+    "description": "Build native mobile apps with React.",
+    "source": "https://reactnative.dev"
+  },
+  {
+    "id": "rails",
+    "name": "Ruby on Rails",
+    "category": "framework",
+    "description": "Full-stack web framework for Ruby with convention over configuration.",
+    "source": "https://rubyonrails.org"
+  },
+  {
+    "id": "shadcn-ui",
+    "name": "shadcn/ui",
+    "category": "framework",
+    "description": "Beautifully designed, copy-paste React components built on Radix.",
+    "source": "https://ui.shadcn.com"
+  },
+  {
+    "id": "spring-boot",
+    "name": "Spring Boot",
+    "category": "framework",
+    "description": "Opinionated framework for production-ready Java/Kotlin apps.",
+    "source": "https://spring.io/projects/spring-boot"
+  },
+  {
+    "id": "storybook",
+    "name": "Storybook",
+    "category": "framework",
+    "description": "Frontend workshop for building UI components in isolation.",
+    "source": "https://storybook.js.org"
+  },
+  {
+    "id": "svelte",
+    "name": "Svelte",
+    "category": "framework",
+    "description": "Compiler-based UI framework with SvelteKit for full-stack apps.",
+    "source": "https://svelte.dev"
+  },
+  {
+    "id": "tailwind-css",
+    "name": "Tailwind CSS",
+    "category": "framework",
+    "description": "Utility-first CSS framework for rapid UI development.",
+    "source": "https://tailwindcss.com"
+  },
+  {
+    "id": "tanstack-query",
+    "name": "TanStack Query",
+    "category": "framework",
+    "description": "Powerful asynchronous state management for fetching and caching.",
+    "source": "https://tanstack.com/query"
+  },
+  {
+    "id": "trpc",
+    "name": "tRPC",
+    "category": "framework",
+    "description": "End-to-end typesafe APIs for TypeScript without schemas.",
+    "source": "https://trpc.io"
+  },
+  {
+    "id": "vercel-ai-sdk",
+    "name": "Vercel AI SDK",
+    "category": "framework",
+    "description": "TypeScript toolkit for building AI apps and agents.",
+    "source": "https://github.com/vercel/ai"
+  },
+  {
+    "id": "vitest",
+    "name": "Vitest",
+    "category": "framework",
+    "description": "Vite-native testing framework with Jest-compatible API.",
+    "source": "https://vitest.dev"
+  },
+  {
+    "id": "vue",
+    "name": "Vue",
+    "category": "framework",
+    "description": "Progressive JavaScript framework for building UIs.",
+    "source": "https://vuejs.org"
+  },
+  {
+    "id": "zod",
+    "name": "Zod",
+    "category": "framework",
+    "description": "TypeScript-first schema validation with static type inference.",
+    "source": "https://zod.dev"
+  },
+  {
+    "id": "aws",
+    "name": "AWS",
+    "category": "tool",
+    "description": "Amazon Web Services cloud platform.",
+    "source": "https://aws.amazon.com"
+  },
+  {
+    "id": "bun",
+    "name": "Bun",
+    "category": "tool",
+    "description": "Fast all-in-one JavaScript runtime, bundler, and package manager.",
+    "source": "https://bun.sh"
+  },
+  {
+    "id": "ccusage",
+    "name": "ccusage",
+    "category": "tool",
+    "description": "CLI for analyzing Claude Code token usage and cost from local logs.",
+    "source": "https://github.com/ryoppippi/ccusage"
+  },
+  {
+    "id": "chrome-devtools",
+    "name": "Chrome DevTools",
+    "category": "tool",
+    "description": "Web developer tools built into Google Chrome.",
+    "source": "https://developer.chrome.com/docs/devtools"
+  },
+  {
+    "id": "claude-code-router",
+    "name": "Claude Code Router",
+    "category": "tool",
+    "description": "Route Claude Code requests to different LLM providers and models.",
+    "source": "https://github.com/musistudio/claude-code-router"
+  },
+  {
+    "id": "cloudflare",
+    "name": "Cloudflare",
+    "category": "tool",
+    "description": "CDN, DNS, security, and Workers edge computing platform.",
+    "source": "https://www.cloudflare.com"
+  },
+  {
+    "id": "docker",
+    "name": "Docker",
+    "category": "tool",
+    "description": "Container platform for building and running applications.",
+    "source": "https://www.docker.com"
+  },
+  {
+    "id": "figma",
+    "name": "Figma",
+    "category": "tool",
+    "description": "Collaborative interface design tool.",
+    "source": "https://www.figma.com"
+  },
+  {
+    "id": "firebase",
+    "name": "Firebase",
+    "category": "tool",
+    "description": "Google's app development platform with Firestore, Auth, and Hosting.",
+    "source": "https://firebase.google.com"
+  },
+  {
+    "id": "git",
+    "name": "Git",
+    "category": "tool",
+    "description": "Distributed version control system.",
+    "source": "https://git-scm.com"
+  },
+  {
+    "id": "github",
+    "name": "GitHub",
+    "category": "tool",
+    "description": "Code hosting platform for version control and collaboration.",
+    "source": "https://github.com"
+  },
+  {
+    "id": "github-actions",
+    "name": "GitHub Actions",
+    "category": "tool",
+    "description": "CI/CD automation built into GitHub.",
+    "source": "https://github.com/features/actions"
+  },
+  {
+    "id": "gcp",
+    "name": "Google Cloud",
+    "category": "tool",
+    "description": "Google Cloud Platform services and infrastructure.",
+    "source": "https://cloud.google.com"
+  },
+  {
+    "id": "jira",
+    "name": "Jira",
+    "category": "tool",
+    "description": "Atlassian's issue and project tracking software.",
+    "source": "https://www.atlassian.com/software/jira"
+  },
+  {
+    "id": "kubernetes",
+    "name": "Kubernetes",
+    "category": "tool",
+    "description": "Open-source container orchestration system.",
+    "source": "https://kubernetes.io"
+  },
+  {
+    "id": "linear",
+    "name": "Linear",
+    "category": "tool",
+    "description": "Issue tracking and project management for software teams.",
+    "source": "https://linear.app"
+  },
+  {
+    "id": "model-context-protocol",
+    "name": "Model Context Protocol",
+    "category": "tool",
+    "description": "Open standard connecting AI apps to tools and data sources.",
+    "source": "https://modelcontextprotocol.io"
+  },
+  {
+    "id": "mongodb",
+    "name": "MongoDB",
+    "category": "tool",
+    "description": "Document-oriented NoSQL database.",
+    "source": "https://www.mongodb.com"
+  },
+  {
+    "id": "nginx",
+    "name": "Nginx",
+    "category": "tool",
+    "description": "High-performance web server and reverse proxy.",
+    "source": "https://nginx.org"
+  },
+  {
+    "id": "nodejs",
+    "name": "Node.js",
+    "category": "tool",
+    "description": "JavaScript runtime built on Chrome's V8 engine.",
+    "source": "https://nodejs.org"
+  },
+  {
+    "id": "notion",
+    "name": "Notion",
+    "category": "tool",
+    "description": "All-in-one workspace for docs, wikis, and project management.",
+    "source": "https://www.notion.so"
+  },
+  {
+    "id": "obsidian",
+    "name": "Obsidian",
+    "category": "tool",
+    "description": "Local-first Markdown knowledge base and note-taking app.",
+    "source": "https://obsidian.md"
+  },
+  {
+    "id": "ollama",
+    "name": "Ollama",
+    "category": "tool",
+    "description": "Run open-source LLMs locally.",
+    "source": "https://github.com/ollama/ollama"
+  },
+  {
+    "id": "pnpm",
+    "name": "pnpm",
+    "category": "tool",
+    "description": "Fast, disk-efficient package manager for Node.js.",
+    "source": "https://pnpm.io"
+  },
+  {
+    "id": "postgresql",
+    "name": "PostgreSQL",
+    "category": "tool",
+    "description": "Advanced open-source relational database.",
+    "source": "https://www.postgresql.org"
+  },
+  {
+    "id": "redis",
+    "name": "Redis",
+    "category": "tool",
+    "description": "In-memory data store for caching, queues, and more.",
+    "source": "https://redis.io"
+  },
+  {
+    "id": "sentry",
+    "name": "Sentry",
+    "category": "tool",
+    "description": "Application monitoring and error tracking platform.",
+    "source": "https://sentry.io"
+  },
+  {
+    "id": "slack",
+    "name": "Slack",
+    "category": "tool",
+    "description": "Team messaging and collaboration platform.",
+    "source": "https://slack.com"
+  },
+  {
+    "id": "spec-kit",
+    "name": "Spec Kit",
+    "category": "tool",
+    "description": "GitHub's toolkit for spec-driven development with AI agents.",
+    "source": "https://github.com/github/spec-kit"
+  },
+  {
+    "id": "stripe",
+    "name": "Stripe",
+    "category": "tool",
+    "description": "Payments infrastructure for the internet.",
+    "source": "https://stripe.com"
+  },
+  {
+    "id": "supabase",
+    "name": "Supabase",
+    "category": "tool",
+    "description": "Open-source Firebase alternative with Postgres, Auth, and Storage.",
+    "source": "https://supabase.com"
+  },
+  {
+    "id": "terraform",
+    "name": "Terraform",
+    "category": "tool",
+    "description": "Infrastructure as code tool by HashiCorp.",
+    "source": "https://developer.hashicorp.com/terraform"
+  },
+  {
+    "id": "turborepo",
+    "name": "Turborepo",
+    "category": "tool",
+    "description": "High-performance build system for JavaScript monorepos.",
+    "source": "https://turborepo.com"
+  },
+  {
+    "id": "vercel",
+    "name": "Vercel",
+    "category": "tool",
+    "description": "Frontend cloud for deploying Next.js and web apps.",
+    "source": "https://vercel.com"
+  },
+  {
+    "id": "vite",
+    "name": "Vite",
+    "category": "tool",
+    "description": "Next-generation frontend build tool with instant HMR.",
+    "source": "https://vite.dev"
+  },
+  {
+    "id": "vs-code",
+    "name": "VS Code",
+    "category": "tool",
+    "description": "Microsoft's free, extensible source code editor.",
+    "source": "https://code.visualstudio.com"
+  }
+]

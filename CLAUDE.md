@@ -47,8 +47,8 @@
 
 ## 프로젝트 트리
 
-- create-next-app 기본 구조 (`app/` 라우터, src 디렉토리 없음)
-- (Day 3 PRD 확정 후 실제 구조 반영)
+- `app/` 라우터(src 없음) · `app/auth/`(callback 라우트·로그인 서버 액션) · `components/` · `lib/supabase/`(서버 클라이언트) · `lib/limits.ts`(BR 제한 유틸+테스트) · `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `.env.example`
+- 테스트: `npm test` (`node --test`, 도메인 로직만)
 
 ## Agent skills
 
