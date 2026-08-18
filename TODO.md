@@ -22,14 +22,14 @@
 
 ### Day 4~5 (8/18~19) — 백엔드 선배정 + 카탈로그 병행
 
-- [ ] **[본인]** Supabase 프로젝트 생성(Free) · GitHub OAuth App 등록(Client ID/Secret) · Supabase Auth Providers·URL Configuration(Site URL·Redirect: prod/preview/localhost) · Slack 앱 Incoming Webhook URL 발급 ← 8/18 U1~U6 완료. **Redirect URLs는 `**` 패턴 필수**(`http://localhost:3000/**`·`https://*.vercel.app/**`·`https://stackd.kr/**`) — 쿼리스트링 포함 glob 매칭이라 정확 URL은 `?next=`에서 실패해 Site URL로 폴백됨
-- [ ] `supabase/schema.sql` — workflows·feedback·인덱스·RLS (PRD-05) → 대시보드 SQL 1회 실행 → 커밋 ← 8/18 작성 → **SQL Editor 실행 완료(사용자) → Supabase MCP로 검증(테이블 2·인덱스 2·정책 4·feedback 정책 0·advisor 이상 없음)**
-- [ ] `@supabase/ssr` 연결: 서버/브라우저 클라이언트·미들웨어 세션 갱신·`/auth/callback` (PRD-06) ← 8/18 코드 작성(`lib/supabase/server.ts`·`proxy.ts`(Next 16: middleware→proxy)·`app/auth/callback/route.ts`·`app/auth/actions.ts` 로그인/로그아웃 서버 액션), 브라우저 클라이언트는 쓰는 곳 생길 때. **로컬 왕복 확인 완료(8/18, chrome-devtools: 로그인→@kjjyyy01→로그아웃)** — 배포 URL 확인은 Day 5 게이트
-- [ ] **[본인]** env 7종 (PRD-17) — `.env.local` + Vercel Production/Preview ← `.env.example` 작성됨(복사해서 채움, 시크릿은 채팅에 붙이지 말 것)
-- [ ] **[본인 눈]** 헤더 로그인/로그아웃 왕복을 **배포 URL**에서 확인 (Day 5 게이트)
+- [x] **[본인]** Supabase 프로젝트 생성(Free) · GitHub OAuth App 등록(Client ID/Secret) · Supabase Auth Providers·URL Configuration(Site URL·Redirect: prod/preview/localhost) · Slack 앱 Incoming Webhook URL 발급 ← 8/18 U1~U6 완료. **Redirect URLs는 `**` 패턴 필수**(`http://localhost:3000/**`·`https://*.vercel.app/**`·`https://stackd.kr/**`) — 쿼리스트링 포함 glob 매칭이라 정확 URL은 `?next=`에서 실패해 Site URL로 폴백됨 *(PRD-17 환경 구성표 Local 행의 정확 경로 표기는 구식 → make-prd로 정정 필요)*
+- [x] `supabase/schema.sql` — workflows·feedback·인덱스·RLS (PRD-05) → 대시보드 SQL 1회 실행 → 커밋 ← 8/18 작성 → **SQL Editor 실행 완료(사용자) → Supabase MCP로 검증(테이블 2·인덱스 2·정책 4·feedback 정책 0·advisor 이상 없음)**
+- [x] `@supabase/ssr` 연결: 서버/브라우저 클라이언트·미들웨어 세션 갱신·`/auth/callback` (PRD-06) ← 8/18 코드 작성(`lib/supabase/server.ts`·`proxy.ts`(Next 16: middleware→proxy)·`app/auth/callback/route.ts`·`app/auth/actions.ts` 로그인/로그아웃 서버 액션), 브라우저 클라이언트는 쓰는 곳 생길 때. **로컬 왕복 확인 완료(8/18, chrome-devtools: 로그인→@kjjyyy01→로그아웃)** — 배포 URL 확인은 Day 5 게이트
+- [ ] **[본인]** env 7종 (PRD-17) — `.env.local` + Vercel Production/Preview ← `.env.example` 작성됨(복사해서 채움, 시크릿은 채팅에 붙이지 말 것) → **8/18 `.env.local` + Vercel Production/Preview 등록 완료(사용자)**. `NEXT_PUBLIC_SITE_URL`은 양쪽 `https://stackd.kr`(로그인은 요청 호스트 사용, 코드에서 아직 미참조). `ADMIN_USER_IDS`만 U11(첫 로그인 후 uuid 복사) 대기
+- [x] **[본인 눈]** 헤더 로그인/로그아웃 왕복을 **배포 URL**에서 확인 (Day 5 게이트) ← **8/18 프리뷰 URL(`stackd-git-feat-day4-supabase-…vercel.app`, 커밋 c071882 Redeploy)에서 홈·로그인·로그아웃 전부 확인(사용자 눈) — 게이트 하루 선행.** 프리뷰는 Vercel Deployment Protection(비로그인 302→SSO, 500 아님)으로 소유자만 접근. main 머지 후 `stackd.kr`에서 재확인 남음
 - [ ] 카탈로그 수집 → `data/catalog.json` (AI agent 100~200 + 개발 스택 60~80, enum 7종) — 에이전트 작업, 병행 ← 8/18 초안 262개(agent 28·skill 46·plugin 50·mcp 55 / language 15·framework 32·tool 36, 60KB, URL 209/214 실측 200) — **[본인 눈]** 스팟체크(0번 카드가 카탈로그만으로 담기는지) 대기
-- [ ] 제한 유틸 1개 (BR-001·002·004·008·010~016·021 — 길이·개수·필수, 이모지 허용 — 빌더·서버 액션·OG 공용, `tdd`) ← 8/18 `lib/limits.ts` + 테스트 13건(`npm test`, node --test)
-- [ ] GA4 초기화 (`NEXT_PUBLIC_GA_ID`, gtag) · sonner · shadcn(버튼·입력·textarea·dialog·switch·badge·tabs) DESIGN 토큰 재스킨
+- [x] 제한 유틸 1개 (BR-001·002·004·008·010~016·021 — 길이·개수·필수, 이모지 허용 — 빌더·서버 액션·OG 공용, `tdd`) ← 8/18 `lib/limits.ts` + 테스트 13건(`npm test`, node --test)
+- [ ] GA4 초기화 (`NEXT_PUBLIC_GA_ID`, gtag) · sonner · shadcn(버튼·입력·textarea·dialog·switch·badge·tabs) DESIGN 토큰 재스킨 ← **8/18 저녁 세션 2에서 진행(사용자 결정)** — 선행: ① `DESIGN.md` 토큰 섹션(그리드·정렬 축·스페이싱·타이포·컬러)이 아직 `(Day 1 확정 후 기입)` 플레이스홀더 → frontend-design·미학 스킬로 먼저 기입 ② 테마 결정(아래) → 그 다음 shadcn init·재스킨·sonner·GA4·헤더 내비·푸터. shadcn·sonner 미설치, `globals.css`에 `prefers-color-scheme: dark` 블록 잔재 있음
 - [ ] **[본인] 테마 결정** — UI 단일(라이트/다크) vs 둘 다 → DESIGN.md / 카드 테마 비의존 / `globals.css` dark 잔재 제거
 - [ ] 공통 레이아웃: 헤더(로고·라이브러리·로그인|내 카드·설정)·푸터(`/privacy` `/terms`·문의 dialog → `submitFeedback` + 웹훅) ← 8/18 헤더 최소판(로고+로그인/로그아웃) `components/site-header.tsx`, 내비·푸터는 화면·테마 확정 후
 
