@@ -1,35 +1,56 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Sans_KR, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/site-header";
+import SiteFooter from "@/components/site-footer";
+import Analytics from "@/components/analytics";
+import LoginEvent from "@/components/login-event";
+import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// 본문·제목 — 한글용으로 그려진 휴머니스트 그로테스크 (DESIGN.md §타이포)
+const plexKr = IBM_Plex_Sans_KR({
+  variable: "--font-plex-kr",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// 기계 식별자 전용 — 도구명·단계 번호·STACK 태그
+const plexMono = IBM_Plex_Mono({
+  variable: "--font-plex-mono",
   subsets: ["latin"],
+  weight: ["400", "500"],
+  display: "swap",
 });
 
-// 사이트 공통 메타 — canonical·OG 절대경로 기준
+// 사이트 공통 메타 — canonical·OG 절대경로 기준 (PRD-04)
 export const metadata: Metadata = {
   metadataBase: new URL("https://stackd.kr"),
-  title: "Stackd — 내 AI 스택 카드 만들기",
+  title: {
+    default: "Stackd — 내 AI 워크플로우 카드 만들기",
+    template: "%s | Stackd",
+  },
   description:
-    "설정을 붙여넣으면 공유하고 싶어지는 AI 스택 카드가 나옵니다.",
+    "도구는 아는데 어떻게 쓰는지 모른다면 — 실제 개발자들의 AI 워크플로우를 카드 한 장으로 공유하고 라이브러리에서 예시를 보세요.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: "Stackd",
+    locale: "ko_KR",
+    url: "/",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html
-      lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">
+    <html lang="ko" className={`${plexKr.variable} ${plexMono.variable} h-full`}>
+      <body className="flex min-h-full flex-col">
         <SiteHeader />
         {children}
+        <SiteFooter />
+        <Toaster position="bottom-center" />
+        <LoginEvent />
+        <Analytics />
       </body>
     </html>
   );

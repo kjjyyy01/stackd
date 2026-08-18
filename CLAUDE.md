@@ -13,7 +13,7 @@
 
 ## 기술 스택
 
-- Next.js(App Router) / TypeScript / Tailwind CSS / GSAP / **Supabase**(Auth GitHub OAuth·Postgres·RLS)
+- Next.js(App Router) / TypeScript / Tailwind v4 / **shadcn/ui**(radix-nova, 라이트 단일) / sonner / GSAP(Day 12~13) / **Supabase**(Auth GitHub OAuth·Postgres·RLS) / GA4(gtag 직접)
 
 ## 개발 명령어
 
@@ -30,6 +30,9 @@
 - 성능 예산: **LCP 2.5초**
 - 구현 후 반드시 시각 확인: chrome-devtools 스크린샷(모바일/데스크톱) + 본인 눈, 둘 다 통과해야 완료
 - 반응형: Tailwind 내장 브레이크포인트(sm/md/lg/xl)만 사용 — 커스텀·별도 정의 금지
+- **라이트 단일 테마** — `globals.css`의 `@custom-variant dark (&:is(.dark *))`가 shadcn의 `dark:`를 무력화한다. 지우지 말 것
+- **한글 조판**: `word-break: keep-all` 필수 · 본문 행간 1.75·자간 0 · mono는 영문 기계 식별자에만 (DESIGN.md)
+- 디자인 토큰 SSOT는 `DESIGN.md` — `app/globals.css`는 그 사본이다
 - 문서 상호 참조: `DESIGN.md`(디자인 시스템) / `ARCHITECTURE.md`(구조) / `ANIMATION.md`(모션) / `TODO.md`(작업 목록) / `docs/PLAN.md`(계획)
 
 ## 보안 기본 규칙
@@ -47,7 +50,10 @@
 
 ## 프로젝트 트리
 
-- `app/` 라우터(src 없음) · `app/auth/`(callback 라우트·로그인 서버 액션) · `components/` · `lib/supabase/`(서버 클라이언트) · `lib/limits.ts`(BR 제한 유틸+테스트) · `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `.env.example`
+- `app/` 라우터(src 없음) · `app/auth/`(callback·로그인 서버 액션) · `app/actions/`(서버 액션) · `app/not-found.tsx`
+- `components/`(site-header·site-footer·feedback-dialog·analytics·login-event) · `components/ui/`(shadcn)
+- `lib/supabase/`(server·admin) · `lib/limits.ts`(BR 제한 유틸+테스트) · `lib/analytics.ts`(GA4 track, EVT 7종) · `lib/utils.ts`(cn)
+- `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `.env.example`
 - 테스트: `npm test` (`node --test`, 도메인 로직만)
 
 ## Agent skills
