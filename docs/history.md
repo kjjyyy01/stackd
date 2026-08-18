@@ -83,3 +83,32 @@
 - EOD 기록 (당일 완료): Obsidian TIL 4건(동적 OG 예외 판정 / URL 페이로드 텍스트 포함 / 서비스명 구매 직전 재검증 / 무저장 구조의 악용 방어) + Notion 개발 로그 2건 등록 완료(과정요약·트러블슈팅[grill 원문 복구] — `개발 로그:stackd` DB)
 - 사용자 잔여: **stackd.kr 구매(가비아, 익일 결제 예정)**
 - 다음: Day 3 — 화면 스펙 + EVT- 이벤트 트래킹 스펙 동시 확정 (GA4 이벤트 명세)
+
+## 2026-08-18 — Day 4: 백엔드 선배정 착수 (Supabase 연결 코드·스키마·제한 유틸) — 진행 중
+
+### 작업 내용
+
+- **무엇을**: PLAN Day 4~5 "Supabase(Auth GitHub OAuth + Postgres + RLS) 연결까지"의 **코드 측**을 먼저 작성 — 대시보드·시크릿 작업(사용자 몫)과 병렬. 세션 시작 시 "네가 할 일 / 내가 할 일" 체크리스트(U1~U13 / C1~C12)로 역할 분리
+- **어떻게**:
+  - 브랜치 `feat/day4-supabase` · `@supabase/ssr`·`@supabase/supabase-js` 설치
+  - `supabase/schema.sql` — PRD-05·09를 SQL로 옮김: workflows(id 16진 8자 CHECK·steps 2~8 CHECK)·feedback(type enum CHECK)·인덱스 2종·RLS 4정책(owner update는 with check로 hidden·hidden_reason 고정)·feedback은 정책 없음(service role만). 재실행 안전(if not exists / drop policy if exists)
+  - `.env.example` 7종(PRD-17) + `.gitignore`에 `!.env.example` 예외 (기존 `.env*` 규칙이 예제까지 무시하던 것 발견)
+  - Next 16 문서(`node_modules/next/dist/docs`) 확인 — **middleware.ts는 폐기, `proxy.ts`**로 세션 갱신(`getClaims()` 조기 호출, 리다이렉트·DB 조회 없음). context7로 `@supabase/ssr` 최신 패턴(getAll/setAll 쿠키) 대조
+  - `lib/supabase/server.ts`(서버 클라이언트) · `app/auth/callback/route.ts`(`exchangeCodeForSession`, `next` 내부 경로만 허용, 실패 → `/?auth=failed`) · `app/auth/actions.ts`(**서버 액션**으로 `signInWithOAuth`+`redirect` — 클라이언트 컴포넌트 없이 로그인, origin은 요청 헤더에서 유도해 로컬/프리뷰/프로덕션 공용) · `components/site-header.tsx`(로고+로그인/로그아웃 최소판, layout에 장착). 브라우저 클라이언트는 쓰는 곳이 생길 때 추가(YAGNI)
+  - `lib/limits.ts` — BR-007 공용 제한 유틸을 `/tdd`(mattpocock)로 red→green: `validateWorkflow`(BR-001·002·004·008·010~015 → PRD-10 코드·필드 반환, trim 정규화 값 반환)·`validateFeedbackBody`(BR-021)·`charCount`(Intl.Segmenter grapheme — 이모지 1자, BR-003)·`LIMITS`·`CATEGORIES` 상수. 테스트 12건 `node --test`(Node 26 네이티브 TS, 의존성 0) — `npm test`
+  - 카탈로그(`data/catalog.json`) 수집은 general-purpose 에이전트에 위임(로컬 플러그인 캐시 우선 → MCP 공식 레포·awesome 리스트 → 중복=인지도 컷)
+- **왜**: 사용자만 할 수 있는 작업(Supabase 프로젝트·GitHub OAuth App·Slack 웹훅·env)이 오늘의 크리티컬 패스이므로, 그 대기 시간에 키 없이 쓸 수 있는 코드를 전부 끝내 Day 5 게이트(배포 URL 로그인 왕복)까지의 경로를 짧게 만든다. 시크릿은 채팅에 노출되지 않도록 `.env.example`만 다룸
+
+### 작업 결과
+
+- 검증: `tsc` 통과 · `eslint` 0건 · `next build` 통과(env 없이도 빌드됨 — 전 라우트 동적 렌더, 헤더 `cookies()` 때문 → LCP 예산 걸리면 Suspense/cacheComponents 분리, ponytail 주석) · `npm test` 12/12
+- 카탈로그 초안: `data/catalog.json` 262개(AI 생태계 179 + 개발 스택 83, 60KB) — 로컬 플러그인 캐시 실데이터 + MCP 공식 레포·awesome 리스트, source URL 214개 중 209개 curl 200 확인(5개는 봇 차단이나 자명한 도메인). 유틸 테스트에 카탈로그 정합성(enum·길이·id 유일) 가드 1건 추가(13/13)
+- **로컬 로그인 왕복 확인 완료 (8/18 오후, C7)**: 사용자 U1~U6(Supabase 프로젝트·GitHub OAuth App·Provider·URL Configuration·Slack 웹훅·`.env.local`) 완료 후 chrome-devtools로 `localhost:3000` → "GitHub로 로그인" → GitHub 승인(사용자) → `GET /auth/callback?code=…&next=/` 307 → 헤더 `@kjjyyy01` → 로그아웃 → 버튼 복귀. 에러·`auth=failed` 0
+- **트러블슈팅 — Supabase Redirect URL 폴백**: 첫 시도에서 GitHub 인증 성공 후 `localhost:3000/auth/callback`이 아니라 **Site URL(`stackd.kr/?code=…`)로 튕김**. 원인: GoTrue의 허용 목록 검사는 **쿼리스트링을 포함한 전체 redirect_to를 glob 매칭** — 정확 URL `http://localhost:3000/auth/callback`은 `?next=%2F`가 붙은 실제 값과 불일치 → 허용 실패 → Site URL 폴백(프로덕션은 Site URL 호스트 일치 예외로 안 걸려 로컬·프리뷰만 재현). 해결: Redirect URLs를 `http://localhost:3000/**` · `https://*.vercel.app/**` · `https://stackd.kr/**`로 교체 → 즉시 통과. 폴백된 code는 콜백 미배포 상태라 소모되지 않았고 PKCE verifier가 localhost 쿠키에만 있어 무해
+- **schema.sql 실행 완료 (8/18 오후, U7)**: Supabase MCP 플러그인을 사용자가 `/plugin`으로 연결 → 제가 `apply_migration`(원격 DDL) 시도했으나 **자동 모드 권한 분류기에 차단** → 우회하지 않고 사용자에게 선택지 제시(권한 규칙 추가 vs SQL Editor) → 사용자 선택으로 **SQL Editor에서 직접 실행**(PRD-17 문구 그대로). 이후 MCP 읽기 도구로 검증: 테이블 2(RLS on)·CHECK·FK·기본값·인덱스 2·정책 4(with check hidden 고정 확인)·feedback 정책 0·security advisor 이상 없음(feedback "정책 없음" INFO는 의도된 설계). 권한 규칙은 설명만(`permissions.ask`에 `mcp__plugin_supabase_supabase__apply_migration` 권장, `.claude/settings.local.json`) — 미적용
+- **커밋·push (8/18 저녁, 사용자 지시)**: `c071882 feat: Day 4 백엔드 선배정 — Supabase 연결·schema.sql·제한 유틸·카탈로그` (18 files, +2507) → `origin/feat/day4-supabase`. 커밋 전 점검: `.env.local` gitignore 확인·`.env.example` 값 비어 있음·신규 코드 console.log/TODO 0·시크릿 접두사 그렙(`sb_secret_`·`sb_publishable_`·`hooks.slack.com`·`.supabase.co`) 매치는 PRD 문서·카탈로그 출처 URL뿐
+- **배포 URL 로그인 왕복 확인 완료 — Day 5 게이트 하루 선행 (8/18 저녁, U8·U10)**: push → Vercel 프리뷰 자동 빌드 성공(env 없이도 빌드됨 — 전 라우트 동적 렌더라 `createServerClient`가 요청 시에만 실행, 즉 **빌드 성공 ≠ 런타임 성공**) → 사용자가 Vercel env 7종 Production/Preview 등록(`NEXT_PUBLIC_SITE_URL` 양쪽 `https://stackd.kr` — 로그인 리다이렉트는 `x-forwarded-host`로 요청 호스트를 쓰므로 프리뷰마다 값 바꿀 필요 없음) → Redeploy → 프리뷰 URL에서 홈 렌더·"GitHub로 로그인"·`@kjjyyy01`·로그아웃 전부 정상(사용자 눈). 부수 확인: 프리뷰는 Vercel Deployment Protection으로 비로그인 접근 시 `302 → vercel.com/sso-api`(500 아님, 소유자만 열람) — 브라우저에 SSO 쿠키가 있어 OAuth 왕복엔 영향 없음. Redirect URLs `https://*.vercel.app/**` 패턴·콜백의 `x-forwarded-host` 처리가 실제 Vercel 프록시 뒤에서 검증됨
+- 미검증: main 머지 후 `stackd.kr`(프로덕션) 재확인 · `ADMIN_USER_IDS`(U11) · PRD-17 Local 행 Redirect 표기 정정(make-prd)
+- **결정 — Drizzle 미도입 유지 (8/18 오후, 사용자 확정)**: "Drizzle을 도입한다면?" 검토 → v1은 계획(순수 SQL + `@supabase/ssr`)대로. 근거: ① supabase-js는 PostgREST가 JWT로 `auth.uid()`를 채워 RLS가 자동이지만 Drizzle은 Postgres 직접 접속이라 매 쿼리를 `set_config('request.jwt.claims')`+`set local role` 트랜잭션 래퍼로 감싸야 하고 한 번 빼먹으면 조용히 IDOR — PRD-09 "RLS 1차 방어" 설계와 충돌 ② `DATABASE_URL`(RLS 우회 가능한 시크릿) 추가 → PRD-17 SSOT 수정(make-prd) ③ Vercel 서버리스 × 직접 접속은 Supavisor 트랜잭션 풀러·`prepare:false` 함정 ④ 테이블 2·쿼리 ~8개에 ORM은 YAGNI, 백엔드 2일 예산 반나절 잠식 ⑤ Auth는 어차피 supabase-js라 의존성 "대체"가 아니라 "추가". 얻는 것(타입)은 `supabase gen types`로 대체 가능. **재검토 발동 조건(v2)**: 테이블 ≥4·조인 발생 / Supabase 이탈 결정 / 로컬 DB+통합 테스트 도입 — 전환 시 `drizzle-kit introspect`로 schema.sql을 그대로 뽑을 수 있어 지금 SQL로 가도 매몰비용 낮음
+- **EOD TIL 후보(Day 4)**: ① ORM 도입 판단 기준 = 타입이 아니라 "누가 auth.uid()를 채우느냐"(RLS 자동성) ② Next 16 middleware→proxy 리네임 + `getClaims()` 조기 호출 패턴 ③ 시크릿 경계로 사람/에이전트 역할 분리(U/C 체크리스트) ④ Node 26 네이티브 TS로 테스트 러너 0 의존 ⑤ RLS 자기참조 서브셀렉트가 재귀 에러를 피하는 조건 ⑥ Supabase Redirect URL은 쿼리스트링 포함 glob 매칭(트러블슈팅) ⑦ 동적 렌더 앱은 env 누락이 빌드가 아니라 런타임에서 터진다 — 배포 "성공" 표시만 믿지 말고 URL을 열어볼 것 / Vercel 프리뷰 보호 302는 장애가 아님
+- 잔여(Claude): C9 카탈로그 검수 · C10 GA4·sonner·shadcn(테마 결정 후) · C11 프리뷰→main 머지 후 프로덕션 재확인 / (사용자) U9 테마 결정 · U11 ADMIN_USER_IDS · EOD 기록 세션
