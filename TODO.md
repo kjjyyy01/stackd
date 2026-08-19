@@ -4,7 +4,7 @@
 
 ## Day 0 잔여 (사용자)
 
-- [x] 시작일 확정 — Day 1 = 2026-08-12(수), ~~Day 20 = 8/31(월)~~ → **Day 20 = 9/3(목) 런칭·게시**, Day 4 = 8/18(화) (8/16·17 리사이즈, PLAN §일정 매핑)
+- [x] 시작일 확정 — Day 1 = 2026-08-12(수), ~~Day 20 = 8/31(월)~~ ~~9/3(목)~~ → **Day 20 = 9/8(화) 런칭·게시**, 판정일 9/22(화), Day 6 = 8/21(금), 버퍼 4일 = 9/2~9/5 (8/19 조정 3회차 — AI Summit 8/19~20 참가, PLAN §일정 매핑)
 - [x] `/mattpocock-skills:setup-matt-pocock-skills` 실행 — CLAUDE.md Agent skills 블록 + docs/agents/ 3종 생성
 - [x] `gh auth login` + 라벨 14종(카테고리 9 + triage 5) 등록 완료
 - [x] GA4 계정 생성
@@ -20,12 +20,12 @@
 
 > 2026-08-17 v2 재작성. 컷 순서(Day 11): 라이브러리 → 내 카드 수정 → 소속·역할. `/admin`은 **컷 불가**(대시보드 미사용 결정 — 신고 처리 유일 경로, 2026-08-17).
 
-### Day 4~5 (8/18~19) — 백엔드 선배정 + 카탈로그 병행
+### Day 4~5 (8/18 하루에 완주 — 1일 선행) — 백엔드 선배정 + 카탈로그 병행
 
 - [x] **[본인]** Supabase 프로젝트 생성(Free) · GitHub OAuth App 등록(Client ID/Secret) · Supabase Auth Providers·URL Configuration(Site URL·Redirect: prod/preview/localhost) · Slack 앱 Incoming Webhook URL 발급 ← 8/18 U1~U6 완료. **Redirect URLs는 `**` 패턴 필수**(`http://localhost:3000/**`·`https://*.vercel.app/**`·`https://stackd.kr/**`) — 쿼리스트링 포함 glob 매칭이라 정확 URL은 `?next=`에서 실패해 Site URL로 폴백됨 *(PRD-17 환경 구성표 Local 행의 정확 경로 표기는 구식 → make-prd로 정정 필요)*
 - [x] `supabase/schema.sql` — workflows·feedback·인덱스·RLS (PRD-05) → 대시보드 SQL 1회 실행 → 커밋 ← 8/18 작성 → **SQL Editor 실행 완료(사용자) → Supabase MCP로 검증(테이블 2·인덱스 2·정책 4·feedback 정책 0·advisor 이상 없음)**
 - [x] `@supabase/ssr` 연결: 서버/브라우저 클라이언트·미들웨어 세션 갱신·`/auth/callback` (PRD-06) ← 8/18 코드 작성(`lib/supabase/server.ts`·`proxy.ts`(Next 16: middleware→proxy)·`app/auth/callback/route.ts`·`app/auth/actions.ts` 로그인/로그아웃 서버 액션), 브라우저 클라이언트는 쓰는 곳 생길 때. **로컬 왕복 확인 완료(8/18, chrome-devtools: 로그인→@kjjyyy01→로그아웃)** — 배포 URL 확인은 Day 5 게이트
-- [ ] **[본인]** env 7종 (PRD-17) — `.env.local` + Vercel Production/Preview ← `.env.example` 작성됨(복사해서 채움, 시크릿은 채팅에 붙이지 말 것) → **8/18 `.env.local` + Vercel Production/Preview 등록 완료(사용자)**. `NEXT_PUBLIC_SITE_URL`은 양쪽 `https://stackd.kr`(로그인은 요청 호스트 사용, 코드에서 아직 미참조). **`NEXT_PUBLIC_GA_ID`는 8/18 세션 2에서 빈 값이 발견돼 `G-G7ZEH4FLWE`로 채움 — `.env.local`·Vercel 양쪽 완료(사용자), 로컬 HTML 주입 실측 확인.** `ADMIN_USER_IDS`만 남음 — **uuid 확보됨: `e6caf467-b3de-4ea3-8d19-806c63c84ea7`(@kjjyyy01, Supabase `auth.users` 조회)** → `.env.local` + Vercel 입력만 하면 U11 종료
+- [x] **[본인]** env 7종 (PRD-17) — `.env.local` + Vercel Production/Preview ← `.env.example` 작성됨(복사해서 채움, 시크릿은 채팅에 붙이지 말 것) → **8/18 `.env.local` + Vercel Production/Preview 등록 완료(사용자)**. `NEXT_PUBLIC_SITE_URL`은 양쪽 `https://stackd.kr`(로그인은 요청 호스트 사용, 코드에서 아직 미참조). **`NEXT_PUBLIC_GA_ID`는 8/18 세션 2에서 빈 값이 발견돼 `G-G7ZEH4FLWE`로 채움 — `.env.local`·Vercel 양쪽 완료(사용자), 로컬 HTML 주입 실측 확인.** **`ADMIN_USER_IDS`도 8/18 밤 입력 완료(uuid `e6caf467-…`, Supabase `auth.users`에서 확보) → U11 종료. `.env.local` 7종 전부 값 확인(형식 검사 포함), Vercel Production/Preview 등록·프리뷰 반영 확인(사용자).**
 - [x] **[본인 눈]** 헤더 로그인/로그아웃 왕복을 **배포 URL**에서 확인 (Day 5 게이트) ← **8/18 프리뷰 URL(`stackd-git-feat-day4-supabase-…vercel.app`, 커밋 c071882 Redeploy)에서 홈·로그인·로그아웃 전부 확인(사용자 눈) — 게이트 하루 선행.** 프리뷰는 Vercel Deployment Protection(비로그인 302→SSO, 500 아님)으로 소유자만 접근. **main 머지(`ec205e7`, PR 없이 직접) 후 `stackd.kr` 프로덕션에서도 로그인 왕복 정상(사용자 확인 8/18 저녁)** — 로컬·프리뷰·프로덕션 3환경 전부 통과
 - [ ] 카탈로그 수집 → `data/catalog.json` (AI agent 100~200 + 개발 스택 60~80, enum 7종) — 에이전트 작업, 병행 ← 8/18 초안 262개(agent 28·skill 46·plugin 50·mcp 55 / language 15·framework 32·tool 36, 60KB, URL 209/214 실측 200) — **[본인 눈]** 스팟체크(0번 카드가 카탈로그만으로 담기는지) 대기
 - [x] 제한 유틸 1개 (BR-001·002·004·008·010~016·021 — 길이·개수·필수, 이모지 허용 — 빌더·서버 액션·OG 공용, `tdd`) ← 8/18 `lib/limits.ts` + 테스트 13건(`npm test`, node --test)
@@ -80,7 +80,7 @@
 
 - [ ] env 게이트(BR-022) · feedback 목록(미처리 필터) · hidden 토글(**사유 1~200자 필수**)·처리 완료 (service role)
 
-### 위생 항목 (SCR 밖 — Day 4~11 내)
+### 위생 항목 (SCR 밖 — Day 6~11 = 8/21~8/26 내)
 
 - [ ] ~~404~~(8/18 완료) / favicon / robots(noindex 규칙) / 정적 기본 OG / sitemap 동적
 - [x] **[본인] GA4 내부 트래픽 제외** (PRD·TODO 미등재였던 항목 — 8/18 세션 2에서 식별) ← 관리 → 데이터 수집 및 수정 → 데이터 스트림 → 태그 설정 구성 → 더보기 → 내부 트래픽 정의(IP `211.177.28.77`) + 데이터 필터 **활성** 완료(사용자 8/18). **아래 시드 작성의 선행 조건** — 필터는 소급 적용이 안 되고, H-01은 `card_create` 사용자 ÷ 전체 사용자라 본인이 분자·분모 양쪽에 섞인다. IP가 바뀌면 필터가 조용히 무력화되므로 회선 변경 시 재확인
