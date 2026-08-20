@@ -27,7 +27,7 @@
 - [x] `@supabase/ssr` 연결: 서버/브라우저 클라이언트·미들웨어 세션 갱신·`/auth/callback` (PRD-06) ← 8/18 코드 작성(`lib/supabase/server.ts`·`proxy.ts`(Next 16: middleware→proxy)·`app/auth/callback/route.ts`·`app/auth/actions.ts` 로그인/로그아웃 서버 액션), 브라우저 클라이언트는 쓰는 곳 생길 때. **로컬 왕복 확인 완료(8/18, chrome-devtools: 로그인→@kjjyyy01→로그아웃)** — 배포 URL 확인은 Day 5 게이트
 - [x] **[본인]** env 7종 (PRD-17) — `.env.local` + Vercel Production/Preview ← `.env.example` 작성됨(복사해서 채움, 시크릿은 채팅에 붙이지 말 것) → **8/18 `.env.local` + Vercel Production/Preview 등록 완료(사용자)**. `NEXT_PUBLIC_SITE_URL`은 양쪽 `https://stackd.kr`(로그인은 요청 호스트 사용, 코드에서 아직 미참조). **`NEXT_PUBLIC_GA_ID`는 8/18 세션 2에서 빈 값이 발견돼 `G-G7ZEH4FLWE`로 채움 — `.env.local`·Vercel 양쪽 완료(사용자), 로컬 HTML 주입 실측 확인.** **`ADMIN_USER_IDS`도 8/18 밤 입력 완료(uuid `e6caf467-…`, Supabase `auth.users`에서 확보) → U11 종료. `.env.local` 7종 전부 값 확인(형식 검사 포함), Vercel Production/Preview 등록·프리뷰 반영 확인(사용자).**
 - [x] **[본인 눈]** 헤더 로그인/로그아웃 왕복을 **배포 URL**에서 확인 (Day 5 게이트) ← **8/18 프리뷰 URL(`stackd-git-feat-day4-supabase-…vercel.app`, 커밋 c071882 Redeploy)에서 홈·로그인·로그아웃 전부 확인(사용자 눈) — 게이트 하루 선행.** 프리뷰는 Vercel Deployment Protection(비로그인 302→SSO, 500 아님)으로 소유자만 접근. **main 머지(`ec205e7`, PR 없이 직접) 후 `stackd.kr` 프로덕션에서도 로그인 왕복 정상(사용자 확인 8/18 저녁)** — 로컬·프리뷰·프로덕션 3환경 전부 통과
-- [ ] 카탈로그 수집 → `data/catalog.json` (AI agent 100~200 + 개발 스택 60~80, enum 7종) — 에이전트 작업, 병행 ← 8/18 초안 262개(agent 28·skill 46·plugin 50·mcp 55 / language 15·framework 32·tool 36, 60KB, URL 209/214 실측 200) — **[본인 눈]** 스팟체크(0번 카드가 카탈로그만으로 담기는지) 대기
+- [x] 카탈로그 수집 → `data/catalog.json` (AI agent 100~200 + 개발 스택 60~80, enum 7종) — 에이전트 작업, 병행 ← 8/18 초안 262개(agent 28·skill 46·plugin 50·mcp 55 / language 15·framework 32·tool 36, 60KB, URL 209/214 실측 200). **스팟체크 판정 완료(8/20 본인): 카탈로그만으로는 못 담음 → (b) 직접 입력으로 흡수**. 저장 형태가 `steps[].tool`·`dev_stack[]` 모두 `{name, category}`라 카탈로그 id 참조가 없어(PRD-05) 흡수에 스키마·데이터 변경 0. 카탈로그는 입력 보조 레이어로 확정 — 이후 보강은 EVT-BLDR-001 `method=manual` 비율로 실측 판단. **8/20 보강 1차: 실제 이 저장소 스택 대조로 미수록 4건 추가**(Radix UI·sonner / ESLint·Google Analytics) → 262 → **266개**. **잔여: 스팟체크에서 못 담긴 항목 목록(본인) 확보 후 2차 보강**
 - [x] 제한 유틸 1개 (BR-001·002·004·008·010~016·021 — 길이·개수·필수, 이모지 허용 — 빌더·서버 액션·OG 공용, `tdd`) ← 8/18 `lib/limits.ts` + 테스트 13건(`npm test`, node --test)
 - [x] GA4 초기화 (`NEXT_PUBLIC_GA_ID`, gtag) · sonner · shadcn 재스킨 ← **8/18 세션 2 완료**(브랜치 `feat/day4-ui-base`). `DESIGN.md` 토큰 섹션 확정 → `globals.css` 토큰 구현(dark 블록 제거) → `shadcn init`(radix-nova, 라이트 단일) + button·dialog·textarea·sonner. GA4는 `components/analytics.tsx`(next/script, 측정 ID 없으면 미주입) + `lib/analytics.ts` `track()`(EVT 7종 union 타입) — **EVT-AUTH-001 `login` 발화까지 실측 확인**. ~~⚠️ `NEXT_PUBLIC_GA_ID` 빈 값~~ → **8/18 해소**: `.env.example`의 인라인 주석줄을 그대로 복사해 값이 비어 있었음(dotenv가 주석을 떼고 트림하면 빈 문자열) → 측정 ID `G-G7ZEH4FLWE` 입력, `.env.local`·Vercel Production/Preview 등록 완료(사용자). 재발 방지로 `.env.example`의 인라인 주석을 전부 윗줄로 이동
 - [ ] shadcn 나머지 4종(input·switch·badge·tabs) — 쓰는 화면 생길 때 `npx shadcn add`. 토큰이 CSS 변수라 나중에 붙여도 재스킨 자동 상속 (input=SCR-001 빌더, switch=SCR-003 공개 스위치, badge=SCR-004·007 상태, tabs=사용처 미정 → 없으면 컷)
@@ -35,10 +35,14 @@
 - [x] 공통 레이아웃: 헤더(로고·라이브러리·로그인|내 카드·설정)·푸터(`/privacy` `/terms`·문의 dialog → `submitFeedback` + 웹훅) ← **8/18 세션 2 완료**. `site-header.tsx`(sticky, 로그인 상태별 분기, 설정·@핸들은 `sm:` 이상) · `site-footer.tsx` · `feedback-dialog.tsx`(신고·문의 공용) · `app/actions/feedback.ts`(서버 재검증 → service role insert → Slack 웹훅은 `after()`로 응답 뒤) · `lib/supabase/admin.ts`(`server-only` 가드). **실측: 실패 경로 ERR-FB-001 토스트+dialog 유지·입력 보존 / 성공 경로 DB insert 확인(feedback id 1·2, 테스트 행이라 resolved 처리) / `after()` 도입으로 액션 응답 1658ms → 294ms**
 - [x] 404 페이지 (`app/not-found.tsx`, CPY-COMMON-004 + noindex) ← 위생 항목 선처리 — 푸터·내비가 아직 없는 라우트를 가리키므로 착지가 필요했음
 
+> **PRD v2.1.0 델타 (8/20, make-prd)** — 카탈로그 스팟체크 판정 반영: ①EL-HOME-011 도구 직접 입력 **상시 노출**(기존: 검색 0건일 때만) ②EL-HOME-012 스택 태그에 **직접 입력 추가**(BR-002·ERR-BLDR-002 확장, CPY-HOME-031 신설) ③PRD-17 Redirect URL `**` glob 정정. 부수 정정 2건: EL-HOME-011의 결번 `ERR-BLDR-007` 참조 제거, REQ-HOME-004 AC-2의 "허용 외 문자"(BR-003 재정의로 폐기) 잔재 제거. **status는 Approved 유지**(00 공통규약 §5 — 수정은 make-prd로, 이력은 git 로그)
+>
+> ⚠️ `lib/limits.ts`는 이미 `dev_stack[].name`을 BR-002·ERR-BLDR-002로 검증 중 — **코드가 PRD보다 앞서 있었고 이번 델타로 문서가 따라잡았다.** 서버 측 추가 작업 없음, 빌더 UI만 구현하면 됨
+
 ### SCR-001 홈 `/` (PRD-SCR-001)
 
 - [ ] 히어로 (h1 CPY-HOME-001 · 부제 CPY-HOME-008 · 예시 카드 이미지 priority)
-- [ ] 빌더: 제목·상황·상황 상세 / 단계 목록(도구 카탈로그 검색·선택|직접 입력 + 메모 + 상세, 순서 이동·삭제) / 개발 스택 태그 / 소속·역할(기본값 자동)
+- [ ] 빌더: 제목·상황·상황 상세 / 단계 목록(도구 카탈로그 검색·선택 + **직접 입력 전환 상시 노출** + 메모 + 상세, 순서 이동·삭제) / 개발 스택 태그(**검색·선택 + 직접 입력**) / 소속·역할(기본값 자동) ← PRD v2.1.0 델타(8/20)
 - [ ] 초안 localStorage 저장·복원 배너 + 수정 모드 `?edit=` 로드 (BR-019)
 - [ ] CTA 게이트(제목·상황·단계≥2 각 메모·상세 필수, BR-016) + EVT-BLDR-001
 - [ ] 메타데이터 + 반응형 + 스크린샷·눈 확인

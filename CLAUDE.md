@@ -3,7 +3,7 @@
 # 프로젝트 규칙
 
 > **매 세션 시작 시 `docs/PLAN.md`의 현재 Day 섹션을 확인할 것.** PLAN.md가 3주간 유일한 계획서다. 추가 아이디어는 전부 `backlog.md`로.
-> **PLAN.md 구간별 지정 스킬(make-plan/make-prd/grill-me/sequential-thinking 등)은 작성·수정 모두 필수** — 운용 원칙 4번. 건너뛴 작업은 해당 스킬로 재검증.
+> **PLAN.md 지정 스킬은 변경 규모로 판단**(운용 원칙 4번) — 단순(문구·에러 메시지·단일 값)=직접 편집 / 중간(AC 추가·검증 규칙)=해당 파일만 로드해 ID·제약 확인 / 구조(화면·데이터 모델·API 계약·스코프)=풀 스킬(make-plan·make-prd·grill-me·sequential-thinking)+정합성 검사.
 
 ## 프로젝트 개요
 
@@ -21,6 +21,7 @@
 
 ## Git 전략 (솔로 기준)
 
+- **첫 파일을 건드리기 전에 브랜치부터 만든다** — 코드·문서·설정 전부 예외 없음. `main`에서 편집 시작 금지(커밋 시점이 아니라 **작업 시작 시점** 규칙)
 - 작업 브랜치 → Vercel 프리뷰 배포에서 확인 → main 머지(= 프로덕션 배포)
 - main 직커밋은 핫픽스만
 - 커밋 규칙: Conventional Commits(feat/fix/docs/chore/refactor). 트러블슈팅 해결 커밋 메시지에 원인·해결 한 줄 포함
