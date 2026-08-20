@@ -630,6 +630,13 @@
     "source": "https://github.com/wonderwhy-er/DesktopCommanderMCP"
   },
   {
+    "id": "ecc",
+    "name": "ecc",
+    "category": "plugin",
+    "description": "Harness-native agent operating system — skills, hooks, rules, and MCP conventions across Claude Code, Codex, and Cursor.",
+    "source": "https://github.com/affaan-m/ECC"
+  },
+  {
     "id": "everything-claude-code",
     "name": "everything-claude-code",
     "category": "plugin",
@@ -838,6 +845,13 @@
     "category": "plugin",
     "description": "Jesse Vincent's core skills library for Claude Code: TDD, debugging, planning, subagents.",
     "source": "https://github.com/obra/superpowers"
+  },
+  {
+    "id": "superpowers-ecc",
+    "name": "superpowers-ecc",
+    "category": "plugin",
+    "description": "ECC components packaged for the superpowers plugin workflow.",
+    "source": "https://github.com/aman-2709/superpowers-ecc"
   },
   {
     "id": "terraform-plugin",
@@ -1484,6 +1498,13 @@
     "source": "https://www.prisma.io"
   },
   {
+    "id": "radix-ui",
+    "name": "Radix UI",
+    "category": "framework",
+    "description": "Unstyled, accessible React primitives for design systems.",
+    "source": "https://www.radix-ui.com"
+  },
+  {
     "id": "react",
     "name": "React",
     "category": "framework",
@@ -1510,6 +1531,13 @@
     "category": "framework",
     "description": "Beautifully designed, copy-paste React components built on Radix.",
     "source": "https://ui.shadcn.com"
+  },
+  {
+    "id": "sonner",
+    "name": "sonner",
+    "category": "framework",
+    "description": "Opinionated toast component for React.",
+    "source": "https://sonner.emilkowal.ski"
   },
   {
     "id": "spring-boot",
@@ -1631,6 +1659,13 @@
     "source": "https://www.docker.com"
   },
   {
+    "id": "eslint",
+    "name": "ESLint",
+    "category": "tool",
+    "description": "Pluggable linter for JavaScript and TypeScript.",
+    "source": "https://eslint.org"
+  },
+  {
     "id": "figma",
     "name": "Figma",
     "category": "tool",
@@ -1664,6 +1699,13 @@
     "category": "tool",
     "description": "CI/CD automation built into GitHub.",
     "source": "https://github.com/features/actions"
+  },
+  {
+    "id": "google-analytics",
+    "name": "Google Analytics",
+    "category": "tool",
+    "description": "Web analytics platform (GA4) for traffic and event tracking.",
+    "source": "https://analytics.google.com"
   },
   {
     "id": "gcp",
