@@ -74,23 +74,23 @@
 
 ## Day 0 — 사전 세팅 (반나절, 1회)
 
-- [ ] **시작일 역산**: Day 20(런칭)이 **화~목**이 되도록 Day 0 날짜를 정한다 — 커뮤니티 게시는 평일 오전이 유리하고, 금요일·주말 런칭은 반응 수집의 골든타임을 버리는 것
+- [x] **시작일 역산**: Day 20(런칭)이 **화~목**이 되도록 Day 0 날짜를 정한다 — 커뮤니티 게시는 평일 오전이 유리하고, 금요일·주말 런칭은 반응 수집의 골든타임을 버리는 것
 
-- [ ] ecc 플러그인 disable → 리포에서 code-reviewer 에이전트만 `~/.claude/agents/`로 복사
-- [ ] omc disable, superpowers-ecc disable (superpowers-ecc는 영구 off)
-- [ ] pm-* 8종, sentry, playwright, 미사용 미학 스킬 전부 off
+- [x] ecc 플러그인 disable → 리포에서 code-reviewer 에이전트만 `~/.claude/agents/`로 복사
+- [x] omc disable, superpowers-ecc disable (superpowers-ecc는 영구 off)
+- [x] pm-* 8종, sentry, playwright, 미사용 미학 스킬 전부 off
 - [ ] notion, obsidian: 구현 세션에서는 off — **EOD 기록 세션에서만 활성화** (아래 "기록 시스템" 참조)
-- [ ] claude-mem: 상시 유지 (EOD 기록의 소스)
-- [ ] **실서비스 인프라 확정** (누락 시 Day 4~9가 무너진다):
+- [x] claude-mem: 상시 유지 (EOD 기록의 소스)
+- [x] **실서비스 인프라 확정** (누락 시 Day 4~9가 무너진다):
   - 도메인 **구매 준비만**: 등록업체 선정·가격 확인 (실제 구매는 서비스명이 나오는 **Day 1 종료 직후** — 서비스 미정 상태에서 이름을 먼저 살 수 없다. 구매 즉시 검색 인덱싱 시계 시작)
   - 애널리틱스 툴 선정 및 계정 생성 (권장: GA4 무료 — Day 3 이벤트 스펙을 심을 대상이 미정이면 스펙은 종이 계획일 뿐)
   - 배포 파이프라인: Vercel 연결, main 브랜치 자동 배포 확인 (Day 4부터 매일 배포 가능한 상태)
   - **월 고정비 상한 결정** (예: 3만원/월): 도메인 + DB + 호스팅 합산. **주의 — Vercel Hobby(무료)는 비상업적 용도 제한**이라 실서비스+마케팅이면 Pro(월 $20) 전환 판단이 런칭 시점에 필요하다. 상한 없이 시작하면 과금은 조용히 커진다
-- [ ] **`backlog.md` 생성** — 이 문서 전체가 참조하는 스코프 방어 파일. 섹션: 기능 / 개선 / 컷된 화면 / 발동 조건부 항목(브라우저 확장 등)
-- [ ] **`/setup-matt-pocock-skills` 실행 (레포당 1회)** — 이슈 트래킹 방식·문서 경로를 레포에 설정 (이후 /grill-me, /tdd, /code-review가 이 설정을 참조)
-- [ ] Notion에 "개발 로그" 데이터베이스 생성 (속성: 날짜, 유형[트러블슈팅/과정요약], 태그, 상태)
-- [ ] Obsidian에 `dev-notes/` 폴더 + TIL 템플릿 생성
-- [ ] **필수 문서 5종 작성** (`claude-md-management` 활용 후 off):
+- [x] **`backlog.md` 생성** — 이 문서 전체가 참조하는 스코프 방어 파일. 섹션: 기능 / 개선 / 컷된 화면 / 발동 조건부 항목(브라우저 확장 등)
+- [x] **`/setup-matt-pocock-skills` 실행 (레포당 1회)** — 이슈 트래킹 방식·문서 경로를 레포에 설정 (이후 /grill-me, /tdd, /code-review가 이 설정을 참조)
+- [x] Notion에 "개발 로그" 데이터베이스 생성 (속성: 날짜, 유형[트러블슈팅/과정요약], 태그, 상태)
+- [x] Obsidian에 `dev-notes/` 폴더 + TIL 템플릿 생성
+- [x] **필수 문서 5종 작성** (`claude-md-management` 활용 후 off):
   - `CLAUDE.md` — 프로젝트 규칙: 스택(Next.js/TS/Tailwind/GSAP), 커밋 규칙, **Git 전략(솔로 기준): 작업 브랜치 → Vercel 프리뷰 배포에서 확인 → main 머지(= 프로덕션 배포). main 직커밋은 핫픽스만**, 성능 예산 **LCP 2.5초**, "구현 후 반드시 시각 확인" 규칙, 문서 5종 상호 참조 지시, **보안 기본 규칙: 시크릿은 환경변수로만(.env는 .gitignore), `NEXT_PUBLIC_` 접두사는 공개돼도 되는 값에만, 모든 사용자 입력은 서버 측 검증**, **마크업·렌더링 위생 규칙(고정)**:
     - 모든 콘텐츠(텍스트·헤딩)는 서버 렌더링된 HTML에 존재해야 함 — JS 실행 후에만 나타나는 콘텐츠 금지
     - `"use client"` 최소화 — 애니메이션 래퍼만 클라이언트, 콘텐츠는 서버 컴포넌트 유지
@@ -303,7 +303,7 @@
 
 ## 진행 체크리스트
 
-- [ ] Day 0: **시작일 역산(Day 20 = 화~목)** + 세팅 완료 (플러그인 정리 + **문서 5종** + **backlog.md** + **GA4/배포 파이프라인/비용 상한** + 도메인 구매 준비 + `/setup-matt-pocock-skills` + Notion DB + Obsidian 폴더)
+- [x] Day 0: **시작일 역산(Day 20 = 화~목)** + 세팅 완료 (플러그인 정리 + **문서 5종** + **backlog.md** + **GA4/배포 파이프라인/비용 상한** + 도메인 구매 준비 + `/setup-matt-pocock-skills` + Notion DB + Obsidian 폴더) ← **전 항목 완료 검증 (8/20): 문서 5종·backlog.md·docs/agents 3종 파일 존재, Notion `개발 로그:stackd` DB·Obsidian `dev-notes/` 확인. 82행(notion·obsidian 세션 off)은 상시 운용 규칙이라 미체크 유지**
 - [ ] 매일: EOD 기록 블록 (트러블슈팅은 당일 필수, 나머지는 격일 허용) / TODO.md 갱신
 - [ ] 수시: 반복 패턴 3회 발견 시 skill-creator로 스킬화
 - [x] Day 1: **언어·시장 결정** + 가설 1개 + **킬 크라이테리아 3줄** + **중점 축 + 우선 원칙 1줄** (+ 애니메이션 축이면 레퍼런스 1~2개) + **유입 전략 판정** (검색이 주요 채널이면 키워드 3~5개) → `/grill-me` 통과 → **서비스명 확정 + 도메인 구매** ← 3차 확정 **Stackd** (`docs/day1-decisions.md` — 2회 번복 기록 포함. stackd.kr 구매는 **Day 2 기획서 확정 직후**로 결정 — 가비아, 검색 경량화 판정으로 지연 리스크 낮음)
