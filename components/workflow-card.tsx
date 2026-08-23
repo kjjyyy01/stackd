@@ -33,6 +33,7 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
 
   return (
     <article
+      aria-label={`${title} — 워크플로우 카드`}
       className={`flex w-[560px] flex-col overflow-hidden rounded-xl p-6 aspect-[4/5] ${className}`}
       style={{ background: SURFACE, color: INK, border: `1px solid ${HAIRLINE}` }}
     >
