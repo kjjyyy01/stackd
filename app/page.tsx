@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import heroCard from "@/public/hero-card.png";
+import WorkflowBuilder from "@/components/workflow-builder";
+import { createClient } from "@/lib/supabase/server";
 
 // SCR-001 홈 메타 — 제목·설명은 PRD-04 표 그대로 (layout의 template를 쓰지 않고 절대 제목)
 export const metadata: Metadata = {
@@ -9,8 +11,13 @@ export const metadata: Metadata = {
   openGraph: { title: "Stackd — 내 AI 워크플로우 카드 만들기", url: "/", images: [{ url: "/hero-card.png", width: 1120, height: 1400 }] },
 };
 
-// SCR-001 홈 — 히어로(EL-HOME-002·003). 빌더(EL-HOME-005~)는 다음 단계
-export default function Home() {
+// SCR-001 홈 — 히어로(EL-HOME-002·003) + 빌더(EL-HOME-004~014). 수정 모드(?edit=)는 SCR-003 저장 이후
+export default async function Home() {
+  // 로그인 사용자의 소속 기본값 — 없거나 실패하면 빈 값 (REQ-HOME-004 AC-3)
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getClaims();
+  const roleDefault = (data?.claims.user_metadata?.role_default as string | undefined) ?? "";
+
   return (
     <main className="flex-1">
       {/* 히어로: 모바일 1열(텍스트 → 이미지), md+ 2열 (PRD-SCR-001 §16) */}
@@ -27,12 +34,14 @@ export default function Home() {
         {/* 0번 카드 — LCP 후보라 priority. 고정 4:5라 CLS 없음 (EL-HOME-003) */}
         <Image
           src={heroCard}
-          alt="예시 워크플로우 카드 — 클로드 코드와 서브에이전트로 3주 만에 서비스 출시하기: superpowers부터 Notion·Obsidian까지 8단계"
+          alt="Stackd 워크플로우 카드 예시 — 상황, 단계별 도구, 개발 스택이 담긴 카드"
           priority
           sizes="(min-width: 768px) 50vw, 100vw"
           className="mx-auto w-full max-w-[560px] rounded-xl border border-border md:mx-0 md:ml-auto"
         />
       </section>
+
+      <WorkflowBuilder roleDefault={roleDefault} />
     </main>
   );
 }
