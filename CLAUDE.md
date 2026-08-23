@@ -52,9 +52,9 @@
 ## 프로젝트 트리
 
 - `app/` 라우터(src 없음) · `app/auth/`(callback·로그인 서버 액션) · `app/actions/`(서버 액션) · `app/not-found.tsx`
-- `components/`(site-header·site-footer·feedback-dialog·analytics·login-event) · `components/ui/`(shadcn)
-- `lib/supabase/`(server·admin) · `lib/limits.ts`(BR 제한 유틸+테스트) · `lib/analytics.ts`(GA4 track, EVT 7종) · `lib/utils.ts`(cn)
-- `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `.env.example`
+- `components/`(site-header·site-footer·feedback-dialog·analytics·login-event · **workflow-card**(4화면 공용 카드, 560×700 고정) · **workflow-builder**·**tool-picker**(SCR-001)) · `components/ui/`(shadcn)
+- `lib/supabase/`(server·admin) · `lib/limits.ts`(BR 제한 유틸+테스트) · `lib/draft.ts`(초안 localStorage+테스트) · `lib/hero-card.ts`(0번 카드 데이터) · `lib/analytics.ts`(GA4 track, EVT 7종) · `lib/utils.ts`(cn)
+- `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `public/hero-card.png`(히어로 2x) · `.env.example`
 - 테스트: `npm test` (`node --test`, 도메인 로직만)
 
 ## Agent skills
