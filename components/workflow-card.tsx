@@ -21,8 +21,8 @@ type Props = {
   showDetailHint?: boolean; // 상세 유도 문구 — SCR-004에서만 false (이미 상세에 도착함)
 };
 
-// 카드 고정 조판 (OQ-006 판정 2026-08-23): 560×700 = 4:5 세로형.
-// 유동 폭은 불가 — 폭이 줄면 박스만 비율대로 줄고 내부 텍스트는 안 줄어 넘친다.
+// 카드 고정 조판 — SSOT는 DESIGN.md §카드 조판 (이 상수는 그 사본이다).
+// 값을 바꾸려면 DESIGN.md를 먼저 고친다. 유동 폭은 불가(근거도 그 문서에).
 export const CARD_W = 560;
 export const CARD_H = 700;
 
