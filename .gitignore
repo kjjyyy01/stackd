@@ -46,3 +46,4 @@ next-env.d.ts
 
 # grill 문답 원문 (로컬 전용 — 공개 레포 제외)
 /docs/grill-log.md
+.proto-shots/
