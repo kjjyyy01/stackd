@@ -56,6 +56,8 @@
 - [x] 메타데이터 + 반응형 + 스크린샷 ← 8/23 title 절대형·canonical·OG(PRD-04), 390 1열+하단 sticky CTA 44px / 1440 2열, 가로 오버플로 0. **[본인 눈] 확인 완료(8/23)** → **SCR-001 정적 완성 ✅** (잔여: 수정 모드 `?edit=` — SCR-003 이후)
 
 > **Day 7 메모 (8/24)** — 홈 개편 시안 동결(아티팩트가 SSOT) → **Day 8(8/25) 캐러셀 이식 확정**(구조 변경 등급: make-prd 풀 스킬 + 미결 6건, 상세는 메모리 `day8-hero-carousel-port`). 위 정적 완성 상태는 **구 레이아웃 기준** — 이식 후 스크린샷·본인 눈 재확인. 미커밋 A안·B안(`app/page.tsx` +19줄)은 Day 8 새 브랜치 생성 때 처리 방향 확인
+>
+> **Day 8 메모 (8/25)** — 캐러셀 이식 **구현 완료**(브랜치 `feat/day8-hero-carousel`, A/B안 폐기 — 사용자 판정). ①make-prd: SCR-001 **v3.0.0** + 카피사전 v2.3.0(CPY 26건) + OQ-013 + DESIGN.md §홈 캐러셀 조판, 미결 6건 전부 판정(사용자 확정), 정합성 9항목 통과 ②구현: 신규 3(home-carousel·draft-banner·back-to-top) + 수정 3(page·builder·globals), 카드 4곳 서버 렌더 ③반응형 실측 조정: 모바일 한 화면 수렴·md 타이포 축소·화살표 xl+·쇼케이스 모바일 블리드 제거(0.58)·CTA aria-disabled 시각 비활성·가로 오버플로 근본 해결(scale 슬롯 overflow-hidden) ④build·lint·test 21/21 ✓, 스크린샷 390/768/1440 통과. **잔여: 본인 눈 최종 확인 → 커밋, 체크포인트 판정(E)은 EOD**
 
 ### SCR-003 카드 `/card` (PRD-SCR-003)
 

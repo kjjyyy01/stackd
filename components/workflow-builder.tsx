@@ -6,8 +6,9 @@ import ToolPicker from "@/components/tool-picker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
-import { EMPTY_DRAFT, clearDraft, isDraftEmpty, loadDraft, saveDraft, type Draft } from "@/lib/draft";
+import { EMPTY_DRAFT, isDraftEmpty, loadDraft, saveDraft, type Draft } from "@/lib/draft";
 import { CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow } from "@/lib/limits";
 
 type Step = Draft["steps"][number];
@@ -25,27 +26,32 @@ function Counter({ n, max, over }: { n: number; max: number; over?: boolean }) {
 // SCR-001 빌더 — 상태는 여기 한 곳, 변경마다 초안 저장 (BR-019). 서버 쓰기 없음
 export default function WorkflowBuilder({ roleDefault = "" }: Props) {
   const [d, setD] = useState<Draft>({ ...EMPTY_DRAFT, role: roleDefault });
-  const [pending, setPending] = useState<Draft | null>(null); // 복원 배너용 (EL-HOME-004)
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [over, setOver] = useState<string | null>(null); // 직전 입력이 상한에 막힌 필드
   const [picking, setPicking] = useState(false); // 단계 도구 선택기 열림
   const [ctaTried, setCtaTried] = useState(false);
   const hydrated = useRef(false);
+  const pending = useRef<Draft | null>(null); // 배너(전역) 응답 대기 중인 초안
 
-  // 진입 시 초안 확인 — hydration 후에만 (서버 HTML은 빈 빌더, PRD §13). useState 초기화로 읽으면 hydration mismatch
+  // 진입 시 초안 확인 + 배너(DraftBanner) 신호 수신 — 배너 UI는 전역 위치가 소유 (EL-HOME-004)
   useEffect(() => {
     const saved = loadDraft();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
-    if (saved && !isDraftEmpty(saved)) setPending(saved);
+    if (saved && !isDraftEmpty(saved)) pending.current = saved;
     hydrated.current = true;
+    const onDraft = (e: Event) => {
+      if ((e as CustomEvent).detail === "restore" && pending.current) setD(pending.current);
+      pending.current = null; // discard든 restore든 저장 보류 해제
+    };
+    window.addEventListener(DRAFT_EVENT, onDraft);
+    return () => window.removeEventListener(DRAFT_EVENT, onDraft);
   }, []);
 
   // 상태 변경마다 저장 — 단, 빈 빌더를 덮어써서 배너 대상 초안을 지우면 안 된다
   useEffect(() => {
-    if (!hydrated.current || pending) return;
+    if (!hydrated.current || pending.current) return;
     if (isDraftEmpty(d)) return;
     saveDraft(d);
-  }, [d, pending]);
+  }, [d]);
 
   const gateOk = validateWorkflow(d).ok; // BR-016 = 전체 검증 통과 (서버 재검증과 같은 함수)
   // 인라인 에러는 필드별로 — 첫 위반만 돌려주는 검증 결과에 기대면 둘 다 비었을 때 하나만 보인다
@@ -90,17 +96,8 @@ export default function WorkflowBuilder({ roleDefault = "" }: Props) {
   const stepIncomplete = (s: Step) => !s.note.trim() || !s.detail.trim();
 
   return (
-    <section id="builder" className="container-page py-16 sm:py-24">
-      {/* 초안 복원 배너 (EL-HOME-004) */}
-      {pending && (
-        <div role="status" className="mb-8 flex flex-wrap items-center gap-3 rounded-lg border border-border bg-card p-4">
-          <p className="flex-1 text-sm">작성하던 워크플로우가 있어요 — 이어서 쓸까요?</p>
-          <Button type="button" onClick={() => { setD(pending); setPending(null); }}>이어서 쓰기</Button>
-          <Button type="button" variant="outline" onClick={() => { clearDraft(); setPending(null); }}>새로 시작</Button>
-        </div>
-      )}
-
-      <form className="grid max-w-2xl gap-10" onSubmit={(e) => e.preventDefault()} noValidate>
+    <div className="container-page">
+      <form className="mt-10 grid max-w-2xl gap-10" onSubmit={(e) => e.preventDefault()} noValidate>
         {/* 기본 정보 (EL-HOME-005~007) */}
         <fieldset className="grid gap-6">
           <legend className="sr-only">기본 정보</legend>
@@ -228,6 +225,6 @@ export default function WorkflowBuilder({ roleDefault = "" }: Props) {
           </div>
         </div>
       </form>
-    </section>
+    </div>
   );
 }

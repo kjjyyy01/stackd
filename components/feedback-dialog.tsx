@@ -71,7 +71,8 @@ export default function FeedbackDialog({
               required
               minLength={LIMITS.feedback_body.min}
               maxLength={LIMITS.feedback_body.max}
-              rows={5}
+              // field-sizing-content라 rows 무시 — min-h로 높이 확보 (모바일 입력창 협소 8/25)
+              className="min-h-40"
               placeholder="내용을 1~500자로 적어주세요" // CPY-COMMON-009
             />
           </div>

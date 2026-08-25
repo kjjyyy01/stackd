@@ -46,9 +46,19 @@
   --radius-3xl: calc(var(--radius) * 2.2);
 }
 
+/* 캐러셀 트랙 — 스크롤바 숨김 (스냅 슬라이드라 바가 소음) */
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
 /* 토큰 SSOT = DESIGN.md §컬러 토큰. 값 변경은 그 문서를 먼저 고칠 것 */
 :root {
   --radius: 0.5rem;
+
+  /* 홈 캐러셀 장면 지면 (DESIGN.md §홈 캐러셀 조판) */
+  --chat-bg: #bacee0;
+  --chat-me: #fee500;
 
   --background: oklch(0.985 0.002 265);
   --foreground: oklch(0.19 0.012 265);
@@ -80,6 +90,8 @@
   }
   html {
     @apply font-sans;
+    /* 앵커(#builder)·FAB 스크롤 — reduced-motion 블록이 auto로 되돌린다 */
+    scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground;
