@@ -57,7 +57,9 @@
 
 > **Day 7 메모 (8/24)** — 홈 개편 시안 동결(아티팩트가 SSOT) → **Day 8(8/25) 캐러셀 이식 확정**(구조 변경 등급: make-prd 풀 스킬 + 미결 6건, 상세는 메모리 `day8-hero-carousel-port`). 위 정적 완성 상태는 **구 레이아웃 기준** — 이식 후 스크린샷·본인 눈 재확인. 미커밋 A안·B안(`app/page.tsx` +19줄)은 Day 8 새 브랜치 생성 때 처리 방향 확인
 >
-> **Day 8 메모 (8/25)** — 캐러셀 이식 **구현 완료**(브랜치 `feat/day8-hero-carousel`, A/B안 폐기 — 사용자 판정). ①make-prd: SCR-001 **v3.0.0** + 카피사전 v2.3.0(CPY 26건) + OQ-013 + DESIGN.md §홈 캐러셀 조판, 미결 6건 전부 판정(사용자 확정), 정합성 9항목 통과 ②구현: 신규 3(home-carousel·draft-banner·back-to-top) + 수정 3(page·builder·globals), 카드 4곳 서버 렌더 ③반응형 실측 조정: 모바일 한 화면 수렴·md 타이포 축소·화살표 xl+·쇼케이스 모바일 블리드 제거(0.58)·CTA aria-disabled 시각 비활성·가로 오버플로 근본 해결(scale 슬롯 overflow-hidden) ④build·lint·test 21/21 ✓, 스크린샷 390/768/1440 통과. **잔여: 본인 눈 최종 확인 → 커밋, 체크포인트 판정(E)은 EOD**
+> **Day 8 메모 (8/25)** — 캐러셀 이식 **구현 완료**(브랜치 `feat/day8-hero-carousel`, A/B안 폐기 — 사용자 판정). ①make-prd: SCR-001 **v3.0.0** + 카피사전 v2.3.0(CPY 26건) + OQ-013 + DESIGN.md §홈 캐러셀 조판, 미결 6건 전부 판정(사용자 확정), 정합성 9항목 통과 ②구현: 신규 3(home-carousel·draft-banner·back-to-top) + 수정 3(page·builder·globals), 카드 4곳 서버 렌더 ③반응형 실측 조정: 모바일 한 화면 수렴·md 타이포 축소·화살표 xl+·쇼케이스 모바일 블리드 제거(0.58)·CTA aria-disabled 시각 비활성·가로 오버플로 근본 해결(scale 슬롯 overflow-hidden) ④build·lint·test 21/21 ✓, 스크린샷 390/768/1440 통과. **눈 확인 3라운드 승인 → 커밋 `0114ee9` push 완료(8/25)**. EOD 체크포인트 산정: 완료율 12.5% < 기준선 18.3% **미달(−5.8%p, Day 7 사전 인지 리스크 실현)** → **판정(사용자): 지렛대 유보, Day 9 만회 + Day 11 게이트 재판정**. main 머지는 프리뷰 눈 확인 후
+>
+> **Day 9 계획 (8/26, 타이트 진행 — 사용자 선언)** — 선행: 프리뷰 눈 확인 → `feat/day8-hero-carousel` main 머지(Day 9 브랜치가 캐러셀 위에서 시작해야 함). ①**SCR-003 저장 플로우**(공개 스위치·저장 버튼 로그인 게이트→OAuth 왕복→자동 저장·`saveWorkflow` 서버 액션 BR-023·EVT-CARD-001/002/003·메타 noindex·반응형) — 완료 시 SCR-001 잔여 `?edit=` 언블록 ②**SCR-004 상세**(서버 조회·404 BR-006·`generateMetadata`+`/api/og` ImageResponse·PNG 저장 OQ-002·링크 복사·EVT-SHARE·신고 dialog·소유자 액션·hidden 블러) ③여력 시 원래 Day 9분: SCR-005 법적(1시간 컷) 또는 SCR-006 갤러리 착수
 
 ### SCR-003 카드 `/card` (PRD-SCR-003)
 
