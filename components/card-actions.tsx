@@ -24,6 +24,40 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
   const router = useRouter();
   const [confirming, setConfirming] = useState(false);
   const [pending, startTransition] = useTransition();
+  const [saving, setSaving] = useState(false);
+
+  // REQ-WF-002 PNG 저장 — 화면의 세로 카드(560×700) DOM을 그대로 이미지로.
+  // /api/og(가로 1200×630)는 용도가 달라 재사용하지 않는다 (OQ-008 해소)
+  async function savePng() {
+    const node = document.getElementById("wf-card");
+    if (!node) return;
+    setSaving(true);
+    // SCR-004는 유도 문구를 화면에서만 감춘다 — PNG엔 들어가야 한다 (EL-CARD-009 · TC-CARD-001-03)
+    const hint = node.querySelector<HTMLElement>("[data-detail-hint]");
+    const wasHidden = hint?.classList.contains("hidden") ?? false;
+    if (wasHidden) hint?.classList.remove("hidden");
+    try {
+      // 클릭 시점에만 로드 — 초기 번들에 넣지 않는다 (LCP 예산)
+      const { toBlob } = await import("html-to-image");
+      // 부모의 scale은 클론에 안 따라오므로 항상 원본 560×700으로 그려진다
+      const blob = await toBlob(node, { pixelRatio: 2, backgroundColor: "#ffffff" });
+      if (!blob) throw new Error("blob 생성 실패");
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `stackd-${id}.png`;
+      a.click();
+      URL.revokeObjectURL(url);
+
+      track(isOwner ? "card_share" : "card_reshare", { share_method: "png_download", workflow_id: id });
+    } catch {
+      toast.error("이미지 저장에 실패했어요 — 다시 시도해주세요"); // CPY-WF-005 · ERR-SHARE-002
+    } finally {
+      if (wasHidden) hint?.classList.add("hidden");
+      setSaving(false);
+    }
+  }
 
   async function copyLink() {
     const url = `${location.origin}/card-detail/${id}`;
@@ -63,9 +97,14 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
 
   return (
     <div className="mt-6">
-      <Button variant="outline" onClick={copyLink} className="h-11 px-6">
-        링크 복사
-      </Button>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="outline" onClick={copyLink} className="h-11 px-6">
+          링크 복사
+        </Button>
+        <Button variant="outline" onClick={savePng} disabled={saving} className="h-11 px-6">
+          {saving ? "저장 중…" : "PNG 저장"}
+        </Button>
+      </div>
 
       {isOwner && (
         <div className="mt-6 border-t border-border pt-6">

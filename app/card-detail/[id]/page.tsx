@@ -96,7 +96,7 @@ export default async function CardDetailPage({ params }: Params) {
         <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
           <div className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
             <div className="origin-top-left [transform:scale(var(--s))]">
-              <WorkflowCard workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" />
+              <WorkflowCard id="wf-card" workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" />
             </div>
           </div>
         </div>

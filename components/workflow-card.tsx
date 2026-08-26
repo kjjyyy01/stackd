@@ -18,8 +18,9 @@ type Props = {
   workflow: CardData;
   handle?: string; // 세션 GitHub 핸들 (BR-025), 없으면 placeholder
   className?: string; // 바깥에서 scale로 축소할 때만 사용 — 폭·비율은 카드가 갖는다
-  showDetailHint?: boolean; // 상세 유도 문구 — SCR-004에서만 false (이미 상세에 도착함)
+  showDetailHint?: boolean; // 상세 유도 문구 — SCR-004만 false(화면에서만 감춤, PNG엔 포함)
   titleAs?: "h1" | "h2"; // 상세에서만 h1 — 카드 제목이 페이지 유일 헤딩 (EL-WF-001)
+  id?: string; // PNG 저장이 캡처할 DOM을 지목할 때만 (SCR-004 REQ-WF-002)
 };
 
 // 카드 고정 조판 — SSOT는 DESIGN.md §카드 조판 (이 상수는 그 사본이다).
@@ -28,12 +29,13 @@ export const CARD_W = 560;
 export const CARD_H = 700;
 
 // 공용 워크플로우 카드 (EL-CARD-002~008) — SCR-003·004·006·007 공용
-export default function WorkflowCard({ workflow, handle, className = "", showDetailHint = true, titleAs: Title = "h2" }: Props) {
+export default function WorkflowCard({ workflow, handle, className = "", showDetailHint = true, titleAs: Title = "h2", id }: Props) {
   const { title, situation_short, steps, dev_stack, role } = workflow;
   const accent = ACCENTS[workflow.accent] ?? INK;
 
   return (
     <article
+      id={id}
       aria-label={`${title} — 워크플로우 카드`}
       className={`flex w-[560px] flex-col overflow-hidden rounded-xl p-6 aspect-[4/5] ${className}`}
       style={{ background: SURFACE, color: INK, border: `1px solid ${HAIRLINE}` }}
@@ -108,11 +110,14 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
         <span className="font-mono text-xs" style={{ color: MUTED }}>
           stackd.kr
         </span>
-        {showDetailHint && (
-          <span className="text-xs leading-none" style={{ color: accent }}>
-            단계별 설명 보기 →
-          </span>
-        )}
+        {/* SCR-004는 화면에서만 감춘다 — PNG는 이 문구를 포함해야 한다 (TC-CARD-001-03) */}
+        <span
+          data-detail-hint
+          className={`text-xs leading-none${showDetailHint ? "" : " hidden"}`}
+          style={{ color: accent }}
+        >
+          단계별 설명 보기 →
+        </span>
       </footer>
     </article>
   );
