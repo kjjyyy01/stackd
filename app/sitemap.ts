@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
+import { SITE_URL as BASE } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
-
-const BASE = "https://stackd.kr";
 
 // 정적 4개 + 공개·!hidden 상세 동적 (PRD-04 §사이트맵)
 // hidden은 RLS를 통과하므로 앱에서 걸러야 한다 (schema.sql "public read" 주석)
