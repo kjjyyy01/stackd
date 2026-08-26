@@ -38,15 +38,17 @@ const SLIDE_VIZ =
   "flex flex-wrap items-center justify-center gap-6 justify-self-center md:justify-self-end lg:flex-nowrap";
 
 // 슬라이드 2 배경 도구명 텍스처 — 장면 데이터 (카피 아님)
+// 위치가 % 기준이라 1열(md 미만)에서는 상단 4개가 본문 위를 지난다 — 실측 겹침 495~17433px²
+// → md 미만에서 숨긴다(`hidden md:block`). 하단 4개는 전 폭에서 겹침 0이라 그대로 둔다
 const WORDFIELD: Array<[string, string]> = [
-  ["chrome-devtools", "left-[4%] top-[12%] text-3xl -rotate-6"],
-  ["sequential-thinking", "left-[62%] top-[8%] text-[1.375rem] rotate-[4deg]"],
+  ["chrome-devtools", "left-[4%] top-[12%] text-3xl -rotate-6 hidden md:block"],
+  ["sequential-thinking", "left-[62%] top-[8%] text-[1.375rem] rotate-[4deg] hidden md:block"],
   ["ponytail", "left-[78%] top-[38%] text-[2rem] -rotate-3"],
   ["claude-mem", "left-[8%] top-[74%] text-2xl rotate-[5deg]"],
   ["make-prd", "left-[40%] top-[88%] text-[1.6875rem] -rotate-[4deg]"],
   ["superpowers", "left-[68%] top-[78%] text-xl rotate-6"],
-  ["context7", "left-[30%] top-[4%] text-xl rotate-3"],
-  ["GSAP", "left-[88%] top-[14%] text-[1.1875rem] -rotate-[5deg]"],
+  ["context7", "left-[30%] top-[4%] text-xl rotate-3 hidden md:block"],
+  ["GSAP", "left-[88%] top-[14%] text-[1.1875rem] -rotate-[5deg] hidden md:block"],
 ];
 
 // SCR-001 홈 v3 — 캐러셀 히어로 + 쇼케이스 + 과정 레일 + 빌더 (Day 8 시안 이식)
@@ -106,7 +108,7 @@ export default async function Home() {
           <article className={`${SLIDE} bg-background`}>
             <div aria-hidden className="absolute inset-0">
               {WORDFIELD.map(([name, pos]) => (
-                <span key={name} className={`absolute whitespace-nowrap font-mono text-muted-foreground opacity-[0.14] ${pos}`}>
+                <span key={name} className={`absolute whitespace-nowrap font-mono text-muted-foreground opacity-[0.07] md:opacity-[0.14] ${pos}`}>
                   {name}
                 </span>
               ))}
