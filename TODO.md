@@ -70,16 +70,16 @@
 - [x] ~~⚠️ SCR-003 델타 필요~~ → **완료 (8/23, make-prd + 정합성 검사)**: `EL-CARD-009`를 **카드 조판 안 정적 유도 문구**로 재정의(버튼 아님, PNG 포함, SCR-004만 미노출). 조판 안 문구가 기존 유도 버튼을 흡수해 **요소 2→1**. 대가: PNG에 눌리지 않는 화살표 포함(사용자가 알고 선택). 판정 근거·버린 대안 3건은 `21_미해결질문.md` OQ-010 행에 기록
   - 수정 문서 7종 v2.2.0: `SCR-003`·`SCR-004`·`SCR-006`·`11_UX카피사전`·`21_미해결질문`·`08_도메인규칙`·`DESIGN.md` (status는 전부 Approved 유지)
   - 정합성 검사 9항목 통과. **검사가 잡은 3건**: ①미정의 ID `EL-CARD-015` 참조 제거 ②치수 값 복제 → `DESIGN.md §카드 조판`으로 단일화(00_공통규약 20행이 DESIGN.md를 디자인 SSOT로 위임 중) ③`TC-CARD-005-01`이 이름과 다른 걸 검증하고 있어 **REQ-CARD-005(P0·H-01)가 처음부터 미검증**이었음이 드러남 → TC 3건 신설(`005-01` `card_preview` 중복 미발화 / `005-02` 단계<2 미발화 / `001-04` 상한 회귀: 단계8·메모60·태그4에서 560×700 유지·잘림 0)
-- [ ] 공개/비공개 스위치 · 저장 버튼(로그인 게이트 → OAuth 왕복 → 자동 저장) · `saveWorkflow` 서버 액션 (id 생성 BR-023·서버 검증)
-- [ ] EVT-CARD-002 `card_preview`(진입) · 저장 성공 → EVT-CARD-001 `card_create`(H-01)/003 `card_edit` → `/card-detail/{id}`
-- [ ] 메타데이터(noindex) + 반응형 + 확인
+- [x] 공개/비공개 스위치 · 저장 버튼(로그인 게이트 → OAuth 왕복 → 자동 저장) · `saveWorkflow` 서버 액션 (id 생성 BR-023·서버 검증) ← **8/26** `app/actions/workflow.ts`(getClaims 세션 → `validateWorkflow` 재검증 BR-007 → editId면 소유자 update / 아니면 id 생성 insert, 충돌 3회 재시도, 작성자 GitHub 스냅샷 BR-025) + `app/card/page.tsx`(서버, h1·noindex) + `components/card-preview.tsx`(초안 복원·리다이렉트·스위치·게이트·자동 저장). 팔레트 밖 accent는 서버가 기본값 대체 — `ACCENTS`를 `workflow-card.tsx`에서 export해 단일 원본 유지
+- [x] EVT-CARD-002 `card_preview`(진입) · 저장 성공 → EVT-CARD-001 `card_create`(H-01)/003 `card_edit` → `/card-detail/{id}` ← **8/26 실측**: 진입 시 `card_preview {step_count:2}` 1회 발화, `?save=1` 복귀 로드에서는 **미발화**(중복 방지, REQ-CARD-005 AC-1) 확인
+- [x] 메타데이터(noindex) + 반응형 ← **8/26** 서버 HTML에 h1·`카드 만들기 | Stackd`·`noindex, nofollow` 존재(JS 없이 확인). 실측 390/768/1440 전부 가로 오버플로 0, 카드 scale 0.58/0.78/1.0 = 325/437/560px, 좌측 축 16/24px 컨테이너 일치. **터치 타깃 위반 1건 수정**: 저장 CTA 32px → `h-11`(44px), 복귀 링크 25px → `py-2.5`(45px) — DESIGN.md:144·SCR-003 §15 기준. ⚠️ **[본인 눈] 확인 + 실제 OAuth 저장 왕복 미완**
 
 ### SCR-004 상세 `/card-detail/{id}` (PRD-SCR-004)
 
-- [ ] 서버 컴포넌트 조회·404 규칙(BR-006) · 카드 + 상황 상세 + 단계별 설명 + 작성자
-- [ ] `generateMetadata` 동적 title/OG + `/api/og?id=&v=` ImageResponse (폴백·캐시·한글 폰트 + 이모지 옵션 OQ-003, hidden=false 필터, 가로 별도 구성 OQ-012)
-- [ ] PNG 저장(클라이언트 렌더, OQ-002) · 링크 복사 · EVT-SHARE-001(소유자, H-02)/002(타인) · CTA(utm_source=card&utm_medium=share)
-- [ ] 신고 dialog(`submitFeedback` report) · 소유자 액션(수정·삭제·공개 전환) · 비공개 배지 · **hidden = 타인에게 블러 플레이스홀더 + 사유(내용 HTML 미포함)**
+- [x] 서버 컴포넌트 조회·404 규칙(BR-006) · 카드 + 상황 상세 + 단계별 설명 + 작성자 ← **8/26** `app/card-detail/[id]/page.tsx`. 조회는 `cache()`로 감싸 `generateMetadata`+본문 2회 호출을 DB 1회로. 실측 404: 형식 위반(`zzzz`·대문자)은 조회 없이, 없는 id도 동일하게 404(존재 비노출). 카드 제목이 페이지 유일 h1 — `WorkflowCard`에 `titleAs` prop 신설(EL-WF-001)
+- [~] `generateMetadata` 동적 title/OG ← **8/26 부분**: 동적 title(`{title} — @{handle}`)·description(`{situation_short} · N단계`)·canonical·robots 완료, 비공개·hidden은 noindex + 정적 OG 폴백(BR-017·018). / [ ] **`/api/og?id=&v=` ImageResponse — OQ-003(폰트 서브셋)·OQ-012(가로 구성) 판정 대기(본인)**
+- [x] 링크 복사 · EVT-SHARE-001(소유자, H-02)/002(타인) · CTA(utm_source=card&utm_medium=share) ← **8/26** `components/card-actions.tsx`(클립보드 실패 시 ERR-SHARE-003 폴백으로 URL 노출). / [ ] **PNG 저장 — OQ-002 라이브러리 선정 대기(본인)**
+- [x] 신고 dialog(`submitFeedback` report) · 소유자 액션(수정·삭제·공개 전환) · 비공개 배지 · **hidden = 타인에게 블러 플레이스홀더 + 사유(내용 HTML 미포함)** ← **8/26** 신고는 기존 `feedback-dialog.tsx` 재사용(`type="report"`+`workflowId` 이미 지원 — 신규 컴포넌트 0). 서버 액션 `deleteWorkflow`·`togglePublic` 추가(둘 다 `user_id` 조건 2차 확인 BR-024, 토글은 `hidden=false` 조건으로 BR-018 차단). hidden 블러는 카드 DOM 자체를 렌더하지 않고 빈 플레이스홀더 + 사유만
 - [ ] 카톡/X 미리보기 육안 확인 · 비공개 타인 404 확인
 
 ### SCR-006 라이브러리 `/workflows` (PRD-SCR-006 — 컷 1순위)
