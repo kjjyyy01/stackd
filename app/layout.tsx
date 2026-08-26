@@ -44,7 +44,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className={`${plexKr.variable} ${plexMono.variable} h-full`}>
-      <body className="flex min-h-full flex-col">
+      {/* 확장 프로그램이 body에 속성 주입 — 경고만 억제 */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <SiteHeader />
         {children}
         <SiteFooter />
