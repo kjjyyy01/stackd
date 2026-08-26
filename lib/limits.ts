@@ -12,6 +12,7 @@ export const LIMITS = {
   dev_stack: { min: 0, max: 4 }, // BR-015
   role: { min: 0, max: 20 }, // BR-008
   feedback_body: { min: 1, max: 500 }, // BR-021
+  hidden_reason: { min: 1, max: 200 }, // BR-018
 } as const;
 
 // 카테고리 enum 7종 (BR-004) — dev_stack은 앞 3종만
@@ -109,4 +110,10 @@ export function validateWorkflow(input: unknown): Result<WorkflowInput> {
 export function validateFeedbackBody(body: unknown): Result<string> {
   const t = str(body, LIMITS.feedback_body);
   return t === null ? fail("ERR-FB-001", "body") : { ok: true, value: t };
+}
+
+// 숨김 사유 검증 (BR-018) — hidden=true일 때 필수, 상세 페이지에 모두에게 표시된다
+export function validateHiddenReason(reason: unknown): Result<string> {
+  const t = str(reason, LIMITS.hidden_reason);
+  return t === null ? fail("ERR-ADMIN-002", "reason") : { ok: true, value: t };
 }
