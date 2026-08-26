@@ -54,6 +54,7 @@
 - [ ] 수정 모드 `?edit=` 로드 (REQ-HOME-006) — **SCR-003 저장 이후**(저장된 행이 없어 검증 불가). 빌더에 `initial` prop 자리만. `/card`→`/` 뒤로가기 "배너 없이 즉시 복원"도 SCR-003이 플래그를 세워야 해서 같이
 - [x] CTA 게이트(제목·상황·단계≥2 각 메모·상세 필수, BR-016) + EVT-BLDR-001 ← 8/23 (위 빌더에 포함)
 - [x] 메타데이터 + 반응형 + 스크린샷 ← 8/23 title 절대형·canonical·OG(PRD-04), 390 1열+하단 sticky CTA 44px / 1440 2열, 가로 오버플로 0. **[본인 눈] 확인 완료(8/23)** → **SCR-001 정적 완성 ✅** (잔여: 수정 모드 `?edit=` — SCR-003 이후)
+- [ ] **도구 검색 `description` 매칭** — **Day 11(8/28) 적용 확정**(8/26 조사·사용자 판정). `components/tool-picker.tsx:31`이 `name`만 비교해 268건 전부가 보유한 `description`을 버린다 → 카탈로그 mcp·plugin·skill **153건이 이름만으론 사실상 도달 불가**. 실측: `review` 검색 **5건 → 10건**(Aider는 설명에 "AI pair programming"이 있는데 `pair programming`으로 안 잡힘). 수정 = 조건에 `|| i.description.toLowerCase().includes(query)` + **이름 히트 우선 정렬** 1줄. 의존성·비용 0. **신규 기능이 아니라 SCR-001 결함**이라 Plan Freeze·판정 오염과 무관
 
 > **Day 7 메모 (8/24)** — 홈 개편 시안 동결(아티팩트가 SSOT) → **Day 8(8/25) 캐러셀 이식 확정**(구조 변경 등급: make-prd 풀 스킬 + 미결 6건, 상세는 메모리 `day8-hero-carousel-port`). 위 정적 완성 상태는 **구 레이아웃 기준** — 이식 후 스크린샷·본인 눈 재확인. 미커밋 A안·B안(`app/page.tsx` +19줄)은 Day 8 새 브랜치 생성 때 처리 방향 확인
 >
