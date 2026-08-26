@@ -13,7 +13,7 @@
 
 ## 기술 스택
 
-- Next.js(App Router) / TypeScript / Tailwind v4 / **shadcn/ui**(radix-nova, 라이트 단일) / sonner / GSAP(Day 12~13) / **Supabase**(Auth GitHub OAuth·Postgres·RLS) / GA4(gtag 직접)
+- Next.js(App Router) / TypeScript / Tailwind v4 / **shadcn/ui**(radix-nova, 라이트 단일) / sonner / GSAP(Day 12~13) / **Supabase**(Auth GitHub OAuth·Postgres·RLS) / html-to-image(PNG 저장, 동적 import) / GA4(gtag 직접)
 
 ## 개발 명령어
 
