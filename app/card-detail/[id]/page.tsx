@@ -55,8 +55,10 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       description,
       url: `/card-detail/${wf.id}`,
       // 중첩 세그먼트가 openGraph를 선언하면 상위 파일 규약 이미지가 덮인다 — 명시 지정 필요
-      // 공개 카드의 동적 OG(/api/og?id=&v=)는 OQ-003·012 판정 후 이 자리에 연결
-      images: ["/opengraph-image"],
+      // 공개만 동적 OG, v=는 updated_at epoch 캐시 버스팅 (PRD-06). 비공개·hidden은 정적 기본
+      images: shareable
+        ? [`/api/og?id=${wf.id}&v=${Math.floor(new Date(wf.updated_at).getTime() / 1000)}`]
+        : ["/opengraph-image"],
     },
   };
 }
