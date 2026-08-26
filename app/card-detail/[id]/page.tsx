@@ -54,8 +54,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       title,
       description,
       url: `/card-detail/${wf.id}`,
-      // ?v= 캐시 버스팅 (PRD-06) — /api/og는 OQ-003·012 판정 후 연결
-      images: shareable ? [{ url: `/hero-card.png` }] : undefined,
+      // 이미지 미지정 = app/opengraph-image.tsx 상속 (비공개·hidden은 PRD-04대로 정적 기본)
+      // 공개 카드의 동적 OG(/api/og?id=&v=)는 OQ-003·012 판정 후 연결
     },
   };
 }
