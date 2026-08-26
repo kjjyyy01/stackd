@@ -7,7 +7,7 @@ const MUTED = "#656972";
 const HAIRLINE = "#e0e2e6";
 
 // accent 슬러그 → 색. 미인식 슬러그는 기본 ink (PRD-05)
-const ACCENTS: Record<string, string> = { ink: INK };
+export const ACCENTS: Record<string, string> = { ink: INK };
 
 type CardData = Pick<
   WorkflowInput,
@@ -19,6 +19,7 @@ type Props = {
   handle?: string; // 세션 GitHub 핸들 (BR-025), 없으면 placeholder
   className?: string; // 바깥에서 scale로 축소할 때만 사용 — 폭·비율은 카드가 갖는다
   showDetailHint?: boolean; // 상세 유도 문구 — SCR-004에서만 false (이미 상세에 도착함)
+  titleAs?: "h1" | "h2"; // 상세에서만 h1 — 카드 제목이 페이지 유일 헤딩 (EL-WF-001)
 };
 
 // 카드 고정 조판 — SSOT는 DESIGN.md §카드 조판 (이 상수는 그 사본이다).
@@ -27,7 +28,7 @@ export const CARD_W = 560;
 export const CARD_H = 700;
 
 // 공용 워크플로우 카드 (EL-CARD-002~008) — SCR-003·004·006·007 공용
-export default function WorkflowCard({ workflow, handle, className = "", showDetailHint = true }: Props) {
+export default function WorkflowCard({ workflow, handle, className = "", showDetailHint = true, titleAs: Title = "h2" }: Props) {
   const { title, situation_short, steps, dev_stack, role } = workflow;
   const accent = ACCENTS[workflow.accent] ?? INK;
 
@@ -42,7 +43,7 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
         <p className="text-xs leading-[1.6]" style={{ color: MUTED }}>
           {situation_short}
         </p>
-        <h2 className="mt-1 text-xl font-semibold leading-[1.25] tracking-[-0.015em]">{title}</h2>
+        <Title className="mt-1 text-xl font-semibold leading-[1.25] tracking-[-0.015em]">{title}</Title>
         <p className="mt-2 text-xs leading-[1.6]" style={{ color: MUTED }}>
           <span className="font-mono">{handle ? `@${handle}` : "@you"}</span>
           {role ? ` · ${role}` : ""}
