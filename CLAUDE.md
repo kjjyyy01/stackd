@@ -8,12 +8,12 @@
 ## 프로젝트 개요
 
 - 3주 출시 프로젝트 — **Stackd(스택드, stackd.kr)**: **AI 워크플로우 카드** — 내 Agentic workflow(상황+단계+도구)를 카드+상세 페이지로 만들어 공유하고 갤러리에서 예시를 본다 (한국어 UI, 저장부터 GitHub 로그인, Supabase). 상세: `docs/day3-mvp-spec.md` (v2, 8/16 재판정) · `docs/day1-decisions.md`
-- 일정: Day 1 = 2026-08-12(수) / **Day 20 런칭·게시 = 2026-09-08(화) 오전**, 판정일 9/22(화). Day 6 = 8/20(목), 버퍼 5일 = 9/1~9/5. *(8/20 조정 4회차 — AI Summit 8/19 하루 참가, 순손실 0. 매핑표는 `docs/PLAN.md` §일정 매핑)*
+- 일정: Day 1 = 2026-08-12(수) / **Day 20 런칭·게시 = 2026-09-08(화) 오전**, 판정일 9/22(화). Day 6 = 8/23(일), 버퍼 2일 = 9/4~9/5. *(8/22 버퍼 소진 2 — 지렛대 0 누적 3일 흡수, 런칭일 불변. 매핑표는 `docs/PLAN.md` §일정 매핑)*
 - 월 고정비 상한: **4만원/월** (도메인+DB+호스팅 합산)
 
 ## 기술 스택
 
-- Next.js(App Router) / TypeScript / Tailwind v4 / **shadcn/ui**(radix-nova, 라이트 단일) / sonner / GSAP(Day 12~13) / **Supabase**(Auth GitHub OAuth·Postgres·RLS) / GA4(gtag 직접)
+- Next.js(App Router) / TypeScript / Tailwind v4 / **shadcn/ui**(radix-nova, 라이트 단일) / sonner / GSAP(Day 12~13) / **Supabase**(Auth GitHub OAuth·Postgres·RLS) / html-to-image(PNG 저장, 동적 import) / GA4(gtag 직접)
 
 ## 개발 명령어
 
@@ -51,9 +51,9 @@
 
 ## 프로젝트 트리
 
-- `app/` 라우터(src 없음) · `app/auth/`(callback·로그인 서버 액션) · `app/actions/`(서버 액션) · `app/not-found.tsx`
-- `components/`(site-header·site-footer·feedback-dialog·analytics·login-event) · `components/ui/`(shadcn)
-- `lib/supabase/`(server·admin) · `lib/limits.ts`(BR 제한 유틸+테스트) · `lib/analytics.ts`(GA4 track, EVT 7종) · `lib/utils.ts`(cn)
+- `app/` 라우터(src 없음) · `app/auth/`(callback·로그인 서버 액션) · `app/actions/`(서버 액션) · `app/card/`·`app/card-detail/[id]/`(SCR-003·004) · `app/privacy/`·`app/terms/`(SCR-005) · `app/not-found.tsx`·`app/robots.ts`·`app/sitemap.ts`·`app/opengraph-image.tsx`·`app/api/og/`(정적 기본 OG + 카드 동적 OG)
+- `components/`(site-header·site-footer·feedback-dialog·analytics·login-event · **workflow-card**(4화면 공용 카드, 560×700 고정) · **workflow-builder**·**tool-picker**(SCR-001)) · `components/ui/`(shadcn)
+- `lib/supabase/`(server·admin) · `lib/limits.ts`(BR 제한 유틸+테스트) · `lib/admin.ts`(admin 게이트 BR-022+테스트) · `lib/og.tsx`(OG 공용 팔레트·기본 이미지) · `lib/draft.ts`(초안 localStorage+테스트) · `lib/hero-card.ts`(0번 카드 데이터) · `lib/analytics.ts`(GA4 track, EVT 7종) · `lib/utils.ts`(cn)
 - `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `.env.example`
 - 테스트: `npm test` (`node --test`, 도메인 로직만)
 

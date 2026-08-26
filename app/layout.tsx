@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_KR, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { SITE_URL } from "@/lib/site";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import Analytics from "@/components/analytics";
@@ -25,7 +26,7 @@ const plexMono = IBM_Plex_Mono({
 
 // 사이트 공통 메타 — canonical·OG 절대경로 기준 (PRD-04)
 export const metadata: Metadata = {
-  metadataBase: new URL("https://stackd.kr"),
+  metadataBase: new URL(SITE_URL), // 프리뷰는 그 배포 주소 — og:image가 읽혀야 한다 (lib/site.ts)
   title: {
     default: "Stackd — 내 AI 워크플로우 카드 만들기",
     template: "%s | Stackd",
@@ -44,7 +45,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko" className={`${plexKr.variable} ${plexMono.variable} h-full`}>
-      <body className="flex min-h-full flex-col">
+      {/* 확장 프로그램이 body에 속성 주입 — 경고만 억제 */}
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <SiteHeader />
         {children}
         <SiteFooter />
