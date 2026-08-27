@@ -47,8 +47,15 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
       clearDraft(); // 다른 카드의 초안 — 수정은 명시적 행위라 안내 없이 폐기 (SCR-001 §11 #3)
     } else if (saved && !isDraftEmpty(saved)) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
-      if (isResuming()) setD(saved); // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기)
-      else pending.current = saved; // 그 외에는 배너 응답을 기다린다
+      if (isResuming()) setD(saved); // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기). 수정 흐름도 그대로 이어간다
+      else {
+        // 수정 모드(`?edit=`)가 아닌 일반 진입 — 초안에 남은 editId를 떼어낸다.
+        // 남겨두면 그 카드를 삭제한 뒤에도 새로 쓴 초안이 계속 그 id로 update를 시도하고,
+        // `/card`가 "수정 완료"를 띄운다 (8/27 사용자 보고)
+        const fresh = saved.editId ? { ...saved, editId: undefined } : saved;
+        if (saved.editId) saveDraft(fresh); // 배너에 답하지 않고 떠나도 저장소에 남지 않게
+        pending.current = fresh; // 배너 응답을 기다린다
+      }
     }
     if (init) document.getElementById("builder")?.scrollIntoView(); // 수정 대상부터 보여준다 (엣지 14)
     hydrated.current = true;
