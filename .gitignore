@@ -47,3 +47,10 @@ next-env.d.ts
 # grill 문답 원문 (로컬 전용 — 공개 레포 제외)
 /docs/grill-log.md
 .proto-shots/
+
+# 에이전트 도구 로컬 상태 (커밋 대상 아님)
+/.claude/
+/.serena/
+
+# 시드 스크립트 — 로컬 검증용, 추적 제외 판정(2026-08-27)
+/seed.ts

@@ -26,9 +26,15 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
   const [manualErr, setManualErr] = useState(false); // ERR-BLDR-002
 
   const query = q.trim().toLowerCase();
+  // 이름 0 · 설명 1 · 미일치 2 — 이름만 보면 mcp·plugin·skill 153건이 사실상 도달 불가다
+  // (예: Aider는 설명의 "AI pair programming"으로만 찾을 수 있다)
+  const rank = (i: Item) =>
+    i.name.toLowerCase().includes(query) ? 0 : i.description.toLowerCase().includes(query) ? 1 : 2;
   // ponytail: 부분 일치 선형 검색 — 268건이라 충분, 수천 건 되면 인덱스
   const results = query
-    ? CATALOG.filter((i) => categories.includes(i.category) && i.name.toLowerCase().includes(query)).slice(0, 20)
+    ? CATALOG.filter((i) => categories.includes(i.category) && rank(i) < 2)
+        .sort((a, b) => rank(a) - rank(b)) // 설명이 스친 항목이 정확한 이름을 밀어내지 않게
+        .slice(0, 20)
     : [];
   const taken = new Set(excludeNames.map((n) => n.trim()));
 

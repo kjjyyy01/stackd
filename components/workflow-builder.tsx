@@ -8,11 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
-import { EMPTY_DRAFT, isDraftEmpty, loadDraft, saveDraft, type Draft } from "@/lib/draft";
+import { EMPTY_DRAFT, clearDraft, isDraftEmpty, isResuming, loadDraft, saveDraft, type Draft } from "@/lib/draft";
 import { CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow } from "@/lib/limits";
 
 type Step = Draft["steps"][number];
-type Props = { roleDefault?: string }; // 로그인 사용자의 user_metadata.role_default (REQ-HOME-004)
+type Props = {
+  roleDefault?: string; // 로그인 사용자의 user_metadata.role_default (REQ-HOME-004)
+  initial?: Draft; // 수정 모드로 로드된 DB 값 (REQ-HOME-006) — 없으면 새로 쓰기
+};
 
 // 글자 수 카운터 — 상한 도달·초과 시 붉게 (ERR-BLDR-005 "카운터 붉게")
 function Counter({ n, max, over }: { n: number; max: number; over?: boolean }) {
@@ -24,21 +27,46 @@ function Counter({ n, max, over }: { n: number; max: number; over?: boolean }) {
 }
 
 // SCR-001 빌더 — 상태는 여기 한 곳, 변경마다 초안 저장 (BR-019). 서버 쓰기 없음
-export default function WorkflowBuilder({ roleDefault = "" }: Props) {
-  const [d, setD] = useState<Draft>({ ...EMPTY_DRAFT, role: roleDefault });
+export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
+  const [d, setD] = useState<Draft>(initial ?? { ...EMPTY_DRAFT, role: roleDefault });
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [over, setOver] = useState<string | null>(null); // 직전 입력이 상한에 막힌 필드
   const [picking, setPicking] = useState(false); // 단계 도구 선택기 열림
   const [ctaTried, setCtaTried] = useState(false);
   const hydrated = useRef(false);
   const pending = useRef<Draft | null>(null); // 배너(전역) 응답 대기 중인 초안
+  const initialRef = useRef(initial); // 서버 prop — 마운트 시점 값만 쓴다
 
   // 진입 시 초안 확인 + 배너(DraftBanner) 신호 수신 — 배너 UI는 전역 위치가 소유 (EL-HOME-004)
   useEffect(() => {
+    const init = initialRef.current;
     const saved = loadDraft();
-    if (saved && !isDraftEmpty(saved)) pending.current = saved;
+    const resuming = isResuming(); // 배너와 공유되는 모듈 캐시 — 누가 먼저 묻든 같은 답
+
+    if (init && saved && saved.editId !== init.editId) {
+      clearDraft(); // 다른 카드의 초안 — 수정은 명시적 행위라 안내 없이 폐기 (SCR-001 §11 #3)
+    } else if (saved && !isDraftEmpty(saved)) {
+      if (resuming) {
+        // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기). 수정 흐름도 이어간다
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
+        setD(saved);
+      } else if (!init && saved.editId) {
+        // 수정 모드가 아닌데 초안에 editId가 남아 있다 — 떼어낸다. 남겨두면 그 카드를
+        // 삭제한 뒤에도 새로 쓴 초안이 계속 그 id로 update를 시도한다 (8/27 사용자 보고).
+        // `init`이 있을 때(= 같은 카드를 수정 중)는 유지해야 한다 — 떼면 이어서 쓰기가 복제본을 만든다
+        const fresh = { ...saved, editId: undefined };
+        saveDraft(fresh); // 배너에 답하지 않고 떠나도 저장소에 남지 않게
+        pending.current = fresh;
+      } else {
+        pending.current = saved; // 배너 응답을 기다린다 (§11 #3·#4)
+      }
+    }
+    // 수정 대상(엣지 14)·방금 쓰던 내용(§6 복귀) 앞으로 데려간다 — 빌더가 하단이라 없으면 다시 스크롤해야 한다
+    if (init || resuming) document.getElementById("builder")?.scrollIntoView();
     hydrated.current = true;
+
     const onDraft = (e: Event) => {
+      // 수정 모드의 "새로 시작" = DB 값 복귀 — d가 이미 initial이라 보류 해제만으로 충족된다
       if ((e as CustomEvent).detail === "restore" && pending.current) setD(pending.current);
       pending.current = null; // discard든 restore든 저장 보류 해제
     };
@@ -46,13 +74,17 @@ export default function WorkflowBuilder({ roleDefault = "" }: Props) {
     return () => window.removeEventListener(DRAFT_EVENT, onDraft);
   }, []);
 
-  // 상태 변경마다 저장 — 단, 빈 빌더를 덮어써서 배너 대상 초안을 지우면 안 된다
+  // 상태 변경마다 저장 — 단, 빈 빌더를 덮어써서 배너 대상 초안을 지우면 안 된다.
+  // 수정 모드의 초기값도 저장한다: `/card`는 초안을 유일한 전달 통로로 쓰므로(BR-019)
+  // 아무것도 고치지 않고 미리보기로 넘어가면 초안이 없어 홈으로 튕긴다 (8/27 점검)
   useEffect(() => {
     if (!hydrated.current || pending.current) return;
     if (isDraftEmpty(d)) return;
     saveDraft(d);
   }, [d]);
 
+  // 이동처는 `/card`로 같지만 "만들기"는 새로 만드는 것으로 읽힌다 (CPY-HOME-006 / 059)
+  const ctaLabel = initial ? "수정한 내용 확인하기" : "카드 만들기";
   const gateOk = validateWorkflow(d).ok; // BR-016 = 전체 검증 통과 (서버 재검증과 같은 함수)
   // 인라인 에러는 필드별로 — 첫 위반만 돌려주는 검증 결과에 기대면 둘 다 비었을 때 하나만 보인다
   const fieldOk: Record<string, boolean> = {
@@ -215,9 +247,9 @@ export default function WorkflowBuilder({ roleDefault = "" }: Props) {
         <div className="sticky bottom-0 -mx-4 border-t border-border bg-background/95 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 md:static md:m-0 md:border-0 md:bg-transparent md:p-0">
           <div className="flex flex-wrap items-center gap-4">
             {gateOk ? (
-              <Button asChild size="lg" className="h-11 px-6"><Link href="/card">카드 만들기</Link></Button>
+              <Button asChild size="lg" className="h-11 px-6"><Link href="/card">{ctaLabel}</Link></Button>
             ) : (
-              <Button type="button" size="lg" className="h-11 px-6" aria-disabled onClick={() => setCtaTried(true)}>카드 만들기</Button>
+              <Button type="button" size="lg" className="h-11 px-6" aria-disabled onClick={() => setCtaTried(true)}>{ctaLabel}</Button>
             )}
             {!gateOk && (
               <p className="text-sm text-muted-foreground">제목·상황을 적고, 단계를 2개 이상(각각 한 줄 메모와 설명 포함) 담으면 카드를 만들 수 있어요</p>

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import WorkflowCard, { ACCENTS } from "@/components/workflow-card";
 import { track } from "@/lib/analytics";
-import { clearDraft, loadDraft, saveDraft, type Draft } from "@/lib/draft";
+import { clearDraft, loadDraft, markResume, saveDraft, type Draft } from "@/lib/draft";
 import { LIMITS, validateWorkflow } from "@/lib/limits";
 
 type Props = { handle?: string; loggedIn: boolean };
@@ -18,6 +18,7 @@ type Props = { handle?: string; loggedIn: boolean };
 // 실패 코드 → 토스트 문구 (PRD-10 · CPY-CARD)
 const ERROR_COPY: Record<string, string> = {
   "ERR-CARD-004": "저장에 실패했어요 — 다시 시도해주세요 (작성 내용은 남아 있어요)",
+  "ERR-CARD-006": "수정하려던 카드를 찾을 수 없어요 — 삭제됐거나 권한이 없어요. 다시 누르면 새 카드로 저장돼요",
   "ERR-AUTH-001": "로그인이 필요해요",
 };
 const GATE_COPY = "제목·상황을 적고 단계 2개 이상(메모·설명 포함)이면 저장할 수 있어요";
@@ -38,6 +39,8 @@ export default function CardPreview({ handle, loggedIn }: Props) {
       router.replace("/");
       return;
     }
+    // 홈 복귀 시 배너 없이 즉시 복원 (SCR-001 §6) — 링크 클릭과 브라우저 뒤로가기를 한 번에 덮는다
+    markResume();
     // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
     setDraft(d);
     // OAuth 복귀(save=1)는 재진입이라 중복 발화 제외 (REQ-CARD-005 AC-1)
@@ -68,6 +71,13 @@ export default function CardPreview({ handle, loggedIn }: Props) {
           toast.success("저장했어요 — 이제 공유할 수 있어요");
           router.push(`/card-detail/${r.id}`);
           return;
+        }
+        // 수정 대상이 사라졌으면 초안의 editId를 떼어 다음 시도가 새 카드로 가게 한다.
+        // 자동 재시도는 하지 않는다 — 수정을 의도했는데 말없이 새 카드가 생기면 안 된다 (ERR-CARD-006)
+        if (r.code === "ERR-CARD-006") {
+          const fresh = { ...d, editId: undefined };
+          setDraft(fresh);
+          saveDraft(fresh);
         }
         toast.error(ERROR_COPY[r.code] ?? GATE_COPY);
       });
@@ -158,7 +168,8 @@ export default function CardPreview({ handle, loggedIn }: Props) {
               disabled={!gate || !online || pending}
               className="h-11 w-full px-6 sm:w-auto"
             >
-              {pending ? "저장 중…" : "저장하기"}
+              {/* 수정 흐름의 최종 지점 — 여기가 "완료"임이 보여야 한다 (CPY-CARD-020) */}
+              {pending ? "저장 중…" : draft.editId ? "수정 완료" : "저장하기"}
             </Button>
           ) : (
             <form action={signInWithGitHub}>
@@ -170,9 +181,10 @@ export default function CardPreview({ handle, loggedIn }: Props) {
           )}
         </div>
 
-        {/* EL-CARD-014 복귀 링크 — 초안은 그대로 유지 */}
+        {/* EL-CARD-014 복귀 링크 — 초안 유지 + 수정 중이면 URL에도 남긴다.
+            빌더의 문구·스크롤은 URL `?edit=` 기준이라 떼면 생성 모드로 보인다 (§6 뒤로가기) */}
         <Link
-          href="/"
+          href={draft.editId ? `/?edit=${draft.editId}` : "/"}
           className="mt-1 inline-block py-2.5 text-sm leading-[1.75] text-muted-foreground underline underline-offset-4"
         >
           돌아가서 수정하기
