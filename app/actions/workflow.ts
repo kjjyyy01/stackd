@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { ACCENTS } from "@/components/workflow-card";
 import { validateWorkflow } from "@/lib/limits";
 import { createClient } from "@/lib/supabase/server";
@@ -79,6 +80,7 @@ export async function deleteWorkflow(id: string): Promise<ActionResult> {
     .eq("user_id", userId);
   // count 0 = 타인 카드거나 이미 없음 — 존재 여부를 구분해 알리지 않는다 (BR-006)
   if (error || !count) return { ok: false, code: "ERR-ME-001" };
+  revalidatePath("/me"); // 목록에서 즉시 빠져야 한다 (REQ-ME-003 AC-1)
   return { ok: true };
 }
 
@@ -95,5 +97,6 @@ export async function togglePublic(id: string, isPublic: boolean): Promise<Actio
     .eq("user_id", userId)
     .eq("hidden", false);
   if (error || !count) return { ok: false, code: "ERR-ME-001" };
+  revalidatePath("/me"); // 배지·스위치의 원본은 서버다 (REQ-ME-004 AC-1)
   return { ok: true };
 }
