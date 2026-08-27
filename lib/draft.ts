@@ -61,3 +61,31 @@ export function clearDraft() {
 export function isDraftEmpty(d: Draft) {
   return !d.title && !d.situation_short && !d.situation && d.steps.length === 0 && d.dev_stack.length === 0 && !d.role;
 }
+
+// `/card` 다녀옴 표시 — 홈 복귀 시 배너 없이 즉시 복원용 (SCR-001 §6 뒤로가기)
+// 링크 클릭과 브라우저 뒤로가기를 모두 덮으려면 URL이 아니라 세션 저장소여야 한다
+const RESUME_KEY = "stackd:resume";
+
+export function markResume() {
+  try {
+    sessionStorage.setItem(RESUME_KEY, "1");
+  } catch {
+    /* 초안 복원과 같은 편의 기능 — 실패해도 배너 경로로 떨어질 뿐 */
+  }
+}
+
+export function isResuming() {
+  try {
+    return sessionStorage.getItem(RESUME_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function clearResume() {
+  try {
+    sessionStorage.removeItem(RESUME_KEY);
+  } catch {
+    /* 무시 */
+  }
+}

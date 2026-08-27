@@ -5,6 +5,7 @@ import HomeCarousel from "@/components/home-carousel";
 import { buttonVariants } from "@/components/ui/button";
 import WorkflowBuilder from "@/components/workflow-builder";
 import WorkflowCard from "@/components/workflow-card";
+import { EMPTY_DRAFT, type Draft } from "@/lib/draft";
 import { HERO_CARD } from "@/lib/hero-card";
 import { createClient } from "@/lib/supabase/server";
 
@@ -51,16 +52,35 @@ const WORDFIELD: Array<[string, string]> = [
   ["GSAP", "left-[88%] top-[14%] text-[1.1875rem] -rotate-[5deg] hidden md:block"],
 ];
 
+// 빌더에 실을 필드만 — id·user_id·작성자 스냅샷은 저장 시 서버가 다시 채운다 (BR-025)
+const EDIT_COLUMNS = "title, situation_short, situation, steps, dev_stack, role, accent, is_public";
+
 // SCR-001 홈 v3 — 캐러셀 히어로 + 쇼케이스 + 과정 레일 + 빌더 (Day 8 시안 이식)
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ edit?: string }> }) {
+  const { edit } = await searchParams;
   // 로그인 사용자의 소속 기본값 — 없거나 실패하면 빈 값 (REQ-HOME-004 AC-3)
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
   const roleDefault = (data?.claims.user_metadata?.role_default as string | undefined) ?? "";
+  const userId = data?.claims.sub;
+
+  // 수정 모드 (REQ-HOME-006) — RLS "public read"는 타인의 공개 카드도 통과시키므로
+  // 소유자 게이트는 user_id 명시 필터다. 0행·에러·비로그인은 전부 빈 빌더, 안내 없음 (AC-2·AC-3)
+  let initial: Draft | undefined;
+  if (edit && userId) {
+    const { data: row } = await supabase
+      .from("workflows")
+      .select(EDIT_COLUMNS)
+      .eq("id", edit)
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (row) initial = { ...EMPTY_DRAFT, ...row, editId: edit };
+  }
 
   return (
     <main className="flex-1">
-      <DraftBanner />
+      {/* 수정 모드에서는 같은 카드의 초안일 때만 배너 (SCR-001 §11 #3) */}
+      <DraftBanner editId={initial?.editId} />
 
       {/* 풀뷰포트 캐러셀 (EL-HOME-016) — 슬라이드는 서버 렌더, 컨트롤만 클라이언트 */}
       <section aria-label="Stackd 소개">
@@ -297,7 +317,7 @@ export default async function Home() {
             카드 한 장까지 2분이면 충분해요. 저장할 때만 GitHub 로그인이 필요해요.
           </p>
         </div>
-        <WorkflowBuilder roleDefault={roleDefault} />
+        <WorkflowBuilder roleDefault={roleDefault} initial={initial} />
       </section>
 
       <BackToTop />

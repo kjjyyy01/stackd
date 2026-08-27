@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import WorkflowCard, { ACCENTS } from "@/components/workflow-card";
 import { track } from "@/lib/analytics";
-import { clearDraft, loadDraft, saveDraft, type Draft } from "@/lib/draft";
+import { clearDraft, loadDraft, markResume, saveDraft, type Draft } from "@/lib/draft";
 import { LIMITS, validateWorkflow } from "@/lib/limits";
 
 type Props = { handle?: string; loggedIn: boolean };
@@ -38,6 +38,8 @@ export default function CardPreview({ handle, loggedIn }: Props) {
       router.replace("/");
       return;
     }
+    // 홈 복귀 시 배너 없이 즉시 복원 (SCR-001 §6) — 링크 클릭과 브라우저 뒤로가기를 한 번에 덮는다
+    markResume();
     // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
     setDraft(d);
     // OAuth 복귀(save=1)는 재진입이라 중복 발화 제외 (REQ-CARD-005 AC-1)

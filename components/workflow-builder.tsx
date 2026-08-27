@@ -8,11 +8,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
-import { EMPTY_DRAFT, isDraftEmpty, loadDraft, saveDraft, type Draft } from "@/lib/draft";
+import { EMPTY_DRAFT, clearDraft, clearResume, isDraftEmpty, isResuming, loadDraft, saveDraft, type Draft } from "@/lib/draft";
 import { CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow } from "@/lib/limits";
 
 type Step = Draft["steps"][number];
-type Props = { roleDefault?: string }; // 로그인 사용자의 user_metadata.role_default (REQ-HOME-004)
+type Props = {
+  roleDefault?: string; // 로그인 사용자의 user_metadata.role_default (REQ-HOME-004)
+  initial?: Draft; // 수정 모드로 로드된 DB 값 (REQ-HOME-006) — 없으면 새로 쓰기
+};
 
 // 글자 수 카운터 — 상한 도달·초과 시 붉게 (ERR-BLDR-005 "카운터 붉게")
 function Counter({ n, max, over }: { n: number; max: number; over?: boolean }) {
@@ -24,21 +27,34 @@ function Counter({ n, max, over }: { n: number; max: number; over?: boolean }) {
 }
 
 // SCR-001 빌더 — 상태는 여기 한 곳, 변경마다 초안 저장 (BR-019). 서버 쓰기 없음
-export default function WorkflowBuilder({ roleDefault = "" }: Props) {
-  const [d, setD] = useState<Draft>({ ...EMPTY_DRAFT, role: roleDefault });
+export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
+  const [d, setD] = useState<Draft>(initial ?? { ...EMPTY_DRAFT, role: roleDefault });
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [over, setOver] = useState<string | null>(null); // 직전 입력이 상한에 막힌 필드
   const [picking, setPicking] = useState(false); // 단계 도구 선택기 열림
   const [ctaTried, setCtaTried] = useState(false);
   const hydrated = useRef(false);
   const pending = useRef<Draft | null>(null); // 배너(전역) 응답 대기 중인 초안
+  const initialRef = useRef(initial); // 서버 prop — 마운트 시점 값만 쓴다
 
   // 진입 시 초안 확인 + 배너(DraftBanner) 신호 수신 — 배너 UI는 전역 위치가 소유 (EL-HOME-004)
   useEffect(() => {
+    const init = initialRef.current;
     const saved = loadDraft();
-    if (saved && !isDraftEmpty(saved)) pending.current = saved;
+
+    if (init && saved && saved.editId !== init.editId) {
+      clearDraft(); // 다른 카드의 초안 — 수정은 명시적 행위라 안내 없이 폐기 (SCR-001 §11 #3)
+    } else if (saved && !isDraftEmpty(saved)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
+      if (isResuming()) setD(saved); // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기)
+      else pending.current = saved; // 그 외에는 배너 응답을 기다린다
+    }
+    clearResume(); // 배너(DOM상 위 형제)의 effect가 먼저 읽은 뒤 여기서 소비한다
+    if (init) document.getElementById("builder")?.scrollIntoView(); // 수정 대상부터 보여준다 (엣지 14)
     hydrated.current = true;
+
     const onDraft = (e: Event) => {
+      // 수정 모드의 "새로 시작" = DB 값 복귀 — d가 이미 initial이라 보류 해제만으로 충족된다
       if ((e as CustomEvent).detail === "restore" && pending.current) setD(pending.current);
       pending.current = null; // discard든 restore든 저장 보류 해제
     };
