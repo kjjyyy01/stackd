@@ -33,6 +33,7 @@
 - 반응형: Tailwind 내장 브레이크포인트(sm/md/lg/xl)만 사용 — 커스텀·별도 정의 금지
 - **라이트 단일 테마** — `globals.css`의 `@custom-variant dark (&:is(.dark *))`가 shadcn의 `dark:`를 무력화한다. 지우지 말 것
 - **한글 조판**: `word-break: keep-all` 필수 · 본문 행간 1.75·자간 0 · mono는 영문 기계 식별자에만 (DESIGN.md)
+- **로고·파비콘은 PNG만 — SVG 구현 금지** (2026-08-27 사용자 결정). 인라인 SVG·`icon.svg` 전부 불가, 래스터 에셋으로만 넣는다
 - 디자인 토큰 SSOT는 `DESIGN.md` — `app/globals.css`는 그 사본이다
 - 문서 상호 참조: `DESIGN.md`(디자인 시스템) / `ARCHITECTURE.md`(구조) / `ANIMATION.md`(모션) / `TODO.md`(작업 목록) / `docs/PLAN.md`(계획)
 
