@@ -1,6 +1,8 @@
 // OG 공용 — 정적 기본 이미지(app/opengraph-image.tsx)와 /api/og 폴백이 같은 그림을 쓴다
 // 카드와 동일한 고정 팔레트 (workflow-card.tsx · DESIGN.md §색 사용 규칙)
 
+import { WORDMARK_DARK } from "@/lib/og-wordmark";
+
 export const OG_SIZE = { width: 1200, height: 630 };
 export const INK = "#111419";
 export const SURFACE = "#ffffff";
@@ -32,9 +34,10 @@ export function DefaultOg() {
         <div style={{ width: 160, height: 2, background: MUTED, marginLeft: 4 }} />
       </div>
 
-      <div style={{ fontSize: 132, fontWeight: 700, letterSpacing: "-0.04em", lineHeight: 1 }}>
-        stackd
-      </div>
+      {/* 워드마크는 이미지 — @vercel/og 기본 폰트가 Geist 하나뿐이라 텍스트로는 서체·굵기가 안 맞는다 */}
+      {/* 633×157 원본 비율 유지 (4.0318:1) */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- Satori는 next/image를 못 읽는다 */}
+      <img src={WORDMARK_DARK} width={420} height={104} alt="" />
       <div style={{ fontSize: 40, color: MUTED, marginTop: 28 }}>
         Share your AI workflow as a card — stackd.kr
       </div>
