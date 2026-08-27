@@ -51,10 +51,10 @@
 - [x] 히어로 (h1 CPY-HOME-001 · 부제 CPY-HOME-008 · 예시 카드 이미지 priority) ← 8/23 `app/page.tsx`. 모바일 1열(텍스트→이미지)/`md`+ 2열, `next/image` `priority`(Next 16은 fetchpriority 속성 대신 `<link rel=preload as=image>`를 head에 주입 — 실측 확인), 메타 title·canonical·OG(PRD-04). 390·1440 스크린샷 통과, 가로 오버플로 0
 - [x] 빌더: 제목·상황·상황 상세 / 단계 목록(도구 카탈로그 검색·선택 + **직접 입력 전환 상시 노출** + 메모 + 상세, 순서 이동·삭제) / 개발 스택 태그(**검색·선택 + 직접 입력**) / 소속·역할(기본값 자동) ← **8/23 완료** `components/workflow-builder.tsx`(상태 1곳, `"use client"` 1개) + `components/tool-picker.tsx`(단계 7종·스택 3종 공용). 게이트 = `validateWorkflow` 재사용(BR-016, 서버 재검증과 같은 함수). 상한 초과는 입력 차단 + 카운터 옆 CPY-HOME-012. 브라우저 실측: 카탈로그 선택·직접 입력(`step_add method=manual` 발화)·순서 이동·CTA 게이트(빈 단계에만 CPY-HOME-030)·스택 중복 차단·4개 상한 전부 통과
 - [x] 초안 localStorage 저장·복원 배너 ← **8/23** `lib/draft.ts`(v:2 가드, 손상·구버전 폐기, 예외 삼킴) + 테스트 8건(`npm test` 21/21). 새로고침 → 배너 → 이어서 쓰기 전 필드 복원 실측
-- [ ] 수정 모드 `?edit=` 로드 (REQ-HOME-006) — **SCR-003 저장 이후**(저장된 행이 없어 검증 불가). 빌더에 `initial` prop 자리만. `/card`→`/` 뒤로가기 "배너 없이 즉시 복원"도 SCR-003이 플래그를 세워야 해서 같이
+- [~] 수정 모드 `?edit=` 로드 (REQ-HOME-006) ← **8/27 구현**(`94a30b2`). ~~빌더에 `initial` prop 자리만~~ → 자리조차 없어 신설. **RLS 전제 정정**: `"public read"`가 `is_public or auth.uid()=user_id`라 **타인의 공개 카드도 통과** → 소유자 게이트는 `user_id` 명시 필터다(RLS 단독으론 AC-2 불성립). 초안 충돌은 §11 #3 그대로 — 같은 카드면 배너, 다르면 안내 없이 폐기. `/card`→`/` 즉시 복원은 `sessionStorage`(URL이 아니라야 뒤로가기도 덮인다). EVT-BLDR-001은 손댈 필요 없었음(`track`이 클릭 경로 1곳뿐이라 엣지 #5 자동 충족). 검증: tsc·lint·build 통과 / ⚠️ **브라우저 실측·[본인 눈] 대기**(저장된 카드 필요)
 - [x] CTA 게이트(제목·상황·단계≥2 각 메모·상세 필수, BR-016) + EVT-BLDR-001 ← 8/23 (위 빌더에 포함)
 - [x] 메타데이터 + 반응형 + 스크린샷 ← 8/23 title 절대형·canonical·OG(PRD-04), 390 1열+하단 sticky CTA 44px / 1440 2열, 가로 오버플로 0. **[본인 눈] 확인 완료(8/23)** → **SCR-001 정적 완성 ✅** (잔여: 수정 모드 `?edit=` — SCR-003 이후)
-- [ ] **도구 검색 `description` 매칭** — **Day 11(8/28) 적용 확정**(8/26 조사·사용자 판정). `components/tool-picker.tsx:31`이 `name`만 비교해 268건 전부가 보유한 `description`을 버린다 → 카탈로그 mcp·plugin·skill **153건이 이름만으론 사실상 도달 불가**. 실측: `review` 검색 **5건 → 10건**(Aider는 설명에 "AI pair programming"이 있는데 `pair programming`으로 안 잡힘). 수정 = 조건에 `|| i.description.toLowerCase().includes(query)` + **이름 히트 우선 정렬** 1줄. 의존성·비용 0. **신규 기능이 아니라 SCR-001 결함**이라 Plan Freeze·판정 오염과 무관
+- [x] **도구 검색 `description` 매칭** ← **8/27 완료**(`0c60a53`, Day 11 배정분을 사용자 판정으로 당김). `rank()`로 이름 0·설명 1·미일치 2를 매겨 필터 + 안정 정렬. **실측 재확인: `review` 5→10건(상위 3건은 이름 히트 유지) · `pair programming` 0→1건(Aider)**. 원 계획 메모 ↓ — **Day 11(8/28) 적용 확정**(8/26 조사·사용자 판정). `components/tool-picker.tsx:31`이 `name`만 비교해 268건 전부가 보유한 `description`을 버린다 → 카탈로그 mcp·plugin·skill **153건이 이름만으론 사실상 도달 불가**. 실측: `review` 검색 **5건 → 10건**(Aider는 설명에 "AI pair programming"이 있는데 `pair programming`으로 안 잡힘). 수정 = 조건에 `|| i.description.toLowerCase().includes(query)` + **이름 히트 우선 정렬** 1줄. 의존성·비용 0. **신규 기능이 아니라 SCR-001 결함**이라 Plan Freeze·판정 오염과 무관
 
 > **Day 7 메모 (8/24)** — 홈 개편 시안 동결(아티팩트가 SSOT) → **Day 8(8/25) 캐러셀 이식 확정**(구조 변경 등급: make-prd 풀 스킬 + 미결 6건, 상세는 메모리 `day8-hero-carousel-port`). 위 정적 완성 상태는 **구 레이아웃 기준** — 이식 후 스크린샷·본인 눈 재확인. 미커밋 A안·B안(`app/page.tsx` +19줄)은 Day 8 새 브랜치 생성 때 처리 방향 확인
 >
@@ -90,7 +90,7 @@
 
 ### SCR-007 내 카드 `/me` (PRD-SCR-007)
 
-- [ ] 로그인 가드 · 내 목록(상태 배지) · 수정(→ `/?edit=`)·삭제·공개 전환(낙관적 갱신)
+- [~] 로그인 가드 · 내 목록(상태 배지) · 수정(→ `/?edit=`)·삭제·공개 전환(낙관적 갱신) ← **8/27 구현**(`7df5ff1`) `app/me/page.tsx`(서버 — 비인증 `redirect('/?auth=required')`, `user_id` 필터, Empty·Error 분기) + `components/my-card-actions.tsx`(클라 1개 — 배지·낙관적 토글·롤백·삭제 dialog). **부수 해결 3건**: ①`revalidatePath` 사용처가 프로젝트 전체 **0건**이었음 → `deleteWorkflow`·`togglePublic`에 `'/me'` 추가 ②`?auth=required`·`?auth=failed` 토스트 미구현이었음 → `login-event.tsx` 확장(신규 컴포넌트 0, `?edit=` 등 타 파라미터는 보존) ③EL-ME-010 "ERR 신규 필요"는 **불필요** — `ERR-LIB-001`/`CPY-LIB-002`("목록을 불러오지 못했어요")가 라이브러리 비의존 문구라 그대로 재사용. **페이지네이션 생략**(사용자 판정) — 13장째부터 REQ-LIB-002 규칙 적용, `ponytail:` 주석 표시. 검증: tsc·lint·build(`/me` 라우트 생성) / ⚠️ **브라우저 실측·[본인 눈] 대기**(로그인+카드 필요)
 
 ### SCR-008 설정 `/settings` (PRD-SCR-008)
 
