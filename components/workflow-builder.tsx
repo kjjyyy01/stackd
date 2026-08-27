@@ -75,6 +75,8 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
     saveDraft(d);
   }, [d]);
 
+  // 이동처는 `/card`로 같지만 "만들기"는 새로 만드는 것으로 읽힌다 (CPY-HOME-006 / 059)
+  const ctaLabel = initial ? "수정한 내용 확인하기" : "카드 만들기";
   const gateOk = validateWorkflow(d).ok; // BR-016 = 전체 검증 통과 (서버 재검증과 같은 함수)
   // 인라인 에러는 필드별로 — 첫 위반만 돌려주는 검증 결과에 기대면 둘 다 비었을 때 하나만 보인다
   const fieldOk: Record<string, boolean> = {
@@ -237,9 +239,9 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
         <div className="sticky bottom-0 -mx-4 border-t border-border bg-background/95 px-4 py-4 backdrop-blur sm:-mx-6 sm:px-6 md:static md:m-0 md:border-0 md:bg-transparent md:p-0">
           <div className="flex flex-wrap items-center gap-4">
             {gateOk ? (
-              <Button asChild size="lg" className="h-11 px-6"><Link href="/card">카드 만들기</Link></Button>
+              <Button asChild size="lg" className="h-11 px-6"><Link href="/card">{ctaLabel}</Link></Button>
             ) : (
-              <Button type="button" size="lg" className="h-11 px-6" aria-disabled onClick={() => setCtaTried(true)}>카드 만들기</Button>
+              <Button type="button" size="lg" className="h-11 px-6" aria-disabled onClick={() => setCtaTried(true)}>{ctaLabel}</Button>
             )}
             {!gateOk && (
               <p className="text-sm text-muted-foreground">제목·상황을 적고, 단계를 2개 이상(각각 한 줄 메모와 설명 포함) 담으면 카드를 만들 수 있어요</p>

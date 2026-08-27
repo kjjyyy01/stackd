@@ -312,7 +312,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
       {/* 빌더 (EL-HOME-024 + 005~014) — 헤딩은 서버 렌더, 폼은 클라이언트 */}
       <section id="builder" className="scroll-mt-14 border-t border-border py-16 sm:py-24">
         <div className="container-page">
-          <h2 className="text-2xl sm:text-3xl">내 워크플로우 적기</h2>
+          {/* 수정 모드는 헤딩부터 바꾼다 — 같은 화면이라 맥락 표시가 없으면 새로 쓰는 것으로 읽힌다 (CPY-HOME-058) */}
+          <h2 className="text-2xl sm:text-3xl">{initial ? "워크플로우 수정하기" : "내 워크플로우 적기"}</h2>
           <p className="mt-3 max-w-[62ch] text-muted-foreground">
             카드 한 장까지 2분이면 충분해요. 저장할 때만 GitHub 로그인이 필요해요.
           </p>

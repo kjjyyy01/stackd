@@ -160,7 +160,8 @@ export default function CardPreview({ handle, loggedIn }: Props) {
               disabled={!gate || !online || pending}
               className="h-11 w-full px-6 sm:w-auto"
             >
-              {pending ? "저장 중…" : "저장하기"}
+              {/* 수정 흐름의 최종 지점 — 여기가 "완료"임이 보여야 한다 (CPY-CARD-020) */}
+              {pending ? "저장 중…" : draft.editId ? "수정 완료" : "저장하기"}
             </Button>
           ) : (
             <form action={signInWithGitHub}>
