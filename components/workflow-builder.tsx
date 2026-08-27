@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
-import { EMPTY_DRAFT, clearDraft, clearResume, isDraftEmpty, isResuming, loadDraft, saveDraft, type Draft } from "@/lib/draft";
+import { EMPTY_DRAFT, clearDraft, isDraftEmpty, isResuming, loadDraft, saveDraft, type Draft } from "@/lib/draft";
 import { CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow } from "@/lib/limits";
 
 type Step = Draft["steps"][number];
@@ -49,7 +49,6 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
       if (isResuming()) setD(saved); // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기)
       else pending.current = saved; // 그 외에는 배너 응답을 기다린다
     }
-    clearResume(); // 배너(DOM상 위 형제)의 effect가 먼저 읽은 뒤 여기서 소비한다
     if (init) document.getElementById("builder")?.scrollIntoView(); // 수정 대상부터 보여준다 (엣지 14)
     hydrated.current = true;
 
