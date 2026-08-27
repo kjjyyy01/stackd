@@ -41,11 +41,12 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
   useEffect(() => {
     const init = initialRef.current;
     const saved = loadDraft();
+    const resuming = isResuming(); // 배너와 공유되는 모듈 캐시 — 누가 먼저 묻든 같은 답
 
     if (init && saved && saved.editId !== init.editId) {
       clearDraft(); // 다른 카드의 초안 — 수정은 명시적 행위라 안내 없이 폐기 (SCR-001 §11 #3)
     } else if (saved && !isDraftEmpty(saved)) {
-      if (isResuming()) {
+      if (resuming) {
         // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기). 수정 흐름도 이어간다
         // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
         setD(saved);
@@ -60,7 +61,8 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
         pending.current = saved; // 배너 응답을 기다린다 (§11 #3·#4)
       }
     }
-    if (init) document.getElementById("builder")?.scrollIntoView(); // 수정 대상부터 보여준다 (엣지 14)
+    // 수정 대상(엣지 14)·방금 쓰던 내용(§6 복귀) 앞으로 데려간다 — 빌더가 하단이라 없으면 다시 스크롤해야 한다
+    if (init || resuming) document.getElementById("builder")?.scrollIntoView();
     hydrated.current = true;
 
     const onDraft = (e: Event) => {

@@ -181,9 +181,10 @@ export default function CardPreview({ handle, loggedIn }: Props) {
           )}
         </div>
 
-        {/* EL-CARD-014 복귀 링크 — 초안은 그대로 유지 */}
+        {/* EL-CARD-014 복귀 링크 — 초안 유지 + 수정 중이면 URL에도 남긴다.
+            빌더의 문구·스크롤은 URL `?edit=` 기준이라 떼면 생성 모드로 보인다 (§6 뒤로가기) */}
         <Link
-          href="/"
+          href={draft.editId ? `/?edit=${draft.editId}` : "/"}
           className="mt-1 inline-block py-2.5 text-sm leading-[1.75] text-muted-foreground underline underline-offset-4"
         >
           돌아가서 수정하기
