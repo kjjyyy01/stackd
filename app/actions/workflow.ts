@@ -42,7 +42,8 @@ export async function saveWorkflow(draft: unknown, editId?: string): Promise<Sav
       .select("id")
       .maybeSingle();
     if (error) return { ok: false, code: "ERR-CARD-004" };
-    if (!data) return { ok: false, code: "ERR-AUTH-001" }; // 없는 id거나 타인 카드
+    // 0행 = 삭제됐거나 타인 카드. 세션은 위에서 확인했으므로 인증 문제가 아니다 (ERR-CARD-006)
+    if (!data) return { ok: false, code: "ERR-CARD-006" };
     return { ok: true, id: data.id };
   }
 

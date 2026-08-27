@@ -18,6 +18,7 @@ type Props = { handle?: string; loggedIn: boolean };
 // 실패 코드 → 토스트 문구 (PRD-10 · CPY-CARD)
 const ERROR_COPY: Record<string, string> = {
   "ERR-CARD-004": "저장에 실패했어요 — 다시 시도해주세요 (작성 내용은 남아 있어요)",
+  "ERR-CARD-006": "수정하려던 카드를 찾을 수 없어요 — 삭제됐거나 권한이 없어요. 다시 누르면 새 카드로 저장돼요",
   "ERR-AUTH-001": "로그인이 필요해요",
 };
 const GATE_COPY = "제목·상황을 적고 단계 2개 이상(메모·설명 포함)이면 저장할 수 있어요";
@@ -70,6 +71,13 @@ export default function CardPreview({ handle, loggedIn }: Props) {
           toast.success("저장했어요 — 이제 공유할 수 있어요");
           router.push(`/card-detail/${r.id}`);
           return;
+        }
+        // 수정 대상이 사라졌으면 초안의 editId를 떼어 다음 시도가 새 카드로 가게 한다.
+        // 자동 재시도는 하지 않는다 — 수정을 의도했는데 말없이 새 카드가 생기면 안 된다 (ERR-CARD-006)
+        if (r.code === "ERR-CARD-006") {
+          const fresh = { ...d, editId: undefined };
+          setDraft(fresh);
+          saveDraft(fresh);
         }
         toast.error(ERROR_COPY[r.code] ?? GATE_COPY);
       });

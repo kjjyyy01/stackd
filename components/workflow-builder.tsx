@@ -36,7 +36,6 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
   const hydrated = useRef(false);
   const pending = useRef<Draft | null>(null); // 배너(전역) 응답 대기 중인 초안
   const initialRef = useRef(initial); // 서버 prop — 마운트 시점 값만 쓴다
-  const untouched = useRef(true); // 초기값이 아직 초안으로 저장되지 않았다
 
   // 진입 시 초안 확인 + 배너(DraftBanner) 신호 수신 — 배너 UI는 전역 위치가 소유 (EL-HOME-004)
   useEffect(() => {
@@ -46,15 +45,19 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
     if (init && saved && saved.editId !== init.editId) {
       clearDraft(); // 다른 카드의 초안 — 수정은 명시적 행위라 안내 없이 폐기 (SCR-001 §11 #3)
     } else if (saved && !isDraftEmpty(saved)) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
-      if (isResuming()) setD(saved); // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기). 수정 흐름도 그대로 이어간다
-      else {
-        // 수정 모드(`?edit=`)가 아닌 일반 진입 — 초안에 남은 editId를 떼어낸다.
-        // 남겨두면 그 카드를 삭제한 뒤에도 새로 쓴 초안이 계속 그 id로 update를 시도하고,
-        // `/card`가 "수정 완료"를 띄운다 (8/27 사용자 보고)
-        const fresh = saved.editId ? { ...saved, editId: undefined } : saved;
-        if (saved.editId) saveDraft(fresh); // 배너에 답하지 않고 떠나도 저장소에 남지 않게
-        pending.current = fresh; // 배너 응답을 기다린다
+      if (isResuming()) {
+        // `/card` 복귀 = 방금 쓴 내용이라 되묻지 않는다 (§6 뒤로가기). 수정 흐름도 이어간다
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- 브라우저 저장소는 마운트 후 1회만 읽는다
+        setD(saved);
+      } else if (!init && saved.editId) {
+        // 수정 모드가 아닌데 초안에 editId가 남아 있다 — 떼어낸다. 남겨두면 그 카드를
+        // 삭제한 뒤에도 새로 쓴 초안이 계속 그 id로 update를 시도한다 (8/27 사용자 보고).
+        // `init`이 있을 때(= 같은 카드를 수정 중)는 유지해야 한다 — 떼면 이어서 쓰기가 복제본을 만든다
+        const fresh = { ...saved, editId: undefined };
+        saveDraft(fresh); // 배너에 답하지 않고 떠나도 저장소에 남지 않게
+        pending.current = fresh;
+      } else {
+        pending.current = saved; // 배너 응답을 기다린다 (§11 #3·#4)
       }
     }
     if (init) document.getElementById("builder")?.scrollIntoView(); // 수정 대상부터 보여준다 (엣지 14)
@@ -70,14 +73,10 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
   }, []);
 
   // 상태 변경마다 저장 — 단, 빈 빌더를 덮어써서 배너 대상 초안을 지우면 안 된다.
-  // 초기값은 저장하지 않는다: 수정 모드의 DB 값이 그대로 초안이 되면 배너가 그걸
-  // "작성하던 초안"으로 되묻는다. 일반 모드는 빈 초안이라 아래 가드에 걸려 안 보이던 문제 (8/27 실측)
+  // 수정 모드의 초기값도 저장한다: `/card`는 초안을 유일한 전달 통로로 쓰므로(BR-019)
+  // 아무것도 고치지 않고 미리보기로 넘어가면 초안이 없어 홈으로 튕긴다 (8/27 점검)
   useEffect(() => {
     if (!hydrated.current || pending.current) return;
-    if (untouched.current) {
-      untouched.current = false; // 다음 변경부터가 사용자 입력이다
-      return;
-    }
     if (isDraftEmpty(d)) return;
     saveDraft(d);
   }, [d]);
