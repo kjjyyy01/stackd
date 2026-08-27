@@ -36,6 +36,7 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
   const hydrated = useRef(false);
   const pending = useRef<Draft | null>(null); // 배너(전역) 응답 대기 중인 초안
   const initialRef = useRef(initial); // 서버 prop — 마운트 시점 값만 쓴다
+  const untouched = useRef(true); // 초기값이 아직 초안으로 저장되지 않았다
 
   // 진입 시 초안 확인 + 배너(DraftBanner) 신호 수신 — 배너 UI는 전역 위치가 소유 (EL-HOME-004)
   useEffect(() => {
@@ -61,9 +62,15 @@ export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
     return () => window.removeEventListener(DRAFT_EVENT, onDraft);
   }, []);
 
-  // 상태 변경마다 저장 — 단, 빈 빌더를 덮어써서 배너 대상 초안을 지우면 안 된다
+  // 상태 변경마다 저장 — 단, 빈 빌더를 덮어써서 배너 대상 초안을 지우면 안 된다.
+  // 초기값은 저장하지 않는다: 수정 모드의 DB 값이 그대로 초안이 되면 배너가 그걸
+  // "작성하던 초안"으로 되묻는다. 일반 모드는 빈 초안이라 아래 가드에 걸려 안 보이던 문제 (8/27 실측)
   useEffect(() => {
     if (!hydrated.current || pending.current) return;
+    if (untouched.current) {
+      untouched.current = false; // 다음 변경부터가 사용자 입력이다
+      return;
+    }
     if (isDraftEmpty(d)) return;
     saveDraft(d);
   }, [d]);
