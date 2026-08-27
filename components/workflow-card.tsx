@@ -7,6 +7,7 @@ const MUTED = "#656972";
 const HAIRLINE = "#e0e2e6";
 
 // accent 슬러그 → 색. 미인식 슬러그는 기본 ink (PRD-05)
+// 1종만 있으면 스와치 UI가 자동으로 숨는다 — 늘릴 때 조건은 DESIGN.md §카드 고정 팔레트
 export const ACCENTS: Record<string, string> = { ink: INK };
 
 type CardData = Pick<
