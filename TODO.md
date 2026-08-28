@@ -19,6 +19,8 @@
 ## SCR 작업 목록 (기준: `docs/prd/` v2 — **Approved 2026-08-17**)
 
 > 2026-08-17 v2 재작성. 컷 순서(Day 11): 라이브러리 → 내 카드 수정 → 소속·역할. `/admin`은 **컷 불가**(대시보드 미사용 결정 — 신고 처리 유일 경로, 2026-08-17).
+>
+> 🟢 **Day 11(8/28) 스코프 컷 판정 — 컷 0건 (판정 근거)**: 8/28 오후 SCR-006·008 구현 완료로 **SCR 8/8 = 100%**. 컷 1순위였던 라이브러리를 포함해 삭제 대상 없음, 버퍼 잔량 2일 유지(소진 0). 근거: 두 화면 모두 기존 컴포넌트(`workflow-card`·`signOut`·`login-event`) 재사용으로 신규 파일 5개·반나절 규모였다. **잔여는 화면이 아니라 [본인] 실행 항목 3건**(시드 3~5장·기본값 저장 왕복·탈퇴 실동작) — 화면 삭제로 해결되는 종류가 아니므로 컷 대상이 아니다.
 
 ### Day 4~5 (8/18 하루에 완주 — 1일 선행) — 백엔드 선배정 + 카탈로그 병행
 
@@ -85,8 +87,8 @@
 
 ### SCR-006 라이브러리 `/workflows` (PRD-SCR-006 — 컷 1순위)
 
-- [ ] 공개·!hidden 최신순 12개 + 더 보기 · 카드 클릭 → 상세 · Empty/Error
-- [ ] 메타데이터(index) + 사이트맵(공개 상세 포함) + 반응형
+- [x] 공개·!hidden 최신순 12개 + 더 보기 · 카드 클릭 → 상세 · Empty/Error ← **8/28 구현**(`6c65c53`) `app/workflows/page.tsx`(서버 전용 — **클라이언트 컴포넌트 0개**, JS 없이 목록·링크·더 보기 동작) + `lib/paginate.ts`(`parsePage`·`pageRange`·`splitPage` + 테스트 3건). **명시 필터 필수** — 로그인 세션의 RLS는 본인 비공개 행을 통과시키므로 `.eq("is_public", true).eq("hidden", false)`가 노출 규칙이다. 13행 조회 → 12행 렌더, 13번째 존재가 더 보기 조건. 실측: `?page=abc·0·-1·1.5` → 200(1페이지) · `?page=2·99`(0건) → **307 `/workflows`**(REQ-LIB-002 AC-2). ⚠️ **§11 #4 미검증** — 공개 1건뿐이라 "본인 비공개 카드 미노출"을 실증할 데이터가 없다(시드 후 확인 필요)
+- [x] 메타데이터(index) + 사이트맵(공개 상세 포함) + 반응형 ← 사이트맵·robots는 8/26에 이미 `/workflows` 반영 완료(변경 0). canonical `/workflows` 고정 — `?page≥2`도 동일(첫 페이지만 색인). **반응형 7종 실측**(열 폭 대비 슬롯 폭, 가로 넘침 전부 0): 360=1열 328/324.8 · 390=1열 358/324.8 · 640=2열 280/274.4 · 768=2열 344/336 · 1024=3열 298.7/291.2 · 1280·1440=3열 341.3/336. **결함 1건 수정**: `max-w-6xl`은 border-box라 패딩이 max-width 안에 포함된다 — 이를 놓쳐 xl 슬롯이 열을 17px 초과했다(`--s` 0.64 → 0.6). `overflow-hidden`이 가로 스크롤을 막아 `scrollWidth` 검사로는 안 잡히고 **열 폭 대 슬롯 폭 직접 비교**로만 드러난다
 
 ### SCR-007 내 카드 `/me` (PRD-SCR-007)
 
@@ -94,7 +96,7 @@
 
 ### SCR-008 설정 `/settings` (PRD-SCR-008)
 
-- [ ] 로그인 가드 · 소속 기본값(`updateRoleDefault`) · 로그아웃 · 탈퇴(핸들 확인 → `deleteAccount` cascade)
+- [x] 로그인 가드 · 소속 기본값(`updateRoleDefault`) · 로그아웃 · 탈퇴(핸들 확인 → `deleteAccount` cascade) ← **8/28 구현**(`da397ba`) `app/settings/page.tsx`(서버 — 비인증 `redirect('/?auth=required')`, 이메일 미노출 PRD-14) + `app/actions/account.ts`(`updateRoleDefault`는 `user_metadata.role_default`, `deleteAccount`는 service role `auth.admin.deleteUser` → workflows cascade BR-020 → `signOut` → `redirect('/')`) + `components/settings-forms.tsx`(클라 1파일 2컴포넌트). **로그아웃은 기존 `signOut` 재사용 + `<form action>`이라 JS 없이 동작**(§13). **빌더 연결 확인**: `app/page.tsx:65`가 이미 `role_default`를 읽어 `WorkflowBuilder roleDefault`로 넘기고 있었다 — 저장만 없던 상태라 신규 배선 0. **`lib/limits.ts` 리팩터**: `validateRole`·`matchesHandle` 추출, `validateWorkflow`의 role 검사도 같은 함수로 전환 — 빌더가 통과시키는 입력을 설정이 거부하는 비대칭 차단. **BR-003은 문자셋 제한 없음**(길이만) — CPY-CARD-007 문구("한글·영문·숫자")와 다르나 규칙이 SSOT. 유닛 3건 추가(총 31 pass). 실측: 미로그인 `/settings` → `/` + "로그인이 필요해요" 토스트(TC-SET-001-01) · 로그인 세션 렌더 전 요소 · **탈퇴 버튼 disabled → 핸들 대소문자 무시 일치 시 해제 → 불일치 시 재잠금**(TC-SET-004-01) · 가로 넘침 0(341px 폭). ⚠️ **[본인]** 잔여: 기본값 저장 왕복(TC-SET-002-02) · 탈퇴 실동작(TC-SET-004-02) — 둘 다 실제 계정 변경이라 미실행
 
 ### SCR-005 법적 `/privacy` `/terms` (PRD-SCR-005)
 
@@ -109,3 +111,5 @@
 - [~] ~~404~~(8/18 완료) / ~~robots(noindex 규칙)~~ / ~~정적 기본 OG~~ / ~~sitemap 동적~~ ← **8/26** `app/robots.ts`(disallow 5개 — `/card$`는 **끝 앵커 필수**, 없으면 접두사 매칭이 `/card-detail/{id}`까지 막아 H-02 공유 루프가 죽는다) · `app/sitemap.ts`(정적 4 + 공개·!hidden 상세 동적, `updated_at` lastmod — hidden은 RLS를 통과하므로 앱에서 필터) · `app/opengraph-image.tsx`(1200×630 빌드타임 생성). **비율 결함 1건 수정**: 홈·상세가 OG로 쓰던 `hero-card.png`는 1120×1400(4:5)이라 카톡·X에서 잘렸다 → 지정 제거하고 기본 OG 상속. 실측: 전 페이지 og:image 1200×630 상속, robots.txt·sitemap.xml 200. ⚠️ 잔여 **[본인] favicon 교체 예정**(8/26 본인 확정) · 기본 OG는 한글 미포함(OQ-003 폰트 판정 대기) — **실제 공유 미리보기 보고 본인 판단**(8/26 보류) · ~~`public/hero-card.png` 참조 0건~~ → **8/26 제거**(Next 보일러플레이트 svg 5종 동반 제거, 사용자 지시)
 - [x] **[본인] GA4 내부 트래픽 제외** (PRD·TODO 미등재였던 항목 — 8/18 세션 2에서 식별) ← 관리 → 데이터 수집 및 수정 → 데이터 스트림 → 태그 설정 구성 → 더보기 → 내부 트래픽 정의(IP `211.177.28.77`) + 데이터 필터 **활성** 완료(사용자 8/18). **아래 시드 작성의 선행 조건** — 필터는 소급 적용이 안 되고, H-01은 `card_create` 사용자 ÷ 전체 사용자라 본인이 분자·분모 양쪽에 섞인다. IP가 바뀌면 필터가 조용히 무력화되므로 회선 변경 시 재확인
 - [ ] **[본인]** 시드 워크플로우 3~5장 작성 (Day 11까지, 프로덕션에서) ← 선행: 위 내부 트래픽 제외 ✅
+  - ⚠️ **순서 고정 — 탈퇴 실동작 확인(TC-SET-004-02)을 시드 작성보다 먼저 한다.** `schema.sql:11`의 `on delete cascade` 때문에 탈퇴하면 그 계정의 workflows가 전부 삭제된다. 시드를 먼저 넣고 탈퇴를 시험하면 시드가 통째로 날아간다
+  - 시드 중 **1장은 비공개로 남긴다** — SCR-006 §11 #4(로그인 사용자의 본인 비공개 카드가 `/workflows`에 안 뜨는지)를 실증할 유일한 방법. 현재 공개 1건뿐이라 미검증 상태다
