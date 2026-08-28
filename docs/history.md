@@ -611,3 +611,14 @@
 #### 4. 검증
 
 - tsc 0 · lint 0 · **test 31 pass**(신규 6건: `validateRole` 2 · `matchesHandle` 1 · paginate 3) · build 통과(`/settings`·`/workflows` 둘 다 동적 라우트로 생성)
+
+### 후속 1 — 탈퇴 확인을 dialog로 (사용자 지시, 8/28)
+
+- **무엇을**: 설정 페이지에 인라인으로 있던 탈퇴 안내·확인 입력·버튼을 **버튼 하나**로 줄이고, 확인 입력은 dialog 안에서 받도록 바꿨다 (PRD SCR-008 v1.1.0 — EL-SET-007 신설)
+- **어떻게**: `my-card-actions.tsx`의 삭제 확인 dialog 패턴을 그대로 가져왔다 — shadcn `Dialog`가 이미 설치돼 있어 신규 의존성·신규 컴포넌트 0
+- **왜**: 파괴적 행동을 한 단계 뒤로 미룬다. 인라인 폼은 스크롤하다 눈에 들어오는 위치에 확인 입력이 항상 떠 있는 구조였다
+- **결과**:
+  - **추가로 넣은 것은 "닫을 때 입력 초기화" 하나**다. 없으면 핸들을 친 채 닫았다가 다시 열었을 때 **탈퇴 버튼이 이미 열린 상태로 뜬다** — dialog화가 만들어낸 신규 상태라 원래 인라인 구조에는 없던 문제다 (TC-SET-004-04 신설)
+  - 실측: 트리거 → dialog 오픈 + 확인 입력 자동 포커스 / disabled → 대소문자 무시 일치 시 해제 → 불일치 재잠금 → 취소 후 재오픈 시 입력 `""`·다시 disabled / 취소·ESC 모두 닫힘 / 버튼 44px
+  - **계측 함정 1건**: 닫은 직후 `document.querySelector('[role="dialog"]')`가 계속 잡혀 "안 닫힌다"고 오판할 뻔했다. `data-state`를 보니 `closed`였다 — 백그라운드 탭에서는 CSS exit 애니메이션이 안 돌아 `animationend`가 안 뜨고, Radix가 노드를 남긴다. **dialog 닫힘 판정은 노드 존재가 아니라 `data-state`로 해야 한다**
+  - 미변경 판정: `destructive` 변형이 `bg-destructive/10` 소프트 틴트라 **disabled(opacity-50)와 육안 구분이 약하다**. 다만 "핸들이 일치해야 탈퇴 버튼이 열려요" 문구가 상태를 말로 설명해 §15("색만 금지")는 충족하고, `buttonVariants` 수정은 카드 삭제 dialog까지 번져 범위 밖이라 그대로 둔다
