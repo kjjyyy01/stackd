@@ -126,7 +126,9 @@
 | `--ring` | `= --primary` | | 포커스 링 |
 | `--destructive` | `0.52 0.19 25` | `#be222a` | 파괴적 행위·에러만 |
 
-**대비 실측** — foreground/background 17.7:1 · muted-foreground/background 5.28:1 · primary 위 흰 글씨 5.71:1 · primary/background 5.47:1 · input 경계/background 3.22:1 · destructive/background 5.82:1. 전부 WCAG AA 통과.
+**대비 실측** — foreground/background 17.7:1 · muted-foreground/background 5.28:1 · primary 위 흰 글씨 5.71:1 · primary/background 5.47:1 · input 경계/background 3.22:1 · destructive/background 5.82:1 · **destructive 위 흰 글씨 6.08:1**(2026-08-28 실측). 전부 WCAG AA 통과.
+
+**파괴적 버튼 규칙 (2026-08-28)** — `destructive` 버튼 변형은 **solid**(`bg-destructive` + 흰 글씨)이고, **되돌릴 수 없는 최종 실행에만** 쓴다(탈퇴 확인·카드 삭제 확인). 그 행동을 여는 **트리거는 `outline` + `text-destructive`** 다. 소프트 틴트(`bg-destructive/10`)였을 때는 `disabled:opacity-50`과의 차이가 **불투명도 하나뿐**이라 "누를 수 있는 상태"가 육안으로 안 읽혔다 — 배경이 이미 10% 틴트라 disabled에서 5% 틴트가 되고 글자만 절반 흐려진다. 확인 dialog의 실행 버튼은 화면마다 같은 생김새여야 한다.
 
 **색 사용 규칙 (이게 진짜 규칙이다)**
 

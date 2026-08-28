@@ -622,3 +622,14 @@
   - 실측: 트리거 → dialog 오픈 + 확인 입력 자동 포커스 / disabled → 대소문자 무시 일치 시 해제 → 불일치 재잠금 → 취소 후 재오픈 시 입력 `""`·다시 disabled / 취소·ESC 모두 닫힘 / 버튼 44px
   - **계측 함정 1건**: 닫은 직후 `document.querySelector('[role="dialog"]')`가 계속 잡혀 "안 닫힌다"고 오판할 뻔했다. `data-state`를 보니 `closed`였다 — 백그라운드 탭에서는 CSS exit 애니메이션이 안 돌아 `animationend`가 안 뜨고, Radix가 노드를 남긴다. **dialog 닫힘 판정은 노드 존재가 아니라 `data-state`로 해야 한다**
   - 미변경 판정: `destructive` 변형이 `bg-destructive/10` 소프트 틴트라 **disabled(opacity-50)와 육안 구분이 약하다**. 다만 "핸들이 일치해야 탈퇴 버튼이 열려요" 문구가 상태를 말로 설명해 §15("색만 금지")는 충족하고, `buttonVariants` 수정은 카드 삭제 dialog까지 번져 범위 밖이라 그대로 둔다
+
+### 후속 2 — destructive 버튼을 solid로 (사용자 판정, 8/28)
+
+- **무엇을**: `buttonVariants`의 `destructive`를 소프트 틴트(`bg-destructive/10` + 붉은 글씨)에서 **solid**(`bg-destructive` + 흰 글씨)로 바꿨다. 함께 설정 페이지의 탈퇴 **트리거**는 `outline`으로 내렸다
+- **어떻게**: 사용처를 먼저 훑었더니 **규칙이 이미 서 있었다** — `card-actions.tsx:149`·`my-card-actions.tsx:109` 둘 다 트리거는 `outline`, 확인 dialog의 실행 버튼만 `destructive`다. 즉 `destructive` **Button**은 원래부터 "되돌릴 수 없는 최종 실행" 전용이었고, 내가 만든 설정 트리거만 그 규칙을 어기고 있었다. Badge는 `badge.tsx`에 별도 cva가 있어 영향 없음(admin 숨김 배지·상세 신고 배지 그대로)
+- **왜**: 소프트 틴트는 `disabled:opacity-50`과의 차이가 **불투명도 하나뿐**이었다. 배경이 이미 10% 틴트라 disabled에서 5% 틴트가 되고 글자만 절반 흐려져, "누를 수 있는 상태"가 육안으로 안 읽혔다. 확인 dialog의 실행 버튼이 화면마다 다르면 그게 더 어색하다는 사용자 판정으로 공용 변형을 고쳤다
+- **결과**:
+  - 실측: 확인 버튼 `#be222a` 배경 + 흰 글씨 **6.08:1**(AA 통과) / 트리거 `#f9fafb` 배경 + `#be222a` 글씨 **5.82:1** / 버튼 높이 44px
+  - disabled(연한 분홍) ↔ enabled(진한 적색) 차이가 명확해졌다
+  - DESIGN.md에 대비 실측값 + **파괴적 버튼 규칙**(solid=최종 실행, outline=트리거) 신설
+  - **판단 과정의 결함 1건**: 처음에 이 문제를 보고할 때 "공용 variant를 고치면 카드 삭제까지 번진다"만 근거로 들어 **전부 아니면 전무처럼 제시**했다. 이 버튼 하나에만 className을 주는 국소 수정이 있었는데 그 선택지를 빼먹었다. 범위 밖이라 안 고친 것 자체는 맞았지만, 선택지를 좁혀 보고한 건 잘못이다
