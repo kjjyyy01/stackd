@@ -62,7 +62,6 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
   // 로그인 사용자의 소속 기본값 — 없거나 실패하면 빈 값 (REQ-HOME-004 AC-3)
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
-  const roleDefault = (data?.claims.user_metadata?.role_default as string | undefined) ?? "";
   const userId = data?.claims.sub;
 
   // 수정 모드 (REQ-HOME-006) — RLS "public read"는 타인의 공개 카드도 통과시키므로
@@ -323,7 +322,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
             카드 한 장까지 2분이면 충분해요. 저장할 때만 GitHub 로그인이 필요해요.
           </p>
         </div>
-        <WorkflowBuilder roleDefault={roleDefault} initial={initial} />
+        <WorkflowBuilder initial={initial} />
       </section>
 
       <BackToTop />

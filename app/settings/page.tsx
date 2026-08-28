@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
-import { DeleteAccountForm, RoleDefaultForm } from "@/components/settings-forms";
+import { DeleteAccountForm } from "@/components/settings-forms";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 
@@ -21,7 +21,6 @@ export default async function SettingsPage() {
   const meta = claims.claims.user_metadata ?? {};
   const handle = (meta.user_name as string | undefined) ?? "";
   const avatar = meta.avatar_url as string | undefined;
-  const roleDefault = (meta.role_default as string | undefined) ?? "";
 
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
@@ -43,8 +42,6 @@ export default async function SettingsPage() {
           )}
           <span className="font-mono text-sm">@{handle}</span>
         </section>
-
-        <RoleDefaultForm initial={roleDefault} />
 
         {/* EL-SET-004 로그아웃 — 서버 액션 폼이라 JS 없이도 동작한다 (§13) */}
         <form action={signOut}>

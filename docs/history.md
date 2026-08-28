@@ -648,3 +648,16 @@
   - 합성 검증: Switch 감싼 라벨 pointer / 텍스트 라벨 default / summary pointer / 버튼 pointer / 비활성 버튼 default
   - DESIGN.md에 **커서 규칙**과 갱신된 **파괴적 버튼 규칙**(최종 실행=항상 solid, 트리거=무게로 결정) 기록
   - ⚠️ 이 시점에 로컬 세션이 끊겼다 — 프로덕션에서 탈퇴가 실행돼 그 계정의 JWT가 무효화됐고, localhost 쿠키가 만료되면서 `/settings`가 `/?auth=required`로 리다이렉트됐다. 탈퇴 트리거의 solid 렌더 육안 확인은 프리뷰 몫으로 남는다(변형 색은 dialog 실행 버튼에서 이미 6.08:1로 실측)
+
+### 후속 5 — 소속·역할 기본값 기능 삭제 (사용자 판정, 8/28)
+
+- **무엇을**: 설정의 "소속·역할 기본값" 폼과 그 저장 경로를 통째로 제거. 소속·역할은 빌더에서 **카드마다 직접 입력**한다(BR-008 필드 자체는 유지)
+- **어떻게**: 삭제 전에 **전수 맵부터 떴다** — `grep -rn "roleDefault\|role_default\|updateRoleDefault"`. 코드 6곳 + PRD 7개 문서였다
+  - 코드: `app/settings/page.tsx` · `components/settings-forms.tsx`(RoleDefaultForm 삭제) · `app/actions/account.ts`(updateRoleDefault 삭제) · `app/page.tsx` · `components/workflow-builder.tsx`(prop 삭제) · `lib/limits.test.ts`(주석)
+  - PRD: SCR-008(v2.0.0 — EL-SET-003·REQ-SET-002·TC-SET-002-01/02 삭제) · SCR-001 · SCR-005 · PRD-05 · PRD-06 · PRD-10 · PRD-11
+- **왜**: 사용자 판정. PLAN 컷 순서 4순위(소속·역할 필드)의 **부분 적용**이다 — 필드는 남기고 기본값 저장만 잘랐다
+- **결과**:
+  - **`SCR-005_분석고지.md`의 개인정보 수집 항목 표에까지 `user_metadata.role_default`가 들어 있었다.** 수집하지 않는 항목을 수집한다고 적어두면 그것도 부정확한 고지라 함께 제거. 다만 `/privacy` **본문**은 "소속·역할 — 선택 입력 항목"이라고만 적혀 있어 **법적 고지문 수정은 불필요**했다(확인 후 미변경)
+  - `validateRole`은 **남긴다** — `validateWorkflow`가 빌더의 role 필드 검증에 그대로 쓴다. 함께 지웠으면 빌더 검증이 통째로 빠질 뻔했다
+  - 정합성 재검사: 코드 잔여 **0**, PRD 잔여는 §1의 삭제 기록 1줄뿐
+  - 검증: tsc 0 · lint 0 · test 31 pass · build 통과

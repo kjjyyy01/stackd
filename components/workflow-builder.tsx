@@ -13,7 +13,6 @@ import { CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow }
 
 type Step = Draft["steps"][number];
 type Props = {
-  roleDefault?: string; // 로그인 사용자의 user_metadata.role_default (REQ-HOME-004)
   initial?: Draft; // 수정 모드로 로드된 DB 값 (REQ-HOME-006) — 없으면 새로 쓰기
 };
 
@@ -27,8 +26,8 @@ function Counter({ n, max, over }: { n: number; max: number; over?: boolean }) {
 }
 
 // SCR-001 빌더 — 상태는 여기 한 곳, 변경마다 초안 저장 (BR-019). 서버 쓰기 없음
-export default function WorkflowBuilder({ roleDefault = "", initial }: Props) {
-  const [d, setD] = useState<Draft>(initial ?? { ...EMPTY_DRAFT, role: roleDefault });
+export default function WorkflowBuilder({ initial }: Props) {
+  const [d, setD] = useState<Draft>(initial ?? { ...EMPTY_DRAFT });
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [over, setOver] = useState<string | null>(null); // 직전 입력이 상한에 막힌 필드
   const [picking, setPicking] = useState(false); // 단계 도구 선택기 열림
