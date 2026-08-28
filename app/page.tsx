@@ -29,9 +29,10 @@ function ScaledCard({ className = "", cardClassName = "" }: { className?: string
 }
 
 // 슬라이드 공통 프레임 — 풀뷰포트 높이·내부 폭 72rem (DESIGN.md §홈 캐러셀 조판)
-const SLIDE = "relative w-full shrink-0 snap-start overflow-hidden";
+const SLIDE = "relative w-full overflow-hidden lg:shrink-0 lg:snap-start";
+// 풀뷰포트 높이는 lg+에서만 — lg 미만은 세로 스택이라 콘텐츠가 높이를 정한다
 const SLIDE_INNER =
-  "relative z-[1] mx-auto grid min-h-[max(34rem,calc(100svh-3.5rem))] w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 py-8 sm:gap-10 sm:px-6 sm:py-12 md:min-h-[max(38rem,calc(100dvh-3.5rem))] md:grid-cols-[5fr_6fr] lg:px-8";
+  "relative z-[1] mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[5fr_6fr] lg:min-h-[max(38rem,calc(100dvh-4rem))] lg:px-8 lg:py-12";
 // 질문(q) 타이포 — md 2열 진입 시 열 폭에 맞춰 한 단계 낮추고 xl에서 원 크기 복귀
 const SLIDE_Q =
   "mt-2.5 text-2xl font-semibold leading-[1.35] tracking-[-0.015em] text-balance sm:text-3xl md:text-2xl lg:text-3xl xl:text-[2.5rem]";
