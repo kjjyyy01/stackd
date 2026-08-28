@@ -8,7 +8,7 @@ export default function SiteFooter() {
     <footer className="mt-auto border-t border-border">
       <div className="container-page flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-muted-foreground">
-          © 2026 <span className="font-mono">stackd</span>
+          © 2026 stackd
         </p>
 
         {/* -mx-2로 링크 내부 패딩을 상쇄 — 첫 항목 글자가 컨테이너 좌측 축에 맞는다 */}
