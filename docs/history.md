@@ -633,3 +633,18 @@
   - disabled(연한 분홍) ↔ enabled(진한 적색) 차이가 명확해졌다
   - DESIGN.md에 대비 실측값 + **파괴적 버튼 규칙**(solid=최종 실행, outline=트리거) 신설
   - **판단 과정의 결함 1건**: 처음에 이 문제를 보고할 때 "공용 variant를 고치면 카드 삭제까지 번진다"만 근거로 들어 **전부 아니면 전무처럼 제시**했다. 이 버튼 하나에만 className을 주는 국소 수정이 있었는데 그 선택지를 빼먹었다. 범위 밖이라 안 고친 것 자체는 맞았지만, 선택지를 좁혀 보고한 건 잘못이다
+
+### 후속 3 — 탈퇴 트리거 solid 환원 + 커서 복원 (사용자 판정, 8/28)
+
+- **무엇을**: ① 설정의 탈퇴 트리거를 `outline`에서 다시 **solid destructive**로 ② 클릭 가능한 모든 요소에 `cursor: pointer` 복원
+- **어떻게**:
+  - ①은 `variant="destructive"` 환원. 후속 2에서 세웠던 "트리거는 언제나 outline" 규칙을 **무게 기준으로 다시 갈랐다** — 계정 단위 종결 행동(탈퇴)은 단독으로 놓이므로 solid, 목록 항목 안에서 수정 버튼과 나란히 놓이는 인라인 카드 삭제는 outline
+  - ②는 컴포넌트마다 `cursor-pointer`를 붙이는 대신 `globals.css` base 레이어에 **선택자 3줄**로 한 번에: `button:not(:disabled):not([aria-disabled="true"])` · `summary` · `label:has(button, input[type="checkbox"], input[type="radio"])`
+- **왜**: **Tailwind v4 Preflight가 `button`의 커서를 `default`로 되돌린다**(v3에서는 pointer였다). 그래서 shadcn 버튼 전부가 손가락 커서 없이 렌더되고 있었다. 컴포넌트별로 붙이면 반드시 빠뜨리는 곳이 생기므로 전역 규칙이 맞다
+- **결과**:
+  - 실측(홈 20개 요소): `<a>`·`<button>` 전부 pointer / **비활성 제외 정확**
+    - "카드 만들기"는 `aria-disabled`라 `not-allowed` 유지 — `buttonVariants`의 기존 규칙을 덮지 않는다
+    - **텍스트 입력의 `<label>`은 default 유지**가 의도다. `label:has(...)`가 컨트롤을 감싼 라벨만 고르므로 빌더의 제목·상황 라벨은 안 걸린다
+  - 합성 검증: Switch 감싼 라벨 pointer / 텍스트 라벨 default / summary pointer / 버튼 pointer / 비활성 버튼 default
+  - DESIGN.md에 **커서 규칙**과 갱신된 **파괴적 버튼 규칙**(최종 실행=항상 solid, 트리거=무게로 결정) 기록
+  - ⚠️ 이 시점에 로컬 세션이 끊겼다 — 프로덕션에서 탈퇴가 실행돼 그 계정의 JWT가 무효화됐고, localhost 쿠키가 만료되면서 `/settings`가 `/?auth=required`로 리다이렉트됐다. 탈퇴 트리거의 solid 렌더 육안 확인은 프리뷰 몫으로 남는다(변형 색은 dialog 실행 버튼에서 이미 6.08:1로 실측)

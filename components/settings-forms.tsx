@@ -98,12 +98,11 @@ export function DeleteAccountForm({ handle }: { handle: string }) {
 
   return (
     <>
-      {/* 트리거는 outline — solid destructive는 확인 dialog의 실행 버튼 몫이다
-          (card-actions·my-card-actions의 삭제 트리거와 같은 규칙) */}
+      {/* 계정 단위 종결 행동이라 solid — 목록 안에 끼어 있는 카드 삭제 트리거와 무게가 다르다 */}
       <Button
-        variant="outline"
+        variant="destructive"
         onClick={() => toggle(true)}
-        className="h-11 w-fit px-5 text-destructive hover:text-destructive"
+        className="h-11 w-fit px-5"
       >
         탈퇴
       </Button>
