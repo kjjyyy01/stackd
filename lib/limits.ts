@@ -93,8 +93,9 @@ export function validateWorkflow(input: unknown): Result<WorkflowInput> {
     dev_stack.push({ name, category: t.category });
   }
 
-  const role = str(d.role ?? "", LIMITS.role);
-  if (role === null) return fail("ERR-CARD-003", "role");
+  const roleResult = validateRole(d.role);
+  if (!roleResult.ok) return roleResult;
+  const role = roleResult.value;
 
   return {
     ok: true,
@@ -104,6 +105,19 @@ export function validateWorkflow(input: unknown): Result<WorkflowInput> {
       is_public: d.is_public !== false, // 기본 true (BR-017)
     },
   };
+}
+
+// 소속·역할 검증 (BR-008) — 빌더와 설정의 기본값 폼이 같은 규칙을 쓴다
+// 길이만 본다 — 문자셋 제한 없음(BR-003), 빈 값은 "미설정"으로 통과
+export function validateRole(role: unknown): Result<string> {
+  const t = str(role ?? "", LIMITS.role);
+  return t === null ? fail("ERR-CARD-003", "role") : { ok: true, value: t };
+}
+
+// 탈퇴 확인 입력 대조 (SCR-008 §7) — GitHub 핸들은 대소문자를 구분하지 않는다
+export function matchesHandle(input: unknown, handle: string | null | undefined) {
+  if (typeof input !== "string" || !handle) return false;
+  return input.trim().toLowerCase() === handle.trim().toLowerCase();
 }
 
 // 신고·문의 본문 검증 (BR-021) — 통과 시 trim된 본문

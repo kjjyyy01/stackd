@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { CATEGORIES, LIMITS, charCount, validateFeedbackBody, validateWorkflow } from "./limits.ts";
+import { CATEGORIES, LIMITS, charCount, matchesHandle, validateFeedbackBody, validateRole, validateWorkflow } from "./limits.ts";
 
 // 유효한 최소 입력 — 각 테스트가 한 필드씩 깨뜨려 사용
 const valid = () => ({
@@ -108,4 +108,29 @@ test("catalog.json 전 항목이 enum 7종·이름 1~40자·id 유일 (PRD-05 �
     ids.add(e.id);
   }
   assert.ok(catalog.length >= 160, `catalog too small: ${catalog.length}`);
+});
+
+// TC-SET-002-01 — 설정의 기본값 폼과 빌더가 같은 규칙을 쓴다 (BR-008)
+test("소속·역할 21자면 ERR-CARD-003, 20자·빈 값은 통과 (BR-008)", () => {
+  assert.deepEqual(validateRole("가".repeat(21)), { ok: false, code: "ERR-CARD-003", field: "role" });
+  assert.deepEqual(validateRole("가".repeat(20)), { ok: true, value: "가".repeat(20) });
+  assert.deepEqual(validateRole(" 백엔드 개발자 "), { ok: true, value: "백엔드 개발자" });
+  // 빈 값 = 기본값 해제, undefined는 미전송과 같다 (SCR-008 REQ-SET-002 AC-1)
+  assert.deepEqual(validateRole("  "), { ok: true, value: "" });
+  assert.deepEqual(validateRole(undefined), { ok: true, value: "" });
+});
+
+test("소속·역할은 이모지·특수문자를 막지 않는다 — 길이만 (BR-003)", () => {
+  assert.deepEqual(validateRole("프론트 🚀 <dev>"), { ok: true, value: "프론트 🚀 <dev>" });
+});
+
+// TC-SET-004-01·03 — 탈퇴 확인 입력 대조 (SCR-008 §7)
+test("탈퇴 확인 입력은 공백 무시·대소문자 무시로 핸들과 대조한다", () => {
+  assert.equal(matchesHandle(" KJJYYY01 ", "kjjyyy01"), true);
+  assert.equal(matchesHandle("kjjyyy0", "kjjyyy01"), false);
+  assert.equal(matchesHandle("", "kjjyyy01"), false);
+  // 핸들을 못 읽은 세션은 무조건 거부 — 빈 입력이 통과하면 안 된다
+  assert.equal(matchesHandle("", undefined), false);
+  assert.equal(matchesHandle("", null), false);
+  assert.equal(matchesHandle(undefined, "kjjyyy01"), false);
 });
