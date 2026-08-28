@@ -114,6 +114,13 @@
     line-height: 1.15;
     letter-spacing: -0.025em;
   }
+  /* Tailwind v4 Preflight가 버튼 커서를 default로 되돌린다 — 손가락 커서를 복원한다.
+     비활성은 제외(buttonVariants가 aria-disabled에 not-allowed를 따로 준다) */
+  button:not(:disabled):not([aria-disabled="true"]),
+  summary,
+  label:has(button, input[type="checkbox"], input[type="radio"]) {
+    cursor: pointer;
+  }
 }
 
 /* 모션은 상태 전이만 — 그것도 끄고 싶다는 사용자는 끈다 */
