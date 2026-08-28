@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import BackToTop from "@/components/back-to-top";
 import DraftBanner from "@/components/draft-banner";
 import HomeCarousel from "@/components/home-carousel";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import WorkflowBuilder from "@/components/workflow-builder";
 import WorkflowCard from "@/components/workflow-card";
 import { EMPTY_DRAFT, type Draft } from "@/lib/draft";
@@ -97,7 +97,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                   공유하세요.
                 </p>
                 <div className="mt-8">
-                  <a href="#builder" className={buttonVariants({ size: "lg" })}>바로 만들기</a>
+                  {/* 히어로 CTA — DESIGN.md §접근성 "본문 주요 CTA 44px" 미달이었다(36px). 48px로 올림 */}
+                  {/* asChild로 감싸야 cn()의 tailwind-merge가 base의 text-sm을 걷어낸다 */}
+                  <Button asChild size="lg" className="h-12 px-6 text-base">
+                    <a href="#builder">바로 만들기</a>
+                  </Button>
                 </div>
               </div>
               <div
