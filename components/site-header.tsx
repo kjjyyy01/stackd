@@ -14,7 +14,7 @@ export default async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-sm">
-      <div className="container-page flex h-14 items-center justify-between gap-4">
+      <div className="container-page flex h-16 items-center justify-between gap-4">
         {/* 록업 = 마크(PNG) + 워드마크(실제 텍스트) — 텍스트라 검색·복사·리더 모두 유효 */}
         <Link
           href="/"
@@ -24,10 +24,10 @@ export default async function SiteHeader() {
           <Image
             src={markHeader}
             alt=""
-            width={24}
-            height={30}
+            width={26}
+            height={32}
             priority
-            className="h-[30px] w-6"
+            className="h-8 w-[26px]"
           />
           {/* W2 워드마크 — Sans 600, 액센트는 마지막 d 하나에만 (로고 시스템) */}
           <span className="font-sans text-lg leading-none font-semibold tracking-tight">
