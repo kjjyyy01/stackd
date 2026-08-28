@@ -6,6 +6,8 @@ type Props = { children: ReactNode; slideCount: number };
 
 // 캐러셀 셸 (EL-HOME-016) — 슬라이드는 서버 렌더 children, 여기는 화살표·카운터만.
 // 스와이프는 CSS scroll-snap이라 JS 없이도 동작 (REQ-HOME-008 AC-4)
+// lg 미만은 캐러셀을 풀고 세로 스택 — 콘텐츠가 뷰포트(780px)를 99px 넘어
+// 가로 스와이프와 세로 스크롤이 충돌했다 (390×844 실측, 2026-08-28)
 export default function HomeCarousel({ children, slideCount }: Props) {
   const track = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(1);
@@ -42,7 +44,7 @@ export default function HomeCarousel({ children, slideCount }: Props) {
         ref={track}
         tabIndex={0}
         aria-label="문제와 해결 슬라이드"
-        className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto"
+        className="no-scrollbar flex flex-col lg:snap-x lg:snap-mandatory lg:flex-row lg:overflow-x-auto"
       >
         {children}
       </div>
@@ -54,7 +56,7 @@ export default function HomeCarousel({ children, slideCount }: Props) {
       </button>
       <span
         aria-hidden
-        className="absolute bottom-4 right-4 z-10 rounded-full bg-foreground/70 px-3 py-1.5 font-mono text-xs font-medium tracking-[0.08em] text-white"
+        className="absolute bottom-4 right-4 z-10 hidden rounded-full bg-foreground/70 px-3 py-1.5 font-mono text-xs font-medium tracking-[0.08em] text-white lg:block"
       >
         {current} / {slideCount}
       </span>

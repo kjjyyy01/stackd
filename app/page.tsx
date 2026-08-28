@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import BackToTop from "@/components/back-to-top";
 import DraftBanner from "@/components/draft-banner";
 import HomeCarousel from "@/components/home-carousel";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import WorkflowBuilder from "@/components/workflow-builder";
 import WorkflowCard from "@/components/workflow-card";
 import { EMPTY_DRAFT, type Draft } from "@/lib/draft";
@@ -29,9 +29,10 @@ function ScaledCard({ className = "", cardClassName = "" }: { className?: string
 }
 
 // 슬라이드 공통 프레임 — 풀뷰포트 높이·내부 폭 72rem (DESIGN.md §홈 캐러셀 조판)
-const SLIDE = "relative w-full shrink-0 snap-start overflow-hidden";
+const SLIDE = "relative w-full overflow-hidden lg:shrink-0 lg:snap-start";
+// 풀뷰포트 높이는 lg+에서만 — lg 미만은 세로 스택이라 콘텐츠가 높이를 정한다
 const SLIDE_INNER =
-  "relative z-[1] mx-auto grid min-h-[max(34rem,calc(100svh-3.5rem))] w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 py-8 sm:gap-10 sm:px-6 sm:py-12 md:min-h-[max(38rem,calc(100dvh-3.5rem))] md:grid-cols-[5fr_6fr] lg:px-8";
+  "relative z-[1] mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[5fr_6fr] lg:min-h-[max(38rem,calc(100dvh-4rem))] lg:px-8 lg:py-12";
 // 질문(q) 타이포 — md 2열 진입 시 열 폭에 맞춰 한 단계 낮추고 xl에서 원 크기 복귀
 const SLIDE_Q =
   "mt-2.5 text-2xl font-semibold leading-[1.35] tracking-[-0.015em] text-balance sm:text-3xl md:text-2xl lg:text-3xl xl:text-[2.5rem]";
@@ -97,7 +98,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                   공유하세요.
                 </p>
                 <div className="mt-8">
-                  <a href="#builder" className={buttonVariants({ size: "lg" })}>바로 만들기</a>
+                  {/* 히어로 CTA — DESIGN.md §접근성 "본문 주요 CTA 44px" 미달이었다(36px). 48px로 올림 */}
+                  {/* asChild로 감싸야 cn()의 tailwind-merge가 base의 text-sm을 걷어낸다 */}
+                  <Button asChild size="lg" className="h-12 px-6 text-base">
+                    <a href="#builder">바로 만들기</a>
+                  </Button>
                 </div>
               </div>
               <div
@@ -310,7 +315,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
       </section>
 
       {/* 빌더 (EL-HOME-024 + 005~014) — 헤딩은 서버 렌더, 폼은 클라이언트 */}
-      <section id="builder" className="scroll-mt-14 border-t border-border py-16 sm:py-24">
+      <section id="builder" className="scroll-mt-16 border-t border-border py-16 sm:py-24">
         <div className="container-page">
           {/* 수정 모드는 헤딩부터 바꾼다 — 같은 화면이라 맥락 표시가 없으면 새로 쓰는 것으로 읽힌다 (CPY-HOME-058) */}
           <h2 className="text-2xl sm:text-3xl">{initial ? "워크플로우 수정하기" : "내 워크플로우 적기"}</h2>
