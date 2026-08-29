@@ -43,7 +43,6 @@ last_updated: 2026-08-17
 | `submitFeedback(type, body, workflowId?)` | SCR-004·푸터 | | 길이 검증(BR-021) → **service role** insert(reporter_id = 세션 or null) → Slack 웹훅 POST(실패 무시) | ERR-FB-001 |
 | `signOut()` | SCR-008·헤더 | | Supabase signOut → `/` | — |
 | `deleteAccount(confirmHandle)` | SCR-008 | 확인 문구(핸들) | 세션 확인 → 핸들 서버 재대조 → **service role** `auth.admin.deleteUser(uid)` → cascade → signOut → `/` | ERR-SET-001 |
-| `updateRoleDefault(role)` | SCR-008 | | BR-008 검증 → `auth.updateUser({data:{role_default}})` | ERR-SET-002 |
 | `adminSetHidden(id, hidden, reason?)` / `adminResolve(feedbackId)` | OPS-001 | hidden=true면 `reason` 1~200자 필수 | admin 게이트(BR-022) → **service role** update `hidden`·`hidden_reason`(false면 null)·`updated_at`(OG `v` 버스팅) | ERR-ADMIN-001 / ERR-ADMIN-002 |
 
 ## 라우트 핸들러

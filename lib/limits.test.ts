@@ -115,7 +115,7 @@ test("소속·역할 21자면 ERR-CARD-003, 20자·빈 값은 통과 (BR-008)", 
   assert.deepEqual(validateRole("가".repeat(21)), { ok: false, code: "ERR-CARD-003", field: "role" });
   assert.deepEqual(validateRole("가".repeat(20)), { ok: true, value: "가".repeat(20) });
   assert.deepEqual(validateRole(" 백엔드 개발자 "), { ok: true, value: "백엔드 개발자" });
-  // 빈 값 = 기본값 해제, undefined는 미전송과 같다 (SCR-008 REQ-SET-002 AC-1)
+  // 빈 값·undefined는 "소속·역할 미입력"과 같다 (BR-008 선택 필드)
   assert.deepEqual(validateRole("  "), { ok: true, value: "" });
   assert.deepEqual(validateRole(undefined), { ok: true, value: "" });
 });
