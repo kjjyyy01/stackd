@@ -661,3 +661,16 @@
   - `validateRole`은 **남긴다** — `validateWorkflow`가 빌더의 role 필드 검증에 그대로 쓴다. 함께 지웠으면 빌더 검증이 통째로 빠질 뻔했다
   - 정합성 재검사: 코드 잔여 **0**, PRD 잔여는 §1의 삭제 기록 1줄뿐
   - 검증: tsc 0 · lint 0 · test 31 pass · build 통과
+
+### 후속 6 — 헤더 계정 메뉴 dropdown (사용자 요청, 8/28~29)
+
+- **무엇을**: 로그인 시 데스크톱 내비에 4개(내 카드·설정·@핸들·로그아웃)로 나열되던 계정 항목을 **@핸들 클릭 dropdown 1개**로 축약
+- **어떻게**: shadcn `dropdown-menu` 추가(Radix DropdownMenu). `radix-ui`가 이미 있어 **신규 의존성 0**, `button.tsx` 무변조(설치 전 백업 후 diff로 확인). 트리거만 클라이언트(`components/user-menu.tsx`)이고 헤더는 서버 컴포넌트 유지
+- **왜**: 내비에 개인 메뉴가 나열되면 공개 링크(라이브러리)와 계정 항목의 위계가 안 보인다
+- **결과**:
+  - 모바일 Sheet는 **미변경** — lg 미만은 이미 같은 항목을 갖고 있어 중복 렌더가 없다
+  - **명시적 손실**: dropdown은 열릴 때 포털로 붙으므로 **JS 없이는 로그아웃에 도달할 수 없다**(`/me`·`/settings`는 URL 직접 입력 가능). 기존 헤더 주석 "링크 전체가 서버 HTML에 존재한다"를 그에 맞게 수정. 모바일 Sheet가 이미 같은 성질이라 선례는 있음
+  - **버그 1건**: `data-state`는 트리거에 붙는데 아이콘에 `data-[state=open]:rotate-180`을 직접 걸어 아무 일도 안 일어났다. 빌드·타입 체크를 통과하고 에러도 없어 **열어봐야만 발견된다** → 트리거에 `group`, 아이콘은 `group-data-[state=open]:`로 수정
+  - **계측 오류 1건 (중요)**: 수정 후에도 "회전이 안 된다"고 판단했는데 틀렸다. **Tailwind v4는 `rotate-180`을 `transform: rotate()`가 아니라 CSS 독립 속성 `rotate: 180deg`로 낸다.** `getComputedStyle(el).transform`을 보면 영원히 `none`이다 — 봐야 할 건 `.rotate`다. 부수 확인: v4의 `transition-transform`은 `transform, translate, scale, rotate`를 모두 포함해 애니메이션은 정상
+  - **Radix 트리거는 `click`이 아니라 `pointerdown`에 반응한다** — 합성 `.click()`으로는 안 열려 "안 된다"고 오판하기 쉽다. 실제 클릭(요소 ref)으로 검증해야 한다
+  - 실측: 메뉴 열림 · 항목 3종 · 아이콘 `rotate` 180deg↔none · ESC 닫힘 · **실제 키 입력 ↓ → roving focus가 "내 카드"로 이동**(합성 keydown으로는 메뉴 컨테이너에 머물러 검증 불가)

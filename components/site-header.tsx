@@ -2,9 +2,10 @@ import Link from "next/link";
 import Image from "next/image";
 import markHeader from "@/app/mark-header.png";
 import { createClient } from "@/lib/supabase/server";
-import { signInWithGitHub, signOut } from "@/app/auth/actions";
+import { signInWithGitHub } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/mobile-nav";
+import UserMenu from "@/components/user-menu";
 
 // 공통 헤더 — 로고 / 라이브러리 / 로그인 or 내 카드·설정 (PRD-04 사이트맵)
 // ponytail: cookies() 때문에 전 페이지 동적 렌더 — LCP 예산 걸리면 Suspense/cacheComponents로 분리
@@ -36,7 +37,7 @@ export default async function SiteHeader() {
           </span>
         </Link>
 
-        {/* 데스크톱 내비 — lg 이상. 링크 전체가 서버 HTML에 존재한다 */}
+        {/* 데스크톱 내비 — lg 이상. 공개 링크는 서버 HTML, 계정 항목은 UserMenu 안 */}
         <nav aria-label="주요" className="hidden items-center gap-1 text-sm lg:flex">
           <Link
             href="/workflows"
@@ -46,38 +47,8 @@ export default async function SiteHeader() {
           </Link>
 
           {handle ? (
-            <>
-              <Link
-                href="/me"
-                className="rounded-md px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-              >
-                내 카드
-              </Link>
-              <Link
-                href="/settings"
-                className="rounded-md px-2 py-1.5 text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-              >
-                설정
-              </Link>
-              {/* @핸들은 설정과 같은 곳으로 간다 — 로그인 계정 확인용 */}
-              <Link
-                href="/settings"
-                className="ml-2 rounded-md px-2 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-              >
-                @{handle}
-              </Link>
-              <form action={signOut} className="ml-1">
-                {/* 내비 링크와 같은 무게 — 로그아웃은 주요 행동이 아니다 */}
-                <Button
-                  type="submit"
-                  variant="ghost"
-                  size="lg"
-                  className="font-normal text-muted-foreground"
-                >
-                  로그아웃
-                </Button>
-              </form>
-            </>
+            /* 계정 항목은 @핸들 아래로 접는다 (2026-08-28) — 내비에 개인 메뉴가 4개 나열되던 것을 1개로 */
+            <UserMenu handle={handle} />
           ) : (
             <form action={signInWithGitHub} className="ml-1">
               <input type="hidden" name="next" value="/" />
