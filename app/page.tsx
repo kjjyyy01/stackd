@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import BackToTop from "@/components/back-to-top";
 import DraftBanner from "@/components/draft-banner";
+import HeroIntro from "@/components/hero-intro";
 import HomeCarousel from "@/components/home-carousel";
 import { Button, buttonVariants } from "@/components/ui/button";
 import WorkflowBuilder from "@/components/workflow-builder";
@@ -87,8 +88,9 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
         <HomeCarousel slideCount={3}>
           {/* 슬라이드 1 = 히어로: h1·부제·CTA + 카톡 공유 장면 DOM 재현 (EL-HOME-002·017·022) */}
           <article className={`${SLIDE} bg-(--chat-bg)`}>
-            <div className={SLIDE_INNER}>
-              <div>
+            {/* 오케스트레이션 래퍼 (ANIMATION.md #1) — 콘텐츠는 서버 렌더 유지 */}
+            <HeroIntro className={SLIDE_INNER}>
+              <div data-hero="text">
                 <h1 className="max-w-[20ch] text-[2.75rem] sm:text-[3.5rem] md:text-4xl lg:text-6xl xl:text-7xl">
                   도구는 아는데, 어떻게 쓰는지는 모른다.
                 </h1>
@@ -105,6 +107,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                 </div>
               </div>
               <div
+                data-hero="chat"
                 role="img"
                 aria-label="메신저에서 워크플로우 카드가 링크로 공유된 장면"
                 className="grid w-full max-w-lg gap-3.5 justify-self-center md:justify-self-end"
@@ -125,7 +128,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                   </div>
                 </div>
               </div>
-            </div>
+            </HeroIntro>
           </article>
 
           {/* 슬라이드 2: 무질서 → 순서 (EL-HOME-018) */}
