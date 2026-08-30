@@ -698,3 +698,14 @@
   - **함정 2건**: ①`import {} from "react/canary"`는 tsc는 통과하지만 **번들러가 실체 없는 모듈을 찾다 빌드가 깨진다** — triple-slash reference(`/// <reference types="react/canary" />`)가 정답 ②기존 reduced-motion 킬스위치는 GSAP(JS 인라인)과 `::view-transition-*`(비요소 의사요소) 둘 다 못 막는다 — `gsap.matchMedia` 등록 가드 + globals.css 명시 규칙로 이중 가드
   - Next 경고 대응: `<html data-scroll-behavior="smooth">` — 라우트 전환 중 smooth 스크롤이 morph와 충돌하는 것을 억제
   - ⚠️ 잔여: **#4(신규 카드 저장→상세 morph) 페어링은 로그인 세션 필요라 미실측**(수정 흐름은 editId로 보장) · **본인 눈 모션 확인 대기** · Day 13 = 페이지 전환 방향성(directional)·그리드 stagger 검토
+
+## 2026-08-30 — Day 13: 폴리싱 마감 (스크롤 리빌 · 워드마크 · 프리뷰 판정 · main 머지)
+
+- **무엇을**: ①홈 쇼케이스·과정 레일 스크롤 리빌(#6 — 사용자 요청으로 승격) ②리빌을 fade-up→**좌우 슬라이드**로 전환 후 강도 상향(x 24→64px·발화점 80%→75%) ③헤더 워드마크 18px→30px(text-3xl) ④프리뷰 판정 2건 통과 후 **main 머지(8af46c9, 프로덕션 배포)** ⑤#5 그리드 stagger 검토→컷 권고
+- **어떻게**: `components/scroll-reveal.tsx` — `[data-reveal="left|right"]` 속성이 방향을 소유(마크업이 방향 결정, 컴포넌트는 읽기만). 요소별 ScrollTrigger(once)라 스크롤 속도가 곧 stagger — 인위적 지연 없음. x 64px가 모바일 패딩 16px를 넘어 레일 섹션에 overflow-hidden 필수
+- **왜**: "티가 많이 나지 않아"(사용자) — 거리 짧음 + 발화점이 시야 밖 하단 + 빠른 감속의 3중 원인. 워드마크는 최대(48px)에서 줄여가며 수렴 — 마크 PNG 32px와의 록업 균형점이 30px
+- **결과**:
+  - 실측: 발화 직후 x ∓38.6px 대칭 · 가로 오버플로 0 · 서버 HTML 콘텐츠 보존 · tsc 0·lint 0·test 31 pass
+  - **프리뷰 판정(본인, 8/30)**: 모션 전건 정상 + **#4 신규 카드 저장→상세 morph 실저장 정상** — Day 12의 미실측 잔여 해소, 컷 불요
+  - **#5 컷 권고(확정 대기)**: 그리드 카드가 #3 morph 페어라 stagger가 mount마다 재생되면 상세→갤러리 복귀 morph 도착 슬롯이 opacity 0으로 충돌 + 고빈도 루프(빈도 게이트)
+  - 잔여: GSAP 지식 총정리·EOD 기록은 초안만(게시는 EOD 세션 승인 후)
