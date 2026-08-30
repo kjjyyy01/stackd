@@ -120,8 +120,8 @@
 - [x] 히어로 오케스트레이션 (설계 #1) ← `components/hero-intro.tsx` + `data-hero` 마킹. 숨김은 hydration 후 gsap — JS-off에서 h1 서버 렌더 실측, LCP 260ms·CLS 0.03
 - [x] `/card` 완성 연출 (설계 #2) ← 카드 scale-in 0.5s + 레일 노드(`data-rail`) 60ms stagger, 초안 로드 직후 1회
 - [x] 카드 morph — 갤러리·`/me`→상세 (설계 #3) ← `components/card-transition.tsx`(`share="morph" default="none"`), 갤러리→상세 `startViewTransition` 1회 호출 실측
-- [~] 저장→상세 morph (설계 #4) ← 구현 완료(useTransition→수동 pending — push와 한 덩어리면 이름이 옛 DOM에 못 실림). ⚠️ **신규 카드 흐름 미실측**(로그인 세션 필요) — 실패 시 컷 판정은 ANIMATION.md 기록대로
-- [ ] 그리드 진입 stagger (설계 #5) — **시간 남을 때만** (PLAN 3순위)
+- [x] 저장→상세 morph (설계 #4) ← 구현 완료(useTransition→수동 pending — push와 한 덩어리면 이름이 옛 DOM에 못 실림). **8/30 프리뷰 실저장 판정: 정상 동작(본인 확인)** — 컷 불요
+- [ ] 그리드 진입 stagger (설계 #5) — **8/30 검토: 컷 권고** — ① 그리드 카드는 #3 morph 페어 대상인데 stagger가 mount마다 재생되면 상세→갤러리 복귀 morph의 도착 슬롯이 opacity 0 ② 갤러리↔상세는 고빈도 루프(빈도 게이트 감점) ③ 직진입만 재생하는 분기는 3순위 가치 대비 과함. **확정은 본인 판정 대기**
 - [x] 홈 쇼케이스·과정 레일 스크롤 리빌 (설계 #6 — **8/30 사용자 요청으로 승격**) ← `components/scroll-reveal.tsx`, `[data-reveal]` 6개 요소별 트리거(once). 실측: 스크롤 전 opacity 0 → 통과 후 1 전건, 서버 HTML에 콘텐츠 보존. **8/30 2차: fade-up → 가로 슬라이드**(사용자 요청) — 쇼케이스 텍스트←좌·카드←우, 레일 단계 좌우 교차. 발화 직후 x ∓10px 대칭 실측·가로 오버플로 0(레일 섹션 overflow-hidden 추가)
-- [ ] **[본인]** 모션 눈 확인 — 히어로 타이밍·완성 연출·morph 감(感), 레퍼런스(ray.so·githubunwrapped) 대비
-- [ ] Day 13: 남은 폴리싱 (방향성 전환·stagger 검토 + GSAP 지식 총정리→Obsidian)
+- [x] **[본인]** 모션 눈 확인 — 히어로 타이밍·완성 연출·morph 감(感) ← **8/30 프리뷰에서 전건 확인 완료** → main 머지(8af46c9, 프로덕션 배포)
+- [~] Day 13: 남은 폴리싱 — ~~방향성 전환~~(8/30 좌우 슬라이드 완료) · ~~stagger 검토~~(8/30 컷 권고, 위 #5) · GSAP 지식 총정리 **초안 작성 완료**(scratchpad) — **Obsidian 게시·EOD 기록은 승인 후 EOD 세션에서**

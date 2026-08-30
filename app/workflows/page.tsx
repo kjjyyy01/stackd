@@ -4,6 +4,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import CardTransition from "@/components/card-transition";
+import GridStagger from "@/components/grid-stagger";
 import WorkflowCard from "@/components/workflow-card";
 import { pageRange, parsePage, splitPage } from "@/lib/paginate";
 import { createClient } from "@/lib/supabase/server";
@@ -68,8 +69,8 @@ export default async function WorkflowsPage({ searchParams }: Props) {
         </div>
       ) : (
         <>
-          {/* EL-LIB-002 목록 — 1열 / sm 2열 / lg 3열 (§16) */}
-          <ul className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {/* EL-LIB-002 목록 — 1열 / sm 2열 / lg 3열 (§16) · 진입 stagger는 ANIMATION.md #5 */}
+          <GridStagger className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((w) => (
               <li key={w.id}>
                 {/* EL-LIB-003 — 항목 전체가 링크 1개. 이름은 제목으로 고정한다 (§15) */}
@@ -107,7 +108,7 @@ export default async function WorkflowsPage({ searchParams }: Props) {
                 </Link>
               </li>
             ))}
-          </ul>
+          </GridStagger>
 
           {/* EL-LIB-004 더 보기 (CPY-LIB-004) — 전체 페이지 이동이라 JS 없이 동작 */}
           {hasNext && (
