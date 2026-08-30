@@ -22,12 +22,13 @@ export default function ScrollReveal({ className, children }: Props) {
         // 값 left/right = 가로 슬라이드, 빈 값 = fade-up
         const dir = el.dataset.reveal;
         gsap.from(el, {
-          x: dir === "left" ? -24 : dir === "right" ? 24 : 0,
+          x: dir === "left" ? -64 : dir === "right" ? 64 : 0,
           y: dir ? 0 : 16,
           opacity: 0,
-          duration: 0.6,
+          duration: 0.7,
           ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 80%", once: true },
+          // 75% — 요소가 화면 안쪽에 들어온 뒤 재생돼야 이동이 눈에 담긴다
+          scrollTrigger: { trigger: el, start: "top 75%", once: true },
         });
       }
     });
