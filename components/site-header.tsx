@@ -32,7 +32,7 @@ export default async function SiteHeader() {
             className="h-8 w-[26px]"
           />
           {/* W2 워드마크 — Sans 600, 액센트는 마지막 d 하나에만 (로고 시스템) */}
-          <span className="font-sans text-lg leading-none font-semibold tracking-tight">
+          <span className="font-sans text-3xl leading-none font-semibold tracking-tight">
             stack<span className="text-primary">d</span>
           </span>
         </Link>
