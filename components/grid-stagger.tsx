@@ -5,9 +5,8 @@ import gsap from "gsap";
 
 type Props = { className?: string; children: ReactNode };
 
-// ⚠️ 판정용 임시 구현 (ANIMATION.md #5) — 본인 눈 판정 후 채택/컷 결정.
-// 갤러리 그리드 li를 mount 시 60ms stagger fade-up.
-// 컷 근거를 실증하는 지점: 상세 → 갤러리 복귀 시 morph 도착 슬롯이 opacity 0
+// 갤러리 그리드 진입 stagger (ANIMATION.md #5) — mount 시 60ms 간격 fade-up.
+// 복귀 morph와의 충돌은 2026-08-30 본인 눈 판정에서 미관측 — 채택 확정
 export default function GridStagger({ className, children }: Props) {
   const root = useRef<HTMLUListElement>(null);
 

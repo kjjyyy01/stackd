@@ -69,8 +69,7 @@ export default async function WorkflowsPage({ searchParams }: Props) {
         </div>
       ) : (
         <>
-          {/* EL-LIB-002 목록 — 1열 / sm 2열 / lg 3열 (§16) */}
-          {/* ⚠️ GridStagger = ANIMATION.md #5 판정용 임시 — 컷 시 <ul>로 되돌린다 */}
+          {/* EL-LIB-002 목록 — 1열 / sm 2열 / lg 3열 (§16) · 진입 stagger는 ANIMATION.md #5 */}
           <GridStagger className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((w) => (
               <li key={w.id}>
