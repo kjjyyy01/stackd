@@ -48,7 +48,7 @@
 | 2 | `/card` 카드 등장 | Scale in + Stagger | 컨테이너 `scale(0.96)+opacity 0 → 1` 0.5s + 단계 레일 노드 60ms stagger. 로드 즉시 시작(지연 금지 — 즉각성이 레퍼런스 기준) |
 | 3 | 갤러리·`/me` → 상세 | Shared element transition | `<ViewTransition name={card-${id}}>`로 카드 페어링 — 그리드 카드가 상세 카드로 morph |
 | 4 | 저장 → 상세 | Continuity transition | #3과 같은 name을 `/card` 미리보기에 부여. 상태 갱신·push 배칭 리스크는 수동 pending으로 해소 — **2026-08-30 프리뷰 실저장 판정: 정상(본인 확인)** |
-| 5 | 갤러리 그리드 진입 | Stagger | **2026-08-30 컷 권고(확정 대기)** — 그리드 카드가 #3 morph 페어라 mount마다 재생 시 복귀 morph 도착 슬롯이 opacity 0으로 충돌 + 갤러리↔상세 고빈도 루프(빈도 게이트) |
+| 5 | 갤러리 그리드 진입 | Stagger | mount 시 fade-up y 16px·0.5s·**60ms stagger** `enter` (`grid-stagger.tsx`) — 컷 권고(morph 페어 충돌 우려)였으나 **2026-08-30 프리뷰 본인 눈 판정으로 채택**, 충돌 미관측 |
 | 6 | 홈 쇼케이스·과정 레일 | Scroll reveal (Slide in) | `[data-reveal="left|right"]` 요소별 트리거(`top 75%`·once) 가로 슬라이드 **x 64px·0.7s** `enter` — 쇼케이스: 텍스트←왼쪽·카드←오른쪽 / 레일 단계: 좌우 교차. 빈 값은 fade-up 폴백. 섹션 overflow-hidden 필수(모바일 패딩 16px < x) (2026-08-30 fade-up→가로 슬라이드, 강도 24px→64px·80%→75% 상향 — 둘 다 사용자 눈 판정) |
 
 **기각** (find-animation-opportunities 게이트): 헤더 내비(고빈도 — 금지) · tool-picker(입력 동선 즉각 반응 원칙) · draft-banner(레이아웃 미는 배너라 등장 모션이 본문 점프를 연출) · 상세 단계 목록 리빌(읽는 콘텐츠) · Radix 계열(기본 모션 존재) · 빌더 단계 추가/삭제(마이크로 — backlog).
