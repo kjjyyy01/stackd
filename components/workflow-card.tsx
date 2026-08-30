@@ -68,6 +68,7 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
           {steps.map((s, i) => (
             <li key={i} className="relative flex gap-3">
               <span
+                data-rail
                 className="z-10 flex size-6 shrink-0 items-center justify-center rounded-full font-mono text-[0.625rem] font-medium leading-none"
                 style={{ background: accent, color: SURFACE }}
               >

@@ -683,3 +683,18 @@
   - **계측 오류 1건 (중요)**: 수정 후에도 "회전이 안 된다"고 판단했는데 틀렸다. **Tailwind v4는 `rotate-180`을 `transform: rotate()`가 아니라 CSS 독립 속성 `rotate: 180deg`로 낸다.** `getComputedStyle(el).transform`을 보면 영원히 `none`이다 — 봐야 할 건 `.rotate`다. 부수 확인: v4의 `transition-transform`은 `transform, translate, scale, rotate`를 모두 포함해 애니메이션은 정상
   - **Radix 트리거는 `click`이 아니라 `pointerdown`에 반응한다** — 합성 `.click()`으로는 안 열려 "안 된다"고 오판하기 쉽다. 실제 클릭(요소 ref)으로 검증해야 한다
   - 실측: 메뉴 열림 · 항목 3종 · 아이콘 `rotate` 180deg↔none · ESC 닫힘 · **실제 키 입력 ↓ → roving focus가 "내 카드"로 이동**(합성 keydown으로는 메뉴 컨테이너에 머물러 검증 불가)
+
+## 2026-08-30 — Day 12: 모션 설계 + 구현 (히어로 오케스트레이션 · 카드 morph · 완성 연출)
+
+- **무엇을**: 중점 축(애니메이션·비주얼) 폴리싱 1차분. ANIMATION.md 빈 섹션 3개(이징·듀레이션·모션 설계) 확정 후 설계 5건 중 4건 구현 — ①홈 히어로 오케스트레이션 ②`/card` 완성 연출 ③갤러리·`/me`→상세 카드 morph ④저장→상세 morph. #5(그리드 stagger)는 PLAN 3순위라 보류
+- **어떻게**: find-animation-opportunities 게이트(빈도·목적·속도·기능 4문)로 후보를 걸렀다 — 채택 5·기각 6(헤더 내비=고빈도 금지, tool-picker=입력 동선 즉각 반응 원칙, draft-banner=레이아웃 밀림 연출 등). sequential-thinking으로 설계 4결정 추적
+  - **페이지 전환은 GSAP이 아니라 React `<ViewTransition>`(Next 16 네이티브)로 판정** — name 매칭만으로 shared element morph가 생기고, 미지원 브라우저 자동 폴백, cleanup 0. GSAP은 타임라인 시퀀싱이 필요한 히어로·완성 연출 2곳만
+  - 히어로: `components/hero-intro.tsx`(클라이언트 셸) + `data-hero` 마킹. 숨김은 CSS가 아니라 **hydration 후 `gsap.set()`** — JS 실패 시 서버 HTML이 그대로 보인다
+  - morph: `components/card-transition.tsx` 공용 래퍼(`name=card-{id}`, `share="morph" default="none"` — 이름 있는 카드가 무관한 전환마다 각자 crossfade하는 것을 방지)
+  - 완성 연출: 카드 scale-in 0.5s + 레일 노드 60ms stagger. 저장 morph는 `useTransition`→수동 pending 전환이 필요했다 — push까지 한 transition으로 묶이면 morph 이름이 옛 DOM에 못 실린다
+- **왜**: Day 1 모션 원칙 — 카드의 비주얼이 곧 제품, "공유하고 싶어지는" 순간(생성·완성 연출)에 모션 집중. 기능(Day 4~11)과 품질(Day 12~13) 분리
+- **결과**:
+  - 실측: 히어로·완성 연출 GSAP 실행 확인(종료 인라인 스타일) · 갤러리→상세 내비에서 `startViewTransition` 1회 호출 · **LCP 260ms**(예산 2.5s, 히어로 모션이 LCP를 지연시키지 않음 — 첫 페인트가 애니메이션 이전) · CLS 0.03 · JS-off 서버 HTML에 h1 존재·숨김 스타일 0건 · 390/1440 레이아웃 무손상 · tsc 0·lint 0·test 31 pass·build 통과
+  - **함정 2건**: ①`import {} from "react/canary"`는 tsc는 통과하지만 **번들러가 실체 없는 모듈을 찾다 빌드가 깨진다** — triple-slash reference(`/// <reference types="react/canary" />`)가 정답 ②기존 reduced-motion 킬스위치는 GSAP(JS 인라인)과 `::view-transition-*`(비요소 의사요소) 둘 다 못 막는다 — `gsap.matchMedia` 등록 가드 + globals.css 명시 규칙로 이중 가드
+  - Next 경고 대응: `<html data-scroll-behavior="smooth">` — 라우트 전환 중 smooth 스크롤이 morph와 충돌하는 것을 억제
+  - ⚠️ 잔여: **#4(신규 카드 저장→상세 morph) 페어링은 로그인 세션 필요라 미실측**(수정 흐름은 editId로 보장) · **본인 눈 모션 확인 대기** · Day 13 = 페이지 전환 방향성(directional)·그리드 stagger 검토

@@ -7,6 +7,7 @@ import CardActions from "@/components/card-actions";
 import FeedbackDialog from "@/components/feedback-dialog";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
+import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import type { WorkflowInput } from "@/lib/limits";
 import { createClient } from "@/lib/supabase/server";
@@ -94,11 +95,14 @@ export default async function CardDetailPage({ params }: Params) {
       <div className="lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
         {/* EL-WF-001 요약 카드 — 유도 문구는 미노출(이미 상세다) */}
         <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
-          <div className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
-            <div className="origin-top-left [transform:scale(var(--s))]">
-              <WorkflowCard id="wf-card" workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" />
+          {/* 목록·미리보기에서 morph로 도착 (ANIMATION.md #3·#4) */}
+          <CardTransition id={wf.id}>
+            <div className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
+              <div className="origin-top-left [transform:scale(var(--s))]">
+                <WorkflowCard id="wf-card" workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" />
+              </div>
             </div>
-          </div>
+          </CardTransition>
         </div>
 
         <div className="mt-8 lg:mt-0">

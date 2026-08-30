@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import { toast } from "sonner";
 import { saveWorkflow } from "@/app/actions/workflow";
 import { signInWithGitHub } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import CardTransition from "@/components/card-transition";
 import WorkflowCard, { ACCENTS } from "@/components/workflow-card";
 import { track } from "@/lib/analytics";
 import { clearDraft, loadDraft, markResume, saveDraft, type Draft } from "@/lib/draft";
@@ -29,7 +31,9 @@ export default function CardPreview({ handle, loggedIn }: Props) {
   const [draft, setDraft] = useState<Draft | null>(null);
   const [autoSave, setAutoSave] = useState(false);
   const [online, setOnline] = useState(true);
-  const [pending, startTransition] = useTransition();
+  // useTransition이면 push까지 한 덩어리로 묶여 morph 이름이 옛 DOM에 못 실린다 (#4)
+  const [pending, setPending] = useState(false);
+  const [savedId, setSavedId] = useState<string | null>(null);
   const fired = useRef(false);
 
   // 초안 없음·손상·단계 2개 미만이면 홈으로 (REQ-CARD-001 AC-2)
@@ -62,25 +66,26 @@ export default function CardPreview({ handle, loggedIn }: Props) {
   }, []);
 
   const save = useCallback(
-    (d: Draft) => {
-      startTransition(async () => {
-        const r = await saveWorkflow(d, d.editId);
-        if (r.ok) {
-          clearDraft(); // 저장 성공 = 초안 폐기 (BR-019)
-          track(d.editId ? "card_edit" : "card_create");
-          toast.success("저장했어요 — 이제 공유할 수 있어요");
-          router.push(`/card-detail/${r.id}`);
-          return;
-        }
-        // 수정 대상이 사라졌으면 초안의 editId를 떼어 다음 시도가 새 카드로 가게 한다.
-        // 자동 재시도는 하지 않는다 — 수정을 의도했는데 말없이 새 카드가 생기면 안 된다 (ERR-CARD-006)
-        if (r.code === "ERR-CARD-006") {
-          const fresh = { ...d, editId: undefined };
-          setDraft(fresh);
-          saveDraft(fresh);
-        }
-        toast.error(ERROR_COPY[r.code] ?? GATE_COPY);
-      });
+    async (d: Draft) => {
+      setPending(true);
+      const r = await saveWorkflow(d, d.editId);
+      if (r.ok) {
+        clearDraft(); // 저장 성공 = 초안 폐기 (BR-019)
+        track(d.editId ? "card_edit" : "card_create");
+        toast.success("저장했어요 — 이제 공유할 수 있어요");
+        setSavedId(r.id); // morph 이름을 먼저 커밋하고 전환 (ANIMATION.md #4)
+        router.push(`/card-detail/${r.id}`);
+        return; // pending 유지 — 전환 중 재클릭 방지
+      }
+      setPending(false);
+      // 수정 대상이 사라졌으면 초안의 editId를 떼어 다음 시도가 새 카드로 가게 한다.
+      // 자동 재시도는 하지 않는다 — 수정을 의도했는데 말없이 새 카드가 생기면 안 된다 (ERR-CARD-006)
+      if (r.code === "ERR-CARD-006") {
+        const fresh = { ...d, editId: undefined };
+        setDraft(fresh);
+        saveDraft(fresh);
+      }
+      toast.error(ERROR_COPY[r.code] ?? GATE_COPY);
     },
     [router],
   );
@@ -90,8 +95,25 @@ export default function CardPreview({ handle, loggedIn }: Props) {
     if (!autoSave || !draft || !loggedIn || fired.current) return;
     if (!validateWorkflow(draft).ok) return; // 왕복 사이 초안이 무너진 경우
     fired.current = true;
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- OAuth 복귀 자동 저장은 의도된 1회 부작용
     save(draft);
   }, [autoSave, draft, loggedIn, save]);
+
+  // 완성 연출 (ANIMATION.md #2) — 초안 로드 직후 1회만, reduce면 등록 안 함
+  const cardRef = useRef<HTMLDivElement>(null);
+  const played = useRef(false);
+  useEffect(() => {
+    if (!draft || played.current || !cardRef.current) return;
+    played.current = true;
+    const mm = gsap.matchMedia(cardRef);
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap
+        .timeline({ defaults: { ease: "power3.out" } })
+        .from(cardRef.current, { scale: 0.96, opacity: 0, duration: 0.5 })
+        .from("[data-rail]", { opacity: 0, duration: 0.3, stagger: 0.06 }, 0.15);
+    });
+    return () => mm.revert();
+  }, [draft]);
 
   // 스와치·스위치 변경은 초안에 즉시 반영 — OAuth 왕복 뒤에도 남아야 한다 (BR-019)
   const patch = (next: Partial<Draft>) => {
@@ -113,11 +135,14 @@ export default function CardPreview({ handle, loggedIn }: Props) {
     <div className="mt-8 lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
       {/* EL-CARD-002 미리보기 — 조판은 560×700 고정, 좁은 화면은 scale로만 축소 */}
       <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
-        <div className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
-          <div className="origin-top-left [transform:scale(var(--s))]">
-            <WorkflowCard workflow={draft} handle={handle} />
+        {/* 수정=editId, 신규=저장 직후 id로 상세와 morph 페어링 (ANIMATION.md #4) */}
+        <CardTransition id={draft.editId ?? savedId ?? "preview"}>
+          <div ref={cardRef} className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
+            <div className="origin-top-left [transform:scale(var(--s))]">
+              <WorkflowCard workflow={draft} handle={handle} />
+            </div>
           </div>
-        </div>
+        </CardTransition>
       </div>
 
       <div className="mt-8 lg:mt-0">
