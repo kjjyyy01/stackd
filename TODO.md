@@ -110,6 +110,17 @@
 
 - [~] ~~404~~(8/18 완료) / ~~robots(noindex 규칙)~~ / ~~정적 기본 OG~~ / ~~sitemap 동적~~ ← **8/26** `app/robots.ts`(disallow 5개 — `/card$`는 **끝 앵커 필수**, 없으면 접두사 매칭이 `/card-detail/{id}`까지 막아 H-02 공유 루프가 죽는다) · `app/sitemap.ts`(정적 4 + 공개·!hidden 상세 동적, `updated_at` lastmod — hidden은 RLS를 통과하므로 앱에서 필터) · `app/opengraph-image.tsx`(1200×630 빌드타임 생성). **비율 결함 1건 수정**: 홈·상세가 OG로 쓰던 `hero-card.png`는 1120×1400(4:5)이라 카톡·X에서 잘렸다 → 지정 제거하고 기본 OG 상속. 실측: 전 페이지 og:image 1200×630 상속, robots.txt·sitemap.xml 200. ⚠️ 잔여 **[본인] favicon 교체 예정**(8/26 본인 확정) · 기본 OG는 한글 미포함(OQ-003 폰트 판정 대기) — **실제 공유 미리보기 보고 본인 판단**(8/26 보류) · ~~`public/hero-card.png` 참조 0건~~ → **8/26 제거**(Next 보일러플레이트 svg 5종 동반 제거, 사용자 지시)
 - [x] **[본인] GA4 내부 트래픽 제외** (PRD·TODO 미등재였던 항목 — 8/18 세션 2에서 식별) ← 관리 → 데이터 수집 및 수정 → 데이터 스트림 → 태그 설정 구성 → 더보기 → 내부 트래픽 정의(IP `211.177.28.77`) + 데이터 필터 **활성** 완료(사용자 8/18). **아래 시드 작성의 선행 조건** — 필터는 소급 적용이 안 되고, H-01은 `card_create` 사용자 ÷ 전체 사용자라 본인이 분자·분모 양쪽에 섞인다. IP가 바뀌면 필터가 조용히 무력화되므로 회선 변경 시 재확인
-- [ ] **[본인]** 시드 워크플로우 3~5장 작성 (Day 11까지, 프로덕션에서) ← 선행: 위 내부 트래픽 제외 ✅
+- [x] **[본인]** 시드 워크플로우 3~5장 작성 (Day 11까지, 프로덕션에서) ← 선행: 위 내부 트래픽 제외 ✅ ← **8/28 완료 — 공개 4 + 비공개 1** (8/30 프로덕션 sitemap 실측: card-detail 4건)
   - ⚠️ **순서 고정 — 탈퇴 실동작 확인(TC-SET-004-02)을 시드 작성보다 먼저 한다.** `schema.sql:11`의 `on delete cascade` 때문에 탈퇴하면 그 계정의 workflows가 전부 삭제된다. 시드를 먼저 넣고 탈퇴를 시험하면 시드가 통째로 날아간다
   - 시드 중 **1장은 비공개로 남긴다** — SCR-006 §11 #4(로그인 사용자의 본인 비공개 카드가 `/workflows`에 안 뜨는지)를 실증할 유일한 방법. 현재 공개 1건뿐이라 미검증 상태다
+
+### Day 12~13 (8/29~30) — 중점 축 폴리싱 (모션)
+
+- [x] 모션 설계 — ANIMATION.md 이징 2종·듀레이션 스케일·설계 5건+기각 6건 확정 ← **8/30** find-animation-opportunities 게이트 + sequential-thinking 4결정. 페이지 전환은 GSAP 아닌 **Next 16 네이티브 `<ViewTransition>`** 판정
+- [x] 히어로 오케스트레이션 (설계 #1) ← `components/hero-intro.tsx` + `data-hero` 마킹. 숨김은 hydration 후 gsap — JS-off에서 h1 서버 렌더 실측, LCP 260ms·CLS 0.03
+- [x] `/card` 완성 연출 (설계 #2) ← 카드 scale-in 0.5s + 레일 노드(`data-rail`) 60ms stagger, 초안 로드 직후 1회
+- [x] 카드 morph — 갤러리·`/me`→상세 (설계 #3) ← `components/card-transition.tsx`(`share="morph" default="none"`), 갤러리→상세 `startViewTransition` 1회 호출 실측
+- [~] 저장→상세 morph (설계 #4) ← 구현 완료(useTransition→수동 pending — push와 한 덩어리면 이름이 옛 DOM에 못 실림). ⚠️ **신규 카드 흐름 미실측**(로그인 세션 필요) — 실패 시 컷 판정은 ANIMATION.md 기록대로
+- [ ] 그리드 진입 stagger (설계 #5) — **시간 남을 때만** (PLAN 3순위)
+- [ ] **[본인]** 모션 눈 확인 — 히어로 타이밍·완성 연출·morph 감(感), 레퍼런스(ray.so·githubunwrapped) 대비
+- [ ] Day 13: 남은 폴리싱 (방향성 전환·stagger 검토 + GSAP 지식 총정리→Obsidian)
