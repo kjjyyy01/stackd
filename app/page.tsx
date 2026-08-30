@@ -3,6 +3,7 @@ import BackToTop from "@/components/back-to-top";
 import DraftBanner from "@/components/draft-banner";
 import HeroIntro from "@/components/hero-intro";
 import HomeCarousel from "@/components/home-carousel";
+import ScrollReveal from "@/components/scroll-reveal";
 import { Button, buttonVariants } from "@/components/ui/button";
 import WorkflowBuilder from "@/components/workflow-builder";
 import WorkflowCard from "@/components/workflow-card";
@@ -215,14 +216,15 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
 
       {/* 카드 쇼케이스 (EL-HOME-020) — 슬라이드 1의 카드를 실물 크기 블리드로 */}
       <section aria-label="카드 실물 보기" className="relative overflow-hidden border-t border-border py-16 sm:py-24">
-        <div className="container-page grid grid-cols-1 items-center gap-12 md:grid-cols-2">
-          <div>
+        {/* 스크롤 리빌 (ANIMATION.md #6) — 콘텐츠는 서버 렌더 유지 */}
+        <ScrollReveal className="container-page grid grid-cols-1 items-center gap-12 md:grid-cols-2">
+          <div data-reveal>
             <h2 className="text-2xl sm:text-3xl">방금 그 카드, 펼치면 이렇습니다</h2>
             <p className="mt-3 max-w-[62ch] text-muted-foreground">
               채팅에 실려 있던 카드 그대로예요. 상황 한 줄, 단계 레일, 개발 스택까지 — 한 장에 담겨요.
             </p>
           </div>
-          <div className="flex justify-center md:justify-end">
+          <div data-reveal className="flex justify-center md:justify-end">
             {/* 모바일·md는 블리드 없이 온전히(0.58), lg는 0.8 콘텐츠 안 수렴(뷰포트 우측 32px 여백 — 가장자리 밀착 답답함 해소),
                 원본(1.0)·-10vw 블리드는 xl+(1280부터 여백이 뻗침을 흡수, 8/25 실측) */}
             <ScaledCard
@@ -230,19 +232,22 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
               cardClassName="shadow-[0_24px_56px_-16px_rgba(17,20,25,0.16)]"
             />
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 과정 레일 (EL-HOME-021) — 시그니처 단계 레일 조형 재사용 */}
       <section aria-label="만드는 과정" className="border-t border-border py-16 sm:py-24">
-        <div className="container-page">
-          <h2 className="text-2xl sm:text-3xl">적은 그대로, 카드 한 장이 됩니다</h2>
-          <p className="mt-3 max-w-[62ch] text-muted-foreground">
-            위의 예시 카드도 이 순서로 만들어졌어요. 저장 전까지 로그인은 필요 없어요.
-          </p>
+        {/* 스크롤 리빌 (ANIMATION.md #6) — 단계는 각자 진입 시 등장 */}
+        <ScrollReveal className="container-page">
+          <div data-reveal>
+            <h2 className="text-2xl sm:text-3xl">적은 그대로, 카드 한 장이 됩니다</h2>
+            <p className="mt-3 max-w-[62ch] text-muted-foreground">
+              위의 예시 카드도 이 순서로 만들어졌어요. 저장 전까지 로그인은 필요 없어요.
+            </p>
+          </div>
           <ol className="relative mt-12 grid gap-14">
             <span aria-hidden className="absolute bottom-4 left-4 top-4 w-px bg-border" />
-            <li className="relative grid grid-cols-[2rem_minmax(0,1fr)] gap-4 sm:gap-6">
+            <li data-reveal className="relative grid grid-cols-[2rem_minmax(0,1fr)] gap-4 sm:gap-6">
               <span className="z-[1] flex size-8 items-center justify-center rounded-full bg-foreground font-mono text-xs font-medium text-background">01</span>
               <div>
                 <h3 className="mt-1 text-lg sm:text-xl">상황과 단계를 적는다</h3>
@@ -269,7 +274,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                 </div>
               </div>
             </li>
-            <li className="relative grid grid-cols-[2rem_minmax(0,1fr)] gap-4 sm:gap-6">
+            <li data-reveal className="relative grid grid-cols-[2rem_minmax(0,1fr)] gap-4 sm:gap-6">
               <span className="z-[1] flex size-8 items-center justify-center rounded-full bg-foreground font-mono text-xs font-medium text-background">02</span>
               <div>
                 <h3 className="mt-1 text-lg sm:text-xl">카드로 미리 본다</h3>
@@ -280,7 +285,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                 <ScaledCard className="mt-5 [--s:0.5]" cardClassName="shadow-none" />
               </div>
             </li>
-            <li className="relative grid grid-cols-[2rem_minmax(0,1fr)] gap-4 sm:gap-6">
+            <li data-reveal className="relative grid grid-cols-[2rem_minmax(0,1fr)] gap-4 sm:gap-6">
               <span className="z-[1] flex size-8 items-center justify-center rounded-full bg-foreground font-mono text-xs font-medium text-background">03</span>
               <div>
                 <h3 className="mt-1 text-lg sm:text-xl">링크·PNG로 공유한다</h3>
@@ -313,7 +318,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
               </div>
             </li>
           </ol>
-        </div>
+        </ScrollReveal>
       </section>
 
       {/* 빌더 (EL-HOME-024 + 005~014) — 헤딩은 서버 렌더, 폼은 클라이언트 */}
