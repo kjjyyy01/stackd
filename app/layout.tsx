@@ -44,7 +44,8 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko" className={`${plexKr.variable} ${plexMono.variable} h-full`}>
+    // 라우트 전환 중 smooth 스크롤 억제 — 없으면 morph와 스크롤 복원이 충돌 (Next 권고)
+    <html lang="ko" data-scroll-behavior="smooth" className={`${plexKr.variable} ${plexMono.variable} h-full`}>
       {/* 확장 프로그램이 body에 속성 주입 — 경고만 억제 */}
       <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <SiteHeader />

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
+import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import { pageRange, parsePage, splitPage } from "@/lib/paginate";
 import { createClient } from "@/lib/supabase/server";
@@ -78,11 +79,14 @@ export default async function WorkflowsPage({ searchParams }: Props) {
                   className="block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   {/* 조판은 560×700 고정, 목록에서는 scale로만 축소 (DESIGN.md §카드 조판) */}
-                  <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.58] sm:[--s:0.49] md:[--s:0.6] lg:[--s:0.52] xl:[--s:0.6]">
-                    <div className="origin-top-left [transform:scale(var(--s))]">
-                      <WorkflowCard workflow={w} handle={w.author_handle} />
+                  {/* 상세로 morph (ANIMATION.md #3) */}
+                  <CardTransition id={w.id}>
+                    <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.58] sm:[--s:0.49] md:[--s:0.6] lg:[--s:0.52] xl:[--s:0.6]">
+                      <div className="origin-top-left [transform:scale(var(--s))]">
+                        <WorkflowCard workflow={w} handle={w.author_handle} />
+                      </div>
                     </div>
-                  </div>
+                  </CardTransition>
                   <h2 className="mt-4 text-lg font-semibold leading-[1.4]">{w.title}</h2>
                   <div className="mt-2 flex items-center gap-2">
                     {w.author_avatar && (
