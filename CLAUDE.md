@@ -53,7 +53,7 @@
 ## 프로젝트 트리
 
 - `app/` 라우터(src 없음) · `app/auth/`(callback·로그인 서버 액션) · `app/actions/`(서버 액션) · `app/card/`·`app/card-detail/[id]/`(SCR-003·004) · `app/me/`(SCR-007) · `app/settings/`(SCR-008) · `app/workflows/`(SCR-006) · `app/privacy/`·`app/terms/`(SCR-005) · `app/not-found.tsx`·`app/robots.ts`·`app/sitemap.ts`·`app/opengraph-image.tsx`·`app/api/og/`(정적 기본 OG + 카드 동적 OG)
-- `components/`(site-header·site-footer·feedback-dialog·analytics·login-event · **workflow-card**(4화면 공용 카드, 560×700 고정) · **workflow-builder**·**tool-picker**(SCR-001) · card-preview·card-actions(SCR-003·004) · my-card-actions(SCR-007) · settings-forms(SCR-008) · mobile-nav(lg 미만 햄버거 시트)) · `components/ui/`(shadcn)
+- `components/`(site-header·site-footer·feedback-dialog·analytics·login-event · **workflow-card**(4화면 공용 카드, 560×700 고정) · **workflow-builder**·**tool-picker**(SCR-001) · card-preview·card-actions(SCR-003·004) · my-card-actions(SCR-007) · settings-forms(SCR-008) · mobile-nav(lg 미만 햄버거 시트) · hero-intro(홈 히어로 GSAP 셸)·card-transition(카드 morph 페어링, Day 12)) · `components/ui/`(shadcn)
 - `lib/supabase/`(server·admin) · `lib/site.ts`(절대 URL SSOT — 프리뷰=배포주소/프로덕션=상수) · `lib/limits.ts`(BR 제한 유틸+검증 함수+테스트) · `lib/paginate.ts`(라이브러리 페이지네이션+테스트) · `lib/admin.ts`(admin 게이트 BR-022+테스트) · `lib/og.tsx`(OG 공용 팔레트·기본 이미지) · `lib/draft.ts`(초안 localStorage+테스트) · `lib/hero-card.ts`(0번 카드 데이터) · `lib/analytics.ts`(GA4 track, EVT 7종) · `lib/utils.ts`(cn)
 - `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `.env.example`
 - 테스트: `npm test` (`node --test`, 도메인 로직만)
