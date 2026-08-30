@@ -18,9 +18,12 @@ export default function ScrollReveal({ className, children }: Props) {
     // reduce 사용자는 등록 자체를 안 한다 — CSS 킬스위치는 GSAP을 못 막는다
     const mm = gsap.matchMedia(root);
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      for (const el of root.current?.querySelectorAll("[data-reveal]") ?? []) {
+      for (const el of root.current?.querySelectorAll<HTMLElement>("[data-reveal]") ?? []) {
+        // 값 left/right = 가로 슬라이드, 빈 값 = fade-up
+        const dir = el.dataset.reveal;
         gsap.from(el, {
-          y: 16,
+          x: dir === "left" ? -24 : dir === "right" ? 24 : 0,
+          y: dir ? 0 : 16,
           opacity: 0,
           duration: 0.6,
           ease: "power3.out",

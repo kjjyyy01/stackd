@@ -122,6 +122,6 @@
 - [x] 카드 morph — 갤러리·`/me`→상세 (설계 #3) ← `components/card-transition.tsx`(`share="morph" default="none"`), 갤러리→상세 `startViewTransition` 1회 호출 실측
 - [~] 저장→상세 morph (설계 #4) ← 구현 완료(useTransition→수동 pending — push와 한 덩어리면 이름이 옛 DOM에 못 실림). ⚠️ **신규 카드 흐름 미실측**(로그인 세션 필요) — 실패 시 컷 판정은 ANIMATION.md 기록대로
 - [ ] 그리드 진입 stagger (설계 #5) — **시간 남을 때만** (PLAN 3순위)
-- [x] 홈 쇼케이스·과정 레일 스크롤 리빌 (설계 #6 — **8/30 사용자 요청으로 승격**) ← `components/scroll-reveal.tsx`, `[data-reveal]` 6개 요소별 트리거(once). 실측: 스크롤 전 opacity 0 → 통과 후 1 전건, 서버 HTML에 콘텐츠 보존
+- [x] 홈 쇼케이스·과정 레일 스크롤 리빌 (설계 #6 — **8/30 사용자 요청으로 승격**) ← `components/scroll-reveal.tsx`, `[data-reveal]` 6개 요소별 트리거(once). 실측: 스크롤 전 opacity 0 → 통과 후 1 전건, 서버 HTML에 콘텐츠 보존. **8/30 2차: fade-up → 가로 슬라이드**(사용자 요청) — 쇼케이스 텍스트←좌·카드←우, 레일 단계 좌우 교차. 발화 직후 x ∓10px 대칭 실측·가로 오버플로 0(레일 섹션 overflow-hidden 추가)
 - [ ] **[본인]** 모션 눈 확인 — 히어로 타이밍·완성 연출·morph 감(感), 레퍼런스(ray.so·githubunwrapped) 대비
 - [ ] Day 13: 남은 폴리싱 (방향성 전환·stagger 검토 + GSAP 지식 총정리→Obsidian)

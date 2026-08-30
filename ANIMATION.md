@@ -49,7 +49,7 @@
 | 3 | 갤러리·`/me` → 상세 | Shared element transition | `<ViewTransition name={card-${id}}>`로 카드 페어링 — 그리드 카드가 상세 카드로 morph |
 | 4 | 저장 → 상세 | Continuity transition | #3과 같은 name을 `/card` 미리보기에 부여. ⚠️ 상태 갱신·push 배칭 시 페어링 실패 가능 — 실패하면 컷(backlog) |
 | 5 | 갤러리 그리드 진입 | Stagger | 30~80ms fade-up — **시간 남을 때만** (PLAN 3순위) |
-| 6 | 홈 쇼케이스·과정 레일 | Scroll reveal | `[data-reveal]` 요소별 트리거(`top 80%`·once) fade-up 16px·0.6s `enter`. 요소별이라 스크롤 속도가 곧 stagger — 인위적 지연 없음 (2026-08-30 사용자 요청으로 승격, PLAN 3순위 순번 도래) |
+| 6 | 홈 쇼케이스·과정 레일 | Scroll reveal (Slide in) | `[data-reveal="left|right"]` 요소별 트리거(`top 80%`·once) 가로 슬라이드 x 24px·0.6s `enter` — 쇼케이스: 텍스트←왼쪽·카드←오른쪽 / 레일 단계: 좌우 교차. 빈 값은 fade-up 폴백. 섹션 overflow-hidden 필수(모바일 패딩 16px < x 24px) (2026-08-30 사용자 요청 — fade-up에서 가로 슬라이드로 수정) |
 
 **기각** (find-animation-opportunities 게이트): 헤더 내비(고빈도 — 금지) · tool-picker(입력 동선 즉각 반응 원칙) · draft-banner(레이아웃 미는 배너라 등장 모션이 본문 점프를 연출) · 상세 단계 목록 리빌(읽는 콘텐츠) · Radix 계열(기본 모션 존재) · 빌더 단계 추가/삭제(마이크로 — backlog).
 
