@@ -25,7 +25,7 @@ export default async function SettingsPage() {
   return (
     <main className="mx-auto w-full max-w-2xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       {/* EL-SET-001 페이지 유일 h1 (CPY-SET-001) */}
-      <h1 className="text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">설정</h1>
+      <h1 className="text-2xl font-semibold tracking-[-0.015em] sm:text-3xl">설정</h1>
 
       <div className="mt-8 grid gap-10">
         {/* EL-SET-002 계정 표시 — 이메일은 노출하지 않는다 (PRD-14) */}

@@ -75,7 +75,7 @@ export default async function CardDetailPage({ params }: Params) {
   if (wf.hidden && !isOwner) {
     return (
       <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-        <h1 className="text-2xl font-semibold tracking-[-0.02em]">숨겨진 워크플로우</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.015em]">숨겨진 워크플로우</h1>
         <div
           aria-hidden
           className="mt-8 h-[406px] w-[325px] rounded-xl border border-border bg-muted blur-sm"

@@ -92,6 +92,7 @@
 | 역할 | 클래스 | 행간 | 자간 | 굵기 |
 |---|---|---|---|---|
 | display (h1) | `text-4xl sm:text-5xl lg:text-6xl` | `leading-[1.15]` | `tracking-[-0.025em]` | 600 |
+| 서브페이지 제목 (h1) | `text-2xl sm:text-3xl` | `leading-[1.25]` | `tracking-[-0.015em]` | 600 |
 | h2 | `text-2xl sm:text-3xl` | `leading-[1.25]` | `tracking-[-0.015em]` | 600 |
 | h3 | `text-lg sm:text-xl` | `leading-[1.4]` | `tracking-[-0.01em]` | 600 |
 | body | `text-base` | `leading-[1.75]` | 0 | 400 |
@@ -149,6 +150,7 @@
 | 잉크 | `#111419` | 제목·본문 |
 | 보조 | `#656972` | 단계 메모·핸들 |
 | 헤어라인 | `#e0e2e6` | 단계 레일 |
+| 칩 지면 | `#f2f3f6` | STACK 태그 배경 — 그 위 보조색 4.96:1 (AA). 지면 대비 1.11:1이라 칩 자체는 경계가 아니라 면으로 읽힌다 |
 
 **액센트 1종** — `ink` `#111419` (`oklch 0.19 0.012 265`, 흰색 대비 18.5:1)
 
