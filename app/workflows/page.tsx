@@ -43,7 +43,7 @@ export default async function WorkflowsPage({ searchParams }: Props) {
   if (!error && page > 1 && !items.length) redirect("/workflows");
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <main className="container-page flex-1 py-10 lg:py-14">
       {/* EL-LIB-001 페이지 유일 h1 (CPY-LIB-001) — 오류 상태에서도 유지된다 */}
       <h1 className="text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">
         개발자들의 워크플로우
