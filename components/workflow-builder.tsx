@@ -35,6 +35,7 @@ export default function WorkflowBuilder({ initial }: Props) {
   const hydrated = useRef(false);
   const pending = useRef<Draft | null>(null); // 배너(전역) 응답 대기 중인 초안
   const initialRef = useRef(initial); // 서버 prop — 마운트 시점 값만 쓴다
+  const firedTools = useRef(new Set<string>()); // step_add 발화 이력 (재추가 억제)
 
   // 진입 시 초안 확인 + 배너(DraftBanner) 신호 수신 — 배너 UI는 전역 위치가 소유 (EL-HOME-004)
   useEffect(() => {
@@ -106,7 +107,11 @@ export default function WorkflowBuilder({ initial }: Props) {
   function addStep(tool: Step["tool"], method: "catalog" | "manual") {
     if (d.steps.length >= LIMITS.steps.max) return;
     setD({ ...d, steps: [...d.steps, { tool, note: "", detail: "" }] });
-    track("step_add", { method, item_category: tool.category, item_name: tool.name }); // EVT-BLDR-001
+    // EVT-BLDR-001 — 삭제 후 재추가는 미발화, 도구 인기 과대계상 방지 (PRD-15)
+    if (!firedTools.current.has(tool.name)) {
+      firedTools.current.add(tool.name);
+      track("step_add", { method, item_category: tool.category, item_name: tool.name });
+    }
     setPicking(false);
   }
   const patchStep = (i: number, p: Partial<Step>) => setD({ ...d, steps: d.steps.map((s, k) => (k === i ? { ...s, ...p } : s)) });
