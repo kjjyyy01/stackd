@@ -38,7 +38,7 @@ export default async function MePage() {
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <div className="flex flex-wrap items-baseline justify-between gap-4">
         {/* EL-ME-001 페이지 유일 h1 (CPY-ME-001) */}
-        <h1 className="text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">내 카드</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.015em] sm:text-3xl">내 카드</h1>
         {/* EL-ME-002 — 헤더와 중복이나 로그아웃·탈퇴를 찾는 동선용 */}
         <Link
           href="/settings"

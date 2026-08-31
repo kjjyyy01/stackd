@@ -13,7 +13,7 @@ export default function TermsPage() {
     <main className="container-page flex-1 py-10 lg:py-14">
       <article className="max-w-[62ch]">
         {/* EL-LEGAL-002 페이지 유일 h1 */}
-        <h1 className="text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">이용약관</h1>
+        <h1 className="text-2xl font-semibold tracking-[-0.015em] sm:text-3xl">이용약관</h1>
 
         {/* EL-LEGAL-003 시행일·개정 이력 */}
         <p className="mt-3 text-sm text-muted-foreground">

@@ -5,6 +5,7 @@ const SURFACE = "#ffffff";
 const INK = "#111419";
 const MUTED = "#656972";
 const HAIRLINE = "#e0e2e6";
+const CHIP = "#f2f3f6"; // STACK 태그 지면
 
 // accent 슬러그 → 색. 미인식 슬러그는 기본 ink (PRD-05)
 // 1종만 있으면 스와치 UI가 자동으로 숨는다 — 늘릴 때 조건은 DESIGN.md §카드 고정 팔레트
@@ -98,7 +99,7 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
               <li
                 key={t.name}
                 className="rounded-full px-3 py-1 font-mono text-xs leading-none"
-                style={{ background: "#f2f3f6", color: MUTED }}
+                style={{ background: CHIP, color: MUTED }}
               >
                 {t.name}
               </li>

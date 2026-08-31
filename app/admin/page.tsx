@@ -76,7 +76,7 @@ export default async function AdminPage({
   return (
     <main className="container-page flex-1 py-10 lg:py-14">
       {/* EL-ADMIN-001 (CPY-ADMIN-001) */}
-      <h1 className="text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">신고·문의 처리</h1>
+      <h1 className="text-2xl font-semibold tracking-[-0.015em] sm:text-3xl">신고·문의 처리</h1>
 
       {/* EL-ADMIN-002 필터 — 링크형이라 JS 없이 동작 (CPY-ADMIN-003) */}
       <p className="mt-4 text-sm">

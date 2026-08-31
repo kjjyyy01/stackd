@@ -45,7 +45,7 @@ export default async function WorkflowsPage({ searchParams }: Props) {
   return (
     <main className="container-page flex-1 py-10 lg:py-14">
       {/* EL-LIB-001 페이지 유일 h1 (CPY-LIB-001) — 오류 상태에서도 유지된다 */}
-      <h1 className="text-2xl font-semibold tracking-[-0.02em] sm:text-3xl">
+      <h1 className="text-2xl font-semibold tracking-[-0.015em] sm:text-3xl">
         개발자들의 워크플로우
       </h1>
 
