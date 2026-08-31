@@ -33,7 +33,7 @@ export default function PrivacyPage() {
         <ul className="mt-3 list-disc space-y-2 pl-5 leading-[1.75]">
           <li>
             <strong className="font-medium">GitHub 이메일 주소</strong> — 계정 식별 목적으로 인증 저장소에만 보관하며,
-            서비스 화면·공유 이미지·분석 도구·알림 어디에도 표시하거나 전송하지 않습니다.
+            서비스 화면·공유 이미지·분석 도구·오류 기록·알림 어디에도 표시하거나 전송하지 않습니다.
           </li>
           <li>
             <strong className="font-medium">GitHub 핸들·프로필 이미지</strong> — 카드를 저장하는 시점의 값을 카드에 함께
@@ -48,6 +48,10 @@ export default function PrivacyPage() {
             Google Analytics를 통해 수집합니다.
           </li>
           <li>
+            <strong className="font-medium">오류 기록</strong> — 서비스에 오류가 발생한 시점의 페이지 주소와 오류
+            내용을 Sentry를 통해 수집합니다. 이용자를 알아볼 수 있는 정보는 포함하지 않습니다.
+          </li>
+          <li>
             <strong className="font-medium">신고자 식별자</strong> — 게시물을 신고할 때 로그인 상태라면 계정 식별자를
             함께 기록합니다. 반복 신고 남용을 확인하기 위한 용도입니다.
           </li>
@@ -58,6 +62,7 @@ export default function PrivacyPage() {
           <li>로그인 및 본인 게시물 확인 — GitHub 이메일</li>
           <li>공개 게시물의 작성자 표기 — GitHub 핸들·프로필 이미지, 소속·역할</li>
           <li>이용 통계 확인과 서비스 개선 — 이용 행태 정보</li>
+          <li>오류 원인 파악과 안정성 개선 — 오류 기록</li>
           <li>신고 처리 및 남용 확인 — 신고자 식별자</li>
         </ul>
 
@@ -100,6 +105,10 @@ export default function PrivacyPage() {
           <li>
             <strong className="font-medium">Slack</strong> — 신고 접수 알림. 신고 본문만 전달하며 신고자를 알아볼 수 있는
             정보는 포함하지 않습니다.
+          </li>
+          <li>
+            <strong className="font-medium">Sentry</strong> — 오류 기록 수집. 오류 발생 시점의 페이지 주소와 오류
+            내용만 전달하며, 이용자를 알아볼 수 있는 정보는 포함하지 않습니다.
           </li>
         </ul>
         <p className="mt-3 leading-[1.75]">
