@@ -59,6 +59,7 @@
   /* 홈 캐러셀 장면 지면 (DESIGN.md §홈 캐러셀 조판) */
   --chat-bg: #bacee0;
   --chat-me: #fee500;
+  --chat-fg: #3f4a56; /* 슬라이드 1 본문 — chat-bg 위 5.59:1 (AA) */
 
   --background: oklch(0.985 0.002 265);
   --foreground: oklch(0.19 0.012 265);

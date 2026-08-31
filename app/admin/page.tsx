@@ -68,7 +68,9 @@ export default async function AdminPage({
   const showAll = all === "1";
   if (!showAll) query = query.eq("resolved", false);
 
-  const { data } = await query.overrideTypes<Row[]>();
+  // 조회 실패를 Empty로 위장하지 않는다 — 장애가 "신고 0건"으로 보이면 안 됨 (REQ-ADMIN-002 AC-3)
+  const { data, error } = await query.overrideTypes<Row[]>();
+  if (error) throw new Error(`신고·문의 조회 실패: ${error.message}`);
   const rows = data ?? [];
 
   return (

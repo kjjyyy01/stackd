@@ -95,7 +95,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
                 <h1 className="max-w-[20ch] text-[2.75rem] sm:text-[3.5rem] md:text-4xl lg:text-6xl xl:text-7xl">
                   도구는 아는데, 어떻게 쓰는지는 모른다.
                 </h1>
-                <p className="mt-6 max-w-[62ch] text-lg text-[#3f4a56] sm:text-xl md:text-lg lg:text-xl">
+                <p className="mt-6 max-w-[62ch] text-lg text-(--chat-fg) sm:text-xl md:text-lg lg:text-xl">
                   실제 개발자들이 어떤 상황에서, 어떤 순서로 agent를 쓰는지 — 워크플로우를 카드 한 장으로
                   공유하세요.
                 </p>
