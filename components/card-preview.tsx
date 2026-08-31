@@ -71,7 +71,17 @@ export default function CardPreview({ handle, loggedIn }: Props) {
       const r = await saveWorkflow(d, d.editId);
       if (r.ok) {
         clearDraft(); // 저장 성공 = 초안 폐기 (BR-019)
-        track(d.editId ? "card_edit" : "card_create");
+        // EVT-CARD-001·003 파라미터 (PRD-15) — 소급 불가라 발화 때 전부 싣는다
+        track(
+          d.editId ? "card_edit" : "card_create",
+          d.editId
+            ? { workflow_id: r.id }
+            : {
+                step_count: d.steps.length,
+                is_public: d.is_public,
+                has_situation: Boolean(d.situation?.trim()),
+              },
+        );
         toast.success("저장했어요 — 이제 공유할 수 있어요");
         setSavedId(r.id); // morph 이름을 먼저 커밋하고 전환 (ANIMATION.md #4)
         router.push(`/card-detail/${r.id}`);
