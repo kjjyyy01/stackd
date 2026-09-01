@@ -142,11 +142,12 @@ export default async function CardDetailPage({ params }: Params) {
           {/* EL-WF-006·009 공유·소유자 액션 (클라이언트) */}
           <CardActions id={wf.id} isOwner={isOwner} isPublic={wf.is_public} hidden={wf.hidden} />
 
+          {/* EL-WF-007 CTA — 소유자는 UTM 없이(자기 유입은 확산이 아니다, PRD-15 §UTM) */}
           <Link
-            href="/?utm_source=card&utm_medium=share"
+            href={isOwner ? "/" : "/?utm_source=card&utm_medium=share"}
             className={`${buttonVariants({ size: "lg" })} mt-8 h-11 w-full px-6 sm:w-auto`}
           >
-            나도 내 워크플로우 카드 만들기
+            {isOwner ? "카드 하나 더 만들기" : "나도 내 워크플로우 카드 만들기"}
           </Link>
 
           {/* EL-WF-008 신고 — 푸터 문의와 같은 dialog, type만 report */}
