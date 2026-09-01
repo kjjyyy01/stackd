@@ -166,9 +166,10 @@ export default function WorkflowBuilder({ initial }: Props) {
         </fieldset>
 
         {/* 단계 (EL-HOME-008~011) */}
-        <fieldset className="grid gap-4">
+        <fieldset className="grid gap-4" aria-labelledby="steps-label">
           <div className="flex items-baseline justify-between gap-4">
-            <legend className="text-sm font-medium">단계 — 2~8개, 쓰는 순서대로</legend>
+            {/* legend는 fieldset 직계 자식이어야 이름이 된다 — 이 레이아웃에선 불가라 aria-labelledby로 */}
+            <span id="steps-label" className="text-sm font-medium">단계 — 2~8개, 쓰는 순서대로</span>
             <Counter n={d.steps.length} max={LIMITS.steps.max} />
           </div>
           <ol className="grid gap-4">
@@ -214,9 +215,9 @@ export default function WorkflowBuilder({ initial }: Props) {
         </fieldset>
 
         {/* 개발 스택 태그 (EL-HOME-012) */}
-        <fieldset className="grid gap-3">
+        <fieldset className="grid gap-3" aria-labelledby="stack-label">
           <div className="flex items-baseline justify-between gap-4">
-            <legend className="text-sm font-medium">이 워크플로우를 쓰는 개발 스택 (선택, 4개까지)</legend>
+            <span id="stack-label" className="text-sm font-medium">이 워크플로우를 쓰는 개발 스택 (선택, 4개까지)</span>
             <Counter n={d.dev_stack.length} max={LIMITS.dev_stack.max} />
           </div>
           {d.dev_stack.length > 0 && (

@@ -50,7 +50,8 @@ export default function CardPreview({ handle, loggedIn }: Props) {
     // OAuth 복귀(save=1)는 재진입이라 중복 발화 제외 (REQ-CARD-005 AC-1)
     const returning = new URLSearchParams(window.location.search).get("save") === "1";
     setAutoSave(returning);
-    if (!returning) track("card_preview", { step_count: d.steps.length });
+    // 게이트 충족분만 — 저장할 수 없는 초안까지 세면 로그인 벽 비용 분모가 부푼다 (PRD-15)
+    if (!returning && validateWorkflow(d).ok) track("card_preview", { step_count: d.steps.length });
   }, [router]);
 
   // 오프라인이면 저장 차단 (REQ-CARD-004 AC-4)

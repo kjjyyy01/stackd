@@ -737,3 +737,22 @@
     - ARCHITECTURE.md: 폴더 구조·컴포넌트 계층(서버 5/클라이언트 16)·상태 관리(전역 스토어 미도입 근거)·데이터 흐름(읽기는 서버 컴포넌트 직접 조회, 쓰기는 서버 액션 단일 통로, admin만 service role 우회 + 게이트 이중)을 실구현 기준으로 기입
     - 검증: 자간 계산값 `-0.0150` · 칩 `rgb(242,243,246)`(값 불변, 상수 추출만) · lint 0 · test 31 pass · build 통과
   - 잔여: 프로덕션 "테스트2" 카드 삭제(사용자 — 에이전트 DELETE는 권한 분류기가 차단) · DESIGN 경미분(CSS 전용 토큰 6개·4px 배수 3곳)은 backlog
+
+## 2026-09-01 — Day 15: 관측성 연동 + 장애 대비 + E2E 1개 (출시 준비 ①)
+
+**무엇을**: ①Sentry SDK 연동(서버·클라이언트 계측 + 소스맵 업로드 게이트) ②GA4 이벤트 정적 대조 검수 7종 ③개인정보처리방침에 Sentry 고지 ④Vercel env 위생 정리 ⑤장애 대응 런북 ⑥핵심 플로우 E2E 1개 ⑦빌더 접근성 결함 1건 수정
+
+**어떻게**: Sentry는 Next 16 파일 규약대로 `instrumentation.ts`(서버 `register` + `onRequestError`)·`instrumentation-client.ts`(하이드레이션 직전 init + `onRouterTransitionStart`) 2개로 나누고, `next.config.ts`의 `withSentryConfig`는 `SENTRY_AUTH_TOKEN`이 있을 때만 감싸 자격증명 없는 환경에서 빌드가 깨지지 않게 했다. `sentry.edge.config.ts`는 만들지 않았다 — Next 16 proxy는 Node 런타임 기본이고 `runtime` 지정 자체가 에러(`proxy.md:223`), `middleware-manifest.json`의 `middleware`·`functions` 배열이 비어 있어 대상이 없다. E2E는 `E2E_BASE_URL`로 **배포본을 기본 대상**으로 두고, GA4·Sentry 요청은 `page.route`로 차단해 테스트 트래픽이 판정 지표에 섞이지 않게 했다.
+
+**왜**: ①**DSN 없으면 init 스킵**은 `components/analytics.tsx`의 GA4 규칙과 같은 근거 — 로컬·프리뷰 노이즈가 섞이면 런칭 후 진짜 에러를 못 찾는다. ②`tracesSampleRate: 0` + 세션 리플레이 미도입은 PRD-14 PII 금지와 무료 쿼터 보존 두 가지 — 화면 녹화는 개인정보 처리라 처리방침 개정이 선행돼야 한다. ③E2E를 **저장 직전까지**로 자른 건 GitHub OAuth를 E2E에 넣는 비용이 3주 일정에 맞지 않아서다. 비로그인 가치 경로 전부는 덮인다.
+
+**결과**:
+- **번들 실측 +221,865 raw / +69,533 gz (+22.0%)** — `.next` 삭제 후 2회 대조. 오탐 1건 배제(청크의 `sentry-mcp` 문자열은 `data/catalog.json` 데이터였다). Sentry 트리셰이킹 define(`__SENTRY_TRACING__`)은 **webpack 경로에만 구현**(`config/webpack.js:565`)돼 Turbopack에서는 줄일 수단이 없다 → **Day 17 LCP에서 재판정**, 초과 시 지렛대 = 클라이언트 SDK 제거(−68KB)
+- **GA4 결함 1건 수정**: `card_preview`가 `steps ≥ 2`만 보고 발화해 게이트 미충족 초안까지 계수했다 → `validateWorkflow(d).ok`로 교체. 저장 불가능한 초안이 분모에 섞이면 보조 지표 "로그인 벽 비용"이 실제보다 나쁘게 나온다. 나머지 6종은 전부 일치
+- **접근성 결함 1건 수정**: 빌더 `fieldset` 2개의 `legend`가 flex 래퍼 안에 있어 직계 자식이 아니었다 = 유효하지 않은 HTML + 이름 없는 group. `aria-labelledby`로 대체, 시각 변화 0(모바일·데스크톱 확인). E2E 셀렉터가 안 잡혀서 발견 — **테스트를 쓰지 않았으면 Day 17까지 못 봤을 건**
+- **릴리스 태그 출처 확정(A/B)**: 토큰 있는 프리뷰 = `release: acf8d0eb…`, 뺀 프리뷰 = `release: null`. SDK의 `VERCEL_GIT_COMMIT_SHA` 자동 감지가 아니라 **번들러 플러그인 주입**이었다. 프리뷰는 에러 수집만 되고 릴리스·소스맵은 없다(프로덕션은 둘 다)
+- **서버 캡처 실동작**: `/api/sentry-test` GET → 500, 다른 경로 200 회귀 없음. E2E 프리뷰 대상 6.9초 통과
+- 시크릿 위생 감사 통과: `.env.local`·`.vercel` 무시 확인, git 전체 이력 `-S` 스캔 4종 0건, `SENTRY_AUTH_TOKEN`은 `Sensitive` + **Production 전용**으로 전환
+- **알림 실수신 확인(본인, 9/1) → Sentry 연동 완료 판정**: 기본 알림 규칙이 KST 16:00 발화(`Total Triggers: 1` — 14일 창에서 유일해 임시 라우트 호출과 동일성이 추론 없이 확정됨), 이메일 도착. **설정은 하나도 안 바꿨다** — 환경 필터를 조이면 런칭 전 프리뷰 검증 구간이 눈멀고, WHEN이 `high priority` 한정인 구멍은 PLAN 런칭 후 루틴의 "매일 sentry 신규 에러 확인"이 이미 메운다. 측정값(1회/14일)을 보기 전에 "환경을 좁혀라"라고 권고했던 것을 철회
+- ⚠️ **잔여 [본인]**: (없음 — Sentry 몫 종료) · GA4 DebugView 7종 실발화 · **GA4 커스텀 디멘션 4 + 측정항목 1 등록** · 롤백 리허설 1회 · CSV 백업 1회
+- ⚠️ **main 머지 시**: `app/api/sentry-test/route.ts` 삭제 + 프로덕션 빌드 로그에서 `Uploaded files to Sentry` 확인(재등록한 토큰이 빌드에 쓰이는 첫 시점)

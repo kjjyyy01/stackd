@@ -56,3 +56,9 @@ next-env.d.ts
 /seed.ts
 # 런칭 시드 카드 — 삽입 완료(2026-08-28), 되돌릴 때만 필요
 /seed-cards.ts
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/.playwright*/
