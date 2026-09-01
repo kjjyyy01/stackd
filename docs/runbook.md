@@ -13,11 +13,20 @@
 
 ```bash
 vercel ls --prod                 # 현재·직전 프로덕션 배포 확인 (맨 위가 현재)
-vercel rollback <직전배포URL>     # 그 배포를 즉시 프로덕션으로 되돌림
+vercel rollback <직전배포URL>     # 그 배포를 즉시 프로덕션으로 되돌림 (확인 프롬프트 — 급하면 --yes)
 vercel rollback status           # 진행 상태
 ```
 
-대시보드 경로: Project → Deployments → 직전 배포 `⋯` → **Instant Rollback**
+고친 뒤 **되돌아오는 명령은 rollback이 아니라 promote다**:
+
+```bash
+vercel promote <최신배포URL>      # 그 배포를 다시 프로덕션으로
+vercel promote status
+```
+
+대시보드 경로: Project → Deployments → 대상 배포 `⋯` → **Instant Rollback**
+
+- ✅ **2026-09-01 리허설 1회 완료** — rollback → `stackd.kr` 정상 확인 → promote 복귀, 4단계 전부 정상. 소요 1분 미만
 
 - ⚠️ **롤백은 코드만 되돌린다.** DB 스키마·데이터·환경변수는 그대로다. 마이그레이션을 돌린 뒤라면 롤백해도 안 낫는다
 - ⚠️ 롤백 후 `main`은 여전히 깨진 커밋을 가리킨다. 다음 push가 다시 그 코드를 배포하므로, **원인을 고쳐 push하거나 `git revert`를 먼저** 해야 한다
