@@ -17,7 +17,7 @@
 
 ## 개발 명령어
 
-- `npm run dev` / `npm run build` / `npm run lint`
+- `npm run dev` / `npm run build` / `npm run lint` / `npm test` / `npm run e2e`
 
 ## Git 전략 (솔로 기준)
 
@@ -35,7 +35,7 @@
 - **한글 조판**: `word-break: keep-all` 필수 · 본문 행간 1.75·자간 0 · mono는 영문 기계 식별자에만 (DESIGN.md)
 - **로고·파비콘은 PNG만 — SVG 구현 금지** (2026-08-27 사용자 결정). 인라인 SVG·`icon.svg` 전부 불가, 래스터 에셋으로만 넣는다
 - 디자인 토큰 SSOT는 `DESIGN.md` — `app/globals.css`는 그 사본이다
-- 문서 상호 참조: `DESIGN.md`(디자인 시스템) / `ARCHITECTURE.md`(구조) / `ANIMATION.md`(모션) / `TODO.md`(작업 목록) / `docs/PLAN.md`(계획)
+- 문서 상호 참조: `DESIGN.md`(디자인 시스템) / `ARCHITECTURE.md`(구조) / `ANIMATION.md`(모션) / `TODO.md`(작업 목록) / `docs/PLAN.md`(계획) / `docs/runbook.md`(장애 대응)
 
 ## 보안 기본 규칙
 
@@ -56,7 +56,8 @@
 - `components/`(site-header·site-footer·feedback-dialog·analytics·login-event · **workflow-card**(4화면 공용 카드, 560×700 고정) · **workflow-builder**·**tool-picker**(SCR-001) · card-preview·card-actions(SCR-003·004) · my-card-actions(SCR-007) · settings-forms(SCR-008) · mobile-nav(lg 미만 햄버거 시트) · hero-intro(홈 히어로 GSAP 셸)·card-transition(카드 morph 페어링, Day 12)) · `components/ui/`(shadcn)
 - `lib/supabase/`(server·admin) · `lib/site.ts`(절대 URL SSOT — 프리뷰=배포주소/프로덕션=상수) · `lib/limits.ts`(BR 제한 유틸+검증 함수+테스트) · `lib/paginate.ts`(라이브러리 페이지네이션+테스트) · `lib/admin.ts`(admin 게이트 BR-022+테스트) · `lib/og.tsx`(OG 공용 팔레트·기본 이미지) · `lib/draft.ts`(초안 localStorage+테스트) · `lib/hero-card.ts`(0번 카드 데이터) · `lib/analytics.ts`(GA4 track, EVT 7종) · `lib/utils.ts`(cn)
 - `proxy.ts`(세션 갱신, Next 16) · `supabase/schema.sql` · `data/catalog.json` · `.env.example`
-- 테스트: `npm test` (`node --test`, 도메인 로직만)
+- 테스트: `npm test` (`node --test`, 도메인 로직만) · `npm run e2e` (playwright, 핵심 플로우 1개 — 대상은 `E2E_BASE_URL`, 기본 localhost)
+- `instrumentation.ts`·`instrumentation-client.ts`(Sentry 계측, DSN 없으면 스킵) · `e2e/` · `playwright.config.ts`
 
 ## Agent skills
 
