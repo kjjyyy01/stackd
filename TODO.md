@@ -136,3 +136,18 @@
 - [x] **결함 1건 수정**(E2E 작성 중 발견) ← 빌더 `fieldset` 2개(단계·개발 스택)의 `legend`가 flex 래퍼 안에 있어 **fieldset 직계 자식이 아니었다**. 유효하지 않은 HTML이고 스크린리더에는 이름 없는 group으로 읽힌다(같은 파일 "기본 정보" fieldset은 `sr-only` legend로 이미 올바름 → 의도가 아니라 결함). 레이아웃상 legend를 올릴 수 없어 `aria-labelledby`로 대체, **모바일·데스크톱 스크린샷 시각 변화 없음 확인**. CLAUDE.md "시맨틱 마크업 강제" 위반이었고 Day 17 접근성 패스에서 어차피 걸렸을 항목
 - [x] **GA4 이벤트 정적 대조 검수**(PRD-15 §실장 검수 1단계) ← EVT 7종 명세 vs 호출 지점 6곳 1:1 대조. **결함 1건 수정**: EVT-CARD-002 `card_preview`가 `steps ≥ 2`만 보고 발화해 게이트(BR-016 — 제목·상황·각 단계 메모·설명) 미충족 초안까지 계수했다 → `validateWorkflow(d).ok`로 교체해 게이트 SSOT를 재사용. 저장이 불가능한 초안이 분모에 섞이면 보조 지표 "로그인 벽 비용"(`card_create ÷ card_preview`)이 실제보다 나쁘게 나온다. 나머지 6종은 이벤트명·파라미터·발화 조건·PII 금지 전부 일치, 커스텀 이벤트 7종 초과 0(`GaEvent` union이 강제). ~~잔여 [본인]~~ ✅ **9/1 완료**: GA4 콘솔 **맞춤 측정기준 4 + 측정항목 1 등록**(`method`·`item_category`·`share_method`·`is_public` + `step_count` — `item_category` 예약어 충돌 없음) · **DebugView 실발화 확인**(2단계, Happy Path 완주). 등록은 소급이 안 되므로 이 시점 이후 데이터만 보고서에 뜬다
 - [x] **소유자 CTA 분기**(DebugView 검증 중 발견) ← `app/card-detail/[id]/page.tsx` 상세 CTA가 소유자에게도 `?utm_source=card&utm_medium=share`를 달고 "나도 내 워크플로우 카드 만들기"로 떴다. **스펙 위반은 아니었다**(EL-WF-007 필수 Y·조건 없음) — 스펙의 빈칸이다. 문제 2개: ① "나도"는 남의 카드를 볼 때 성립하는 말이라 자기 카드에선 자기 자신을 가리킨다(EL-CARD-009를 같은 이유로 뺀 2026-08-23 판정과 동일 유형) ② 소유자 클릭이 세션 어트리뷰션을 리셋해 **PRD-15 §보조 지표 "루프 작동"(`session_source=card`)에 자기 유입이 확산으로 계수**된다. **숨기지 않고 계측만 껐다** — `site-header.tsx`에 생성 진입점이 없어 CTA를 없애면 소유자의 유일한 경로가 로고가 된다. 소유자는 `/`(UTM 없음) + **CPY-WF-016 "카드 하나 더 만들기"**(신설). 문서 4곳 동기화: PRD-11(CPY 신설)·SCR-004(EL-WF-007 조건·REQ-WF-004 AC-1·전환 표·이탈)·PRD-15(§UTM 표 소유자 행)
+
+### Day 17 (9/3 — 9/2 선행) — 출시 전 기술 점검
+
+- [x] **LCP 예산 통과** ← 모바일·CPU 4x·Slow 4G 스로틀 기준 홈 **792ms** / 카드 상세 **856ms**(예산 2.5s의 32~34%), CLS 0.00. 무스로틀 홈 545ms. **Sentry 번들 +22% 재판정 = 클라이언트 SDK 제거 불필요**(`TODO.md:131` 미결 해소). 머지 후 재측정 824ms로 회귀 없음
+- [x] **Lighthouse** ← 홈·카드 상세·라이브러리 모바일 navigation, a11y·SEO·BP·Agentic **전부 100**. 카테고리 점수만 보면 놓친다 — `report.json`의 `score < 1`을 직접 파싱해야 가중치 0인 항목이 보인다
+- [x] **페이지별 메타데이터·OG 최종 검수** ← 프로덕션 9개 라우트 curl 대조. 결함 3건 발견
+- [x] **접근성 스팟 패스** ← Tab 순회 포커스 링 확인. PLAN 지정 `design:accessibility-review`는 미설치라 `chrome-devtools-mcp:a11y-debugging` + Lighthouse로 대체
+- [x] **JSON-LD** ← 홈 `WebSite` · 카드 상세 `Article`(공개 카드만). `components/json-ld.tsx` 공용 렌더러가 `<` 이스케이프 — 카드 제목이 `<script>` 안쪽에 들어가는 XSS 경계다. `HowTo` 미채택(Google 2023-08 리치 결과 폐지) · `publisher` 생략(로고 요건) · `SearchAction` 제외(사이트 내 검색 부재)
+- [x] **OG 메타 결함 3라운드** ← ①`/workflows`가 `openGraph` 선언으로 파일 규약 이미지 상속을 끊어 og:image 소실 ②`/privacy` 대조에서 site_name·locale·type도 소실 확인 — **Next는 하위 `openGraph` 선언 시 상위를 병합이 아니라 교체** → `lib/site.ts` `BASE_OG` 스프레드로 3곳 통일 ③`images`를 문자열로 주면 크기를 몰라 og:image:width/height/type/alt 미생성 → 객체 명시. **프로덕션 4개 페이지 og 11종 동수 실측**
+- [x] **Search Console 등록·사이트맵 제출**(본인) ← 도메인 속성, `dig +short TXT stackd.kr @8.8.8.8` 전파 실측. **네임서버가 Vercel이 아니라 가비아** — TXT는 가비아 DNS 관리툴에 넣는다
+- [ ] **URL 검사 → 색인 생성 요청**(본인) — JSON-LD 반영 후 실행 가능 상태
+- [ ] **iOS Safari 순회**(본인) — 실기기 부재로 macOS Safari 반응형 모드로 대체(PLAN이 허용한 폴백). WebKit 공통이라 레이아웃·backdrop-filter·클립보드·OAuth는 커버되나 **PNG 저장은 사각지대** — `card-actions.tsx:41-50`이 `await` 이후 `a.click()`이라 iOS는 제스처 컨텍스트를 잃는데 데스크톱 Safari는 통과시킨다
+- [ ] **Vercel 플랜 판단**(본인) — 약관보다 **사용량 한도가 실질 리스크**(초과 시 프로젝트 일시 정지 → 런칭 당일 사이트 다운). Usage 탭 수치 + Spend Management 확인
+- [ ] **버퍼 이월**: 라이브러리 카드 링크 `aria-label`이 보이는 텍스트를 전부 포함하지 않음(WCAG 2.5.3 Label in Name, Lighthouse `label-content-name-mismatch`) — `aria-labelledby`로 h2를 가리킬지 `aria-label` 제거할지 판단 필요
+- 검색 키워드 검수는 **조건 미충족으로 스킵** — Day 1 유입 전략이 "입소문·공유 주채널, 검색은 기본 메타데이터 수준으로 경량화"(`docs/day1-decisions.md:50`)
