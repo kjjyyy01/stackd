@@ -15,7 +15,8 @@ export const metadata: Metadata = {
   description:
     "개발자들이 실제로 쓰는 AI 워크플로우 카드 모음 — 상황·단계·도구를 한 장으로 보고 내 것도 만들어보세요.",
   alternates: { canonical: "/workflows" },
-  openGraph: { url: "/workflows" },
+  // openGraph를 선언하면 상위 파일 규약 이미지가 덮인다 — images 명시가 없으면 og:image가 사라진다
+  openGraph: { url: "/workflows", images: ["/opengraph-image"] },
 };
 
 // 카드 조판에 실리는 필드 + 작성자 표시분. situation(본문)은 목록에서 쓰지 않는다 (§8)
