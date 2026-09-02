@@ -1,6 +1,7 @@
 // OG 공용 — 정적 기본 이미지(app/opengraph-image.tsx)와 /api/og 폴백이 같은 그림을 쓴다
 // 카드와 동일한 고정 팔레트 (workflow-card.tsx · DESIGN.md §색 사용 규칙)
 
+import { TAGLINE_FONT } from "@/lib/og-font";
 import { WORDMARK_DARK } from "@/lib/og-wordmark";
 
 export const OG_SIZE = { width: 1200, height: 630 };
@@ -8,7 +9,13 @@ export const INK = "#111419";
 export const SURFACE = "#ffffff";
 export const MUTED = "#656972";
 
-// ERR-OG-001 폴백 겸 사이트 기본 OG — 한글 없음(폰트 없이 렌더돼야 한다)
+// DefaultOg 렌더에 반드시 같이 넘긴다 — 태그라인이 한글이라 폰트가 없으면 통째로 빈칸이 된다.
+// 호출부가 2곳(정적 OG·/api/og 폴백)이라 각자 넘기게 두면 한쪽을 빠뜨린다
+export const DEFAULT_OG_FONTS = [
+  { name: "Sans", data: TAGLINE_FONT, weight: 400 as const, style: "normal" as const },
+];
+
+// ERR-OG-001 폴백 겸 사이트 기본 OG — DEFAULT_OG_FONTS와 세트로만 쓴다
 export function DefaultOg() {
   return (
     <div
@@ -38,8 +45,9 @@ export function DefaultOg() {
       {/* 633×157 원본 비율 유지 (4.0318:1) */}
       {/* eslint-disable-next-line @next/next/no-img-element -- Satori는 next/image를 못 읽는다 */}
       <img src={WORDMARK_DARK} width={420} height={104} alt="" />
+      {/* 문구를 고치면 lib/og-font.ts 서브셋도 다시 받아야 한다 — 없는 글자는 빈칸으로 나온다 */}
       <div style={{ fontSize: 40, color: MUTED, marginTop: 28 }}>
-        Share your AI workflow as a card — stackd.kr
+        내 AI 워크플로우를 카드 한 장으로 — stackd.kr
       </div>
     </div>
   );
