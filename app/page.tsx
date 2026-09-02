@@ -3,12 +3,14 @@ import BackToTop from "@/components/back-to-top";
 import DraftBanner from "@/components/draft-banner";
 import HeroIntro from "@/components/hero-intro";
 import HomeCarousel from "@/components/home-carousel";
+import JsonLd from "@/components/json-ld";
 import ScrollReveal from "@/components/scroll-reveal";
 import { Button, buttonVariants } from "@/components/ui/button";
 import WorkflowBuilder from "@/components/workflow-builder";
 import WorkflowCard from "@/components/workflow-card";
 import { EMPTY_DRAFT, type Draft } from "@/lib/draft";
 import { HERO_CARD } from "@/lib/hero-card";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
 // SCR-001 홈 메타 — 제목·설명은 PRD-04 표 그대로. OG는 app/opengraph-image.tsx 상속
@@ -81,6 +83,17 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
 
   return (
     <main className="flex-1">
+      {/* 사이트 식별 구조화 데이터 — 사이트 내 검색이 없어 SearchAction은 넣지 않는다 */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: SITE_NAME,
+          url: SITE_URL,
+          description: SITE_DESCRIPTION,
+          inLanguage: "ko-KR",
+        }}
+      />
       {/* 수정 모드에서는 같은 카드의 초안일 때만 배너 (SCR-001 §11 #3) */}
       <DraftBanner editId={initial?.editId} />
 

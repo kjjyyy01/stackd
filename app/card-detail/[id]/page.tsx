@@ -5,11 +5,13 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import CardActions from "@/components/card-actions";
 import FeedbackDialog from "@/components/feedback-dialog";
+import JsonLd from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import type { WorkflowInput } from "@/lib/limits";
+import { SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
 type Params = { params: Promise<{ id: string }> };
@@ -21,6 +23,7 @@ type Row = WorkflowInput & {
   author_avatar: string | null;
   hidden: boolean;
   hidden_reason: string | null;
+  created_at: string;
   updated_at: string;
 };
 
@@ -92,6 +95,28 @@ export default async function CardDetailPage({ params }: Params) {
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+      {/* 색인 대상일 때만 구조화 데이터 — noindex 카드에 내보내면 메타와 모순 (BR-017·018) */}
+      {wf.is_public && !wf.hidden && (
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: wf.title,
+            description: `${wf.situation_short} · ${wf.steps.length}단계 워크플로우`,
+            url: `${SITE_URL}/card-detail/${wf.id}`,
+            // JSON-LD는 metadataBase를 상속받지 않는다 — 절대 URL로 적는다
+            image: `${SITE_URL}/api/og?id=${wf.id}&v=${Math.floor(new Date(wf.updated_at).getTime() / 1000)}`,
+            datePublished: wf.created_at,
+            dateModified: wf.updated_at,
+            inLanguage: "ko-KR",
+            author: {
+              "@type": "Person",
+              name: wf.author_handle,
+              url: `https://github.com/${wf.author_handle}`,
+            },
+          }}
+        />
+      )}
       <div className="lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
         {/* EL-WF-001 요약 카드 — 유도 문구는 미노출(이미 상세다) */}
         <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
