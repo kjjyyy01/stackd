@@ -843,3 +843,20 @@
 - **Notion 3건** — 과정요약 `[Stackd] Day 16 — 기본 OG를 한국어화하고 Day 17 이월 2건을 사전 소멸` / 트러블슈팅 `TS-D16-1`(기본 OG만 영문 — 빌드 타임이라 폰트 받을 자리가 없었다) · `TS-D16-2`(favicon 유령 미결 — 해소 커밋에서 잔여 메모를 안 지웠다). 전건 상태 `완료`, 태그는 기존 4종 내(배포 2·기획 1)
 - **Obsidian** — TIL 118 → **119**. 신규 `TIL-폴백은-자기가-대신하려는-실패와-같은-자원에-의존하면-안-된다`, 보강 2건에 `## 추가 사례 (2026-09-02)` 삽입. 위키링크 대상 2건 실재 확인(깨진 링크 0)
 - **도구 응답 압축에 또 속을 뻔한 건 1건**: `create-pages` 응답의 제목이 짧아 보여 잘림을 의심했으나, SQL `length()`로 재조회하니 51·67·69자로 온전했다. 9/1에 겪은 것과 같은 아티팩트 — **생성 응답을 신뢰하지 말고 저장소를 다시 읽는다**가 두 번 연속 유효했다
+
+## 2026-09-02 Day 17 기술 점검: JSON-LD 2종 + OG 메타 결함 3라운드 종결
+
+**무엇을**: ①Day 17 출시 전 기술 점검 실측(LCP·Lighthouse·메타데이터·접근성) ②홈 `WebSite`·카드 상세 `Article` JSON-LD 추가 ③검수에서 나온 OG 메타 결함 3라운드 수정 ④Search Console 등록(본인) 검증
+
+**어떻게**: 프로덕션을 대상으로 먼저 재고 나서 고쳤다. LCP는 모바일·CPU 4x·Slow 4G 스로틀로 측정(무스로틀 545ms는 실사용 조건이 아니다). Lighthouse는 카테고리 점수만 보지 않고 `report.json`을 파싱해 `score < 1` 항목을 직접 뽑았다 — **`label-content-name-mismatch`는 가중치 0이라 a11y 100점 아래 숨어 있었다**. OG는 `openGraph`를 선언하지 않은 `/privacy`를 대조군으로 놓고 태그 종수를 비교했다.
+
+**왜**: 검수는 단독 페이지만 보면 "있네, 됐다"로 끝난다. 대조군이 있어야 **없는 것**이 보인다. 실제로 결함 A를 세 번에 걸쳐 좁혔고, 매 라운드마다 프리뷰 실측으로 남은 것을 찾았다 — 코드만 봤다면 1라운드에서 끝났다고 오판했을 것이다.
+
+- **LCP 예산 통과**: 홈 792ms / 카드 상세 856ms (예산 2.5s의 32~34%), CLS 0.00 · **Sentry 번들 +22% 재판정 = 클라이언트 SDK 제거 불필요**(`docs/history.md:750` 미결 해소)
+- **Lighthouse**: 홈·카드 상세·라이브러리 전부 a11y·SEO·BP·Agentic 100
+- **결함 A 3라운드**: ①`app/workflows/page.tsx`가 `openGraph`를 선언해 상위 파일 규약 이미지 상속이 끊겨 og:image 소실 → `images` 명시 ②`/privacy` 대조에서 site_name·locale·type도 함께 사라진 것 확인 — **Next는 하위 `openGraph` 선언 시 상위 객체를 병합하지 않고 교체한다** → `lib/site.ts`에 `BASE_OG`를 두고 선언 3곳(홈·라이브러리·카드 상세)이 스프레드 ③`images`를 문자열 URL로 주면 Next가 크기를 몰라 og:image:width/height/type/alt를 못 만든다 → 객체로 명시
+- **JSON-LD**: `components/json-ld.tsx` 공용 렌더러가 `<`를 `\u003c`로 이스케이프 — 카드 제목이 `<script>` 안쪽에 들어가는 XSS 경계다. 비공개·hidden 카드는 미출력(noindex와 모순 방지). `metadataBase`를 상속받지 않아 `SITE_URL`로 절대화. `HowTo`는 Google이 2023-08 리치 결과를 폐지해 미채택, `publisher`는 로고 요건 회피로 생략, `SearchAction`은 사이트 내 검색 기능이 없어 제외
+- **`lib/og.tsx`를 import하지 않은 이유**: `og-font`(base64 28.9KB)·`og-wordmark`를 끌고 있어 `lib/site.ts`가 참조하면 layout·sitemap·robots까지 전파된다 → OG_SIZE 값은 리터럴 + 주석으로 연결
+- **실측(프로덕션)**: 4개 페이지 og 태그 11종 동수 · JSON-LD 2종 정상(`datePublished` 8/28 ≠ `dateModified` 8/31) · og:image:alt가 카드별 생성 확인 · tsc 0 · lint 0 · test 31 pass · build 통과 · 배포 후 LCP 824ms 회귀 없음
+- **Search Console**(본인): 도메인 속성 등록 완료, `dig +short TXT stackd.kr @8.8.8.8`로 전파 실측. **네임서버가 Vercel이 아니라 가비아**라 TXT는 가비아 DNS 관리툴에 넣어야 한다
+- **버퍼 이월 1건**: 라이브러리 카드 링크의 `aria-label`이 보이는 텍스트를 전부 포함하지 않음(WCAG 2.5.3 Label in Name) — 접근명 설계에 판단이 필요해 9/4~9/5 버퍼로
