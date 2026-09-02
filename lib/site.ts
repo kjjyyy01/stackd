@@ -10,3 +10,8 @@ export const SITE_URL =
     : process.env.VERCEL_ENV === "production"
       ? "https://stackd.kr"
       : (process.env.NEXT_PUBLIC_SITE_URL ?? "https://stackd.kr");
+
+// 사이트 이름·설명 SSOT — layout 메타와 홈 JSON-LD가 같은 값을 써야 어긋나지 않는다
+export const SITE_NAME = "Stackd";
+export const SITE_DESCRIPTION =
+  "도구는 아는데 어떻게 쓰는지 모른다면 — 실제 개발자들의 AI 워크플로우를 카드 한 장으로 공유하고 라이브러리에서 예시를 보세요.";
