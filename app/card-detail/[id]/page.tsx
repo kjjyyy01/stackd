@@ -61,7 +61,13 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       url: `/card-detail/${wf.id}`,
       // 공개만 동적 OG, v=는 updated_at epoch 캐시 버스팅 (PRD-06). 비공개·hidden은 정적 기본
       images: shareable
-        ? [`/api/og?id=${wf.id}&v=${Math.floor(new Date(wf.updated_at).getTime() / 1000)}`]
+        ? [
+            {
+              ...BASE_OG.images[0], // 크기·타입은 동적 OG도 같은 1200×630 (PRD-06)
+              url: `/api/og?id=${wf.id}&v=${Math.floor(new Date(wf.updated_at).getTime() / 1000)}`,
+              alt: `${wf.title} 워크플로우 카드`,
+            },
+          ]
         : BASE_OG.images,
     },
   };
