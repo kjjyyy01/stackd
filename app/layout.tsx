@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_KR, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
-import { SITE_URL } from "@/lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import SiteHeader from "@/components/site-header";
 import SiteFooter from "@/components/site-footer";
 import Analytics from "@/components/analytics";
@@ -31,12 +31,11 @@ export const metadata: Metadata = {
     default: "Stackd — 내 AI 워크플로우 카드 만들기",
     template: "%s | Stackd",
   },
-  description:
-    "도구는 아는데 어떻게 쓰는지 모른다면 — 실제 개발자들의 AI 워크플로우를 카드 한 장으로 공유하고 라이브러리에서 예시를 보세요.",
+  description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
   openGraph: {
     type: "website",
-    siteName: "Stackd",
+    siteName: SITE_NAME,
     locale: "ko_KR",
     url: "/",
   },
