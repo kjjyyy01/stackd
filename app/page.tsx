@@ -10,14 +10,14 @@ import WorkflowBuilder from "@/components/workflow-builder";
 import WorkflowCard from "@/components/workflow-card";
 import { EMPTY_DRAFT, type Draft } from "@/lib/draft";
 import { HERO_CARD } from "@/lib/hero-card";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
+import { BASE_OG, SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
 // SCR-001 홈 메타 — 제목·설명은 PRD-04 표 그대로. OG는 app/opengraph-image.tsx 상속
 export const metadata: Metadata = {
   title: { absolute: "Stackd — 내 AI 워크플로우 카드 만들기" },
   alternates: { canonical: "/" },
-  openGraph: { title: "Stackd — 내 AI 워크플로우 카드 만들기", url: "/" },
+  openGraph: { ...BASE_OG, title: "Stackd — 내 AI 워크플로우 카드 만들기", url: "/" },
 };
 
 // 0번 카드 축소 렌더 (EL-HOME-003) — 배율은 호출부 --s, 값은 DESIGN.md §홈 캐러셀 조판

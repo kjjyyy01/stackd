@@ -11,7 +11,7 @@ import { buttonVariants } from "@/components/ui/button";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import type { WorkflowInput } from "@/lib/limits";
-import { SITE_URL } from "@/lib/site";
+import { BASE_OG, SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
 type Params = { params: Promise<{ id: string }> };
@@ -55,14 +55,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     alternates: { canonical: `/card-detail/${wf.id}` },
     robots: shareable ? undefined : { index: false, follow: false },
     openGraph: {
+      ...BASE_OG, // 선언하면 상위 openGraph가 교체된다 — site_name·type·이미지 메타를 되깐다
       title,
       description,
       url: `/card-detail/${wf.id}`,
-      // 중첩 세그먼트가 openGraph를 선언하면 상위 파일 규약 이미지가 덮인다 — 명시 지정 필요
       // 공개만 동적 OG, v=는 updated_at epoch 캐시 버스팅 (PRD-06). 비공개·hidden은 정적 기본
       images: shareable
         ? [`/api/og?id=${wf.id}&v=${Math.floor(new Date(wf.updated_at).getTime() / 1000)}`]
-        : ["/opengraph-image"],
+        : BASE_OG.images,
     },
   };
 }

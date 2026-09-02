@@ -7,6 +7,7 @@ import CardTransition from "@/components/card-transition";
 import GridStagger from "@/components/grid-stagger";
 import WorkflowCard from "@/components/workflow-card";
 import { pageRange, parsePage, splitPage } from "@/lib/paginate";
+import { BASE_OG } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
 // SCR-006 메타 — 색인 대상. ?page≥2도 canonical은 /workflows (첫 페이지만 색인, §13)
@@ -15,8 +16,7 @@ export const metadata: Metadata = {
   description:
     "개발자들이 실제로 쓰는 AI 워크플로우 카드 모음 — 상황·단계·도구를 한 장으로 보고 내 것도 만들어보세요.",
   alternates: { canonical: "/workflows" },
-  // openGraph를 선언하면 상위 파일 규약 이미지가 덮인다 — images 명시가 없으면 og:image가 사라진다
-  openGraph: { url: "/workflows", images: ["/opengraph-image"] },
+  openGraph: { ...BASE_OG, url: "/workflows" }, // BASE_OG 없으면 site_name·type·이미지 메타가 사라진다
 };
 
 // 카드 조판에 실리는 필드 + 작성자 표시분. situation(본문)은 목록에서 쓰지 않는다 (§8)
