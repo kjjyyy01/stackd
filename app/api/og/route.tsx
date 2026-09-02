@@ -1,5 +1,5 @@
 import { ImageResponse } from "next/og";
-import { DefaultOg, INK, MUTED, OG_SIZE, SURFACE } from "@/lib/og";
+import { DEFAULT_OG_FONTS, DefaultOg, INK, MUTED, OG_SIZE, SURFACE } from "@/lib/og";
 import { createClient } from "@/lib/supabase/server";
 
 // GET /api/og?id={id}&v={updated_at epoch} — 공개 카드의 동적 OG (PRD-06 · REQ-WF-007)
@@ -80,6 +80,7 @@ async function load(id: string): Promise<Payload | null> {
 const fallback = () =>
   new ImageResponse(<DefaultOg />, {
     ...OG_SIZE,
+    fonts: DEFAULT_OG_FONTS, // 번들 내장 서브셋 — 폰트 fetch가 죽어서 온 폴백이라 네트워크를 또 타면 안 된다
     headers: { "cache-control": "public, max-age=3600" }, // 폴백은 짧게 — 복구되면 곧 정상 이미지로
   });
 
