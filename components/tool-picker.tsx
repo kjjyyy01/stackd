@@ -73,11 +73,11 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
                     type="button"
                     disabled={dup}
                     onClick={() => { onPick({ name: i.name, category: i.category }, "catalog"); setQ(""); }}
-                    className="flex w-full items-start gap-3 px-3 py-2 text-left hover:bg-muted disabled:opacity-50 focus-visible:bg-muted focus-visible:outline-none"
+                    className="flex w-full items-baseline gap-2 px-3 py-2 text-left hover:bg-muted disabled:opacity-50 focus-visible:bg-muted focus-visible:outline-none"
                   >
-                    <span className="font-mono text-sm font-medium">{i.name}</span>
-                    <span className="mt-0.5 font-mono text-xs text-muted-foreground">{i.category}</span>
-                    <span className="ml-auto line-clamp-1 text-xs text-muted-foreground">{i.description}</span>
+                    {/* 설명은 표시하지 않는다 — 좁은 폭에서 넘쳐 목록을 밀어냈다. 검색 매칭에는 계속 쓴다 */}
+                    <span className="min-w-0 break-words font-mono text-sm font-medium">{i.name}</span>
+                    <span className="shrink-0 font-mono text-xs text-muted-foreground">{i.category}</span>
                   </button>
                 </li>
               );
