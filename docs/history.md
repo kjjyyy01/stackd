@@ -860,3 +860,19 @@
 - **실측(프로덕션)**: 4개 페이지 og 태그 11종 동수 · JSON-LD 2종 정상(`datePublished` 8/28 ≠ `dateModified` 8/31) · og:image:alt가 카드별 생성 확인 · tsc 0 · lint 0 · test 31 pass · build 통과 · 배포 후 LCP 824ms 회귀 없음
 - **Search Console**(본인): 도메인 속성 등록 완료, `dig +short TXT stackd.kr @8.8.8.8`로 전파 실측. **네임서버가 Vercel이 아니라 가비아**라 TXT는 가비아 DNS 관리툴에 넣어야 한다
 - **버퍼 이월 1건**: 라이브러리 카드 링크의 `aria-label`이 보이는 텍스트를 전부 포함하지 않음(WCAG 2.5.3 Label in Name) — 접근명 설계에 판단이 필요해 9/4~9/5 버퍼로
+
+## 2026-09-03 — Day 17 종료: 버퍼 이월 해소 + iOS Safari 순회 결함 3건 수정 + 본인 잔여 3종 완료
+
+**무엇을**: ①버퍼 이월된 `aria-label` WCAG 2.5.3 위반 수정 ②iOS Safari 순회(본인)에서 나온 결함 3건 당일 수정·검증 ③Search Console 색인 요청·Vercel 플랜 판단(본인) ④Day 17 EOD 등록(Notion 3건·Obsidian 신규 1·보강 1)
+
+**어떻게**: `aria-label`은 카드 전체를 감싼 `Link`에 달려 내부 텍스트(상황·단계·도구명)를 보강이 아니라 **대체**하고 있었다 — 제거해 접근성 이름이 카드 article의 aria-label에서 오게 했다(`77d9866`). Safari 순회는 macOS 반응형 모드로 9개 화면을 전수 점검했고, 결함 3건 중 검색 오버플로는 설명 열 표시 제거(`3f75f1d`)로, 카드 우측 여백 2건은 `/workflows`의 기존 정상 패턴과 대조해 `mx-auto` 누락을 찾아 수정했다(`1ece175`). 그 과정에서 먼저 시도한 컨테이너 쿼리 기반 유동 배율(`49418b7`)이 CSS 커스텀 속성 무효값(빌드가 못 잡는 타입 불일치)과 Safari 전용 렌더 회귀를 연달아 일으켜 `git revert`(`3196404`)로 되돌렸다 — 상세는 아래 트러블슈팅.
+
+**왜**: 컨테이너 쿼리 시도는 증상("배율이 뷰포트에 안 맞다")만 보고 원인을 추정해 더 복잡한 메커니즘부터 시도한 오진이었다. 같은 저장소의 `/workflows`가 동일 패턴에 `mx-auto`만 붙여 이미 정상 동작 중이었는데, 그걸 먼저 대조하지 않았다. 대체식(`tan(atan2())`)이 Safari에서 안전하다는 판단도 실측이 아니라 기억에 근거했다 — Chrome만 있는 환경에서는 Safari 관련 안전성 주장을 검증할 방법이 없어, 포워드픽스 대신 검증된 상태로 되돌리는 쪽을 택했다.
+
+**결과**:
+- **Day 17 PLAN 요구 전항목 완료** — LCP·Lighthouse·메타데이터/OG·접근성·JSON-LD·Search Console·iOS Safari 순회·Vercel 플랜 판단. **버퍼 9/4~9/5 미배정 유지**(결함 3건 전부 당일 흡수, 버퍼 소진 없음)
+- 결함 3건 프로덕션 실측 확인: `curl stackd.kr/card-detail/<id>` HTML에 `mx-auto` 존재·`atan2`/`@container` 흔적 0건, 홈 JS 청크에 `min-w-0 break-words` 존재·구 마커 `line-clamp-1` 0건
+- 검증: `npm run lint` 0 · `npx tsc --noEmit` 0 · `npm test` 31/31 pass · `npm run build` 통과. 커밋 7(머지 2), 프로덕션 배포 2회 전부 Ready
+- **EOD 등록**: Notion 3건(과정요약 1·트러블슈팅 2, 전건 상태 "완료") · Obsidian 신규 1(`TIL-CSS-커스텀-속성의-무효값은-에러-없이-initial로-풀려-transform을-통째로-지운다`) · 보강 1(iOS/WebKit 노트에 "기억으로 안전하다는 실측으로 안전하다가 아니다" 사례 추가)
+- **배치 쓰기 응답 재확인**: Notion `create-pages` 응답의 제목 에코가 이번에도 손실됐다(트러블슈팅 하나는 제목이 절반 가까이 잘려 왔다) — 단건 `fetch`로 페이지 3건 전부 재조회해 온전함을 확인했다. 9/1·9/2에 이어 세 번째로 확인된 같은 아티팩트: **배치 응답을 검증 근거로 쓰지 않는다**가 계속 유효하다
+- ⚠️ 잔여 없음 — Day 18 이후는 PLAN Day 19(런칭 포스트 준비)로 이어진다

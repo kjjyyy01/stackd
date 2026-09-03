@@ -146,8 +146,8 @@
 - [x] **JSON-LD** ← 홈 `WebSite` · 카드 상세 `Article`(공개 카드만). `components/json-ld.tsx` 공용 렌더러가 `<` 이스케이프 — 카드 제목이 `<script>` 안쪽에 들어가는 XSS 경계다. `HowTo` 미채택(Google 2023-08 리치 결과 폐지) · `publisher` 생략(로고 요건) · `SearchAction` 제외(사이트 내 검색 부재)
 - [x] **OG 메타 결함 3라운드** ← ①`/workflows`가 `openGraph` 선언으로 파일 규약 이미지 상속을 끊어 og:image 소실 ②`/privacy` 대조에서 site_name·locale·type도 소실 확인 — **Next는 하위 `openGraph` 선언 시 상위를 병합이 아니라 교체** → `lib/site.ts` `BASE_OG` 스프레드로 3곳 통일 ③`images`를 문자열로 주면 크기를 몰라 og:image:width/height/type/alt 미생성 → 객체 명시. **프로덕션 4개 페이지 og 11종 동수 실측**
 - [x] **Search Console 등록·사이트맵 제출**(본인) ← 도메인 속성, `dig +short TXT stackd.kr @8.8.8.8` 전파 실측. **네임서버가 Vercel이 아니라 가비아** — TXT는 가비아 DNS 관리툴에 넣는다
-- [ ] **URL 검사 → 색인 생성 요청**(본인) — JSON-LD 반영 후 실행 가능 상태
-- [ ] **iOS Safari 순회**(본인) — 실기기 부재로 macOS Safari 반응형 모드로 대체(PLAN이 허용한 폴백). WebKit 공통이라 레이아웃·backdrop-filter·클립보드·OAuth는 커버되나 **PNG 저장은 사각지대** — `card-actions.tsx:41-50`이 `await` 이후 `a.click()`이라 iOS는 제스처 컨텍스트를 잃는데 데스크톱 Safari는 통과시킨다
-- [ ] **Vercel 플랜 판단**(본인) — 약관보다 **사용량 한도가 실질 리스크**(초과 시 프로젝트 일시 정지 → 런칭 당일 사이트 다운). Usage 탭 수치 + Spend Management 확인
-- [ ] **버퍼 이월**: 라이브러리 카드 링크 `aria-label`이 보이는 텍스트를 전부 포함하지 않음(WCAG 2.5.3 Label in Name, Lighthouse `label-content-name-mismatch`) — `aria-labelledby`로 h2를 가리킬지 `aria-label` 제거할지 판단 필요
+- [x] **URL 검사 → 색인 생성 요청**(본인) ← Search Console에서 홈·라이브러리 등 6개 URL 검사 후 색인 생성 요청 완료
+- [x] **iOS Safari 순회**(본인) ← 실기기 부재로 macOS Safari 반응형 모드 폴백, 9개 화면 전수 점검. **결함 3건 발견·당일 수정·재검증 완료**: ①도구 검색 결과가 뷰포트 밖으로 넘침 — 설명 열 표시 제거(`3f75f1d`) ②`/card` 카드 우측 여백 ③`/card-detail` 카드 우측 여백 — 둘 다 축소 상자 `mx-auto` 누락이 원인(`1ece175`). 컨테이너 쿼리 기반 유동 배율로 먼저 시도했다가 Safari 렌더 회귀가 나 전량 revert(`3196404`) — 상세는 Notion TS-D17-2. 나머지 화면은 전부 정상
+- [x] **Vercel 플랜 판단**(본인) ← **Hobby(무료) 유지** — 유료 전환은 런칭 후 실사용량(Usage 탭 수치)을 확인하고 재판정
+- [x] **버퍼 이월**: 라이브러리 카드 링크 `aria-label`이 보이는 텍스트를 가려 WCAG 2.5.3(Label in Name) 위반 ← `aria-label` **제거**로 판정(`aria-labelledby` 아님) — 접근성 이름이 카드 article의 aria-label에서 오도록 하고, Link 자체의 aria-label은 내부 텍스트를 대체하지 않게 뺐다. `/workflows`·`/me` 2곳 동일 패턴 수정(`77d9866`), 실측: Lighthouse `label-content-name-mismatch` 4건 → 0건
 - 검색 키워드 검수는 **조건 미충족으로 스킵** — Day 1 유입 전략이 "입소문·공유 주채널, 검색은 기본 메타데이터 수준으로 경량화"(`docs/day1-decisions.md:50`)
