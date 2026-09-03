@@ -128,7 +128,8 @@ export default async function CardDetailPage({ params }: Params) {
         <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
           {/* 목록·미리보기에서 morph로 도착 (ANIMATION.md #3·#4) */}
           <CardTransition id={wf.id}>
-            <div className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
+            {/* mx-auto — 없으면 남는 폭이 전부 오른쪽에 몰린다 (/workflows와 동일) */}
+            <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
               <div className="origin-top-left [transform:scale(var(--s))]">
                 <WorkflowCard id="wf-card" workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" />
               </div>
