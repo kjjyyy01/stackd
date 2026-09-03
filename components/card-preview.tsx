@@ -136,19 +136,22 @@ export default function CardPreview({ handle, loggedIn }: Props) {
 
   // Loading — 초안을 읽기 전 1프레임
   if (!draft) {
-    return <div className="mt-8 h-[406px] w-[325px] animate-pulse rounded-xl bg-muted" aria-hidden />;
+    // 실제 카드와 같은 폭·비율 — 고정 px면 유동 배율과 어긋나 CLS가 생긴다
+    return <div className="mt-8 aspect-[4/5] w-full max-w-[560px] animate-pulse rounded-xl bg-muted" aria-hidden />;
   }
 
   const gate = validateWorkflow(draft).ok;
   const swatches = Object.entries(ACCENTS);
 
   return (
-    <div className="mt-8 lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
+    <div className="mt-8 @container lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
       {/* EL-CARD-002 미리보기 — 조판은 560×700 고정, 좁은 화면은 scale로만 축소 */}
-      <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
+      {/* 배율은 컨테이너 폭에서 도출 — 고정값은 뷰포트마다 우측 여백이 남는다 */}
+      {/* tan(atan2())로 길이÷길이=무단위. `100cqw/560`은 길이라 min(1,·)이 무효화된다 */}
+      <div className="[--s:min(1,tan(atan2(100cqw,560px)))]">
         {/* 수정=editId, 신규=저장 직후 id로 상세와 morph 페어링 (ANIMATION.md #4) */}
         <CardTransition id={draft.editId ?? savedId ?? "preview"}>
-          <div ref={cardRef} className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
+          <div ref={cardRef} className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
             <div className="origin-top-left [transform:scale(var(--s))]">
               <WorkflowCard workflow={draft} handle={handle} />
             </div>
