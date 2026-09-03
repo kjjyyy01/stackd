@@ -74,10 +74,9 @@ export default async function WorkflowsPage({ searchParams }: Props) {
           <GridStagger className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((w) => (
               <li key={w.id}>
-                {/* EL-LIB-003 — 항목 전체가 링크 1개. 이름은 제목으로 고정한다 (§15) */}
+                {/* EL-LIB-003 — 항목 전체가 링크 1개 · 이름은 카드 article의 aria-label에서 온다 (WCAG 2.5.3) */}
                 <Link
                   href={`/card-detail/${w.id}`}
-                  aria-label={`${w.title} — @${w.author_handle} 워크플로우 보기`}
                   className="block rounded-xl outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                 >
                   {/* 조판은 560×700 고정, 목록에서는 scale로만 축소 (DESIGN.md §카드 조판) */}

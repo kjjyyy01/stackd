@@ -69,7 +69,7 @@ export default async function MePage() {
         <ul className="mt-10 grid gap-8 md:grid-cols-2">
           {rows.map((w) => (
             <li key={w.id} className="rounded-xl border border-border bg-card p-4 sm:p-5">
-              <Link href={`/card-detail/${w.id}`} aria-label={`${w.title} 상세 보기`}>
+              <Link href={`/card-detail/${w.id}`}>
                 {/* 조판은 560×700 고정, 목록에서는 scale로만 축소 (DESIGN.md §카드 조판) */}
                 {/* 상세로 morph (ANIMATION.md #3) */}
                 <CardTransition id={w.id}>
