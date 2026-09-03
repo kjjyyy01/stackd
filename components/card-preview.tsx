@@ -148,7 +148,8 @@ export default function CardPreview({ handle, loggedIn }: Props) {
       <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
         {/* 수정=editId, 신규=저장 직후 id로 상세와 morph 페어링 (ANIMATION.md #4) */}
         <CardTransition id={draft.editId ?? savedId ?? "preview"}>
-          <div ref={cardRef} className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
+          {/* mx-auto — 없으면 남는 폭이 전부 오른쪽에 몰린다 (/workflows와 동일) */}
+          <div ref={cardRef} className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
             <div className="origin-top-left [transform:scale(var(--s))]">
               <WorkflowCard workflow={draft} handle={handle} />
             </div>
