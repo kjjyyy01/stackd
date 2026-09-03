@@ -87,7 +87,7 @@ export default async function CardDetailPage({ params }: Params) {
         <h1 className="text-2xl font-semibold tracking-[-0.015em]">숨겨진 워크플로우</h1>
         <div
           aria-hidden
-          className="mt-8 aspect-[4/5] w-full max-w-[560px] rounded-xl border border-border bg-muted blur-sm"
+          className="mt-8 h-[406px] w-[325px] rounded-xl border border-border bg-muted blur-sm"
         />
         <p className="mt-6 max-w-[62ch] text-sm leading-[1.75] text-muted-foreground">
           신고 검토로 숨겨진 워크플로우예요 — 사유: {wf.hidden_reason}
@@ -123,14 +123,12 @@ export default async function CardDetailPage({ params }: Params) {
           }}
         />
       )}
-      <div className="@container lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
+      <div className="lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
         {/* EL-WF-001 요약 카드 — 유도 문구는 미노출(이미 상세다) */}
-        {/* 배율은 컨테이너 폭에서 도출 — 고정값은 뷰포트마다 우측 여백이 남는다 */}
-        {/* tan(atan2())로 길이÷길이=무단위. `100cqw/560`은 길이라 min(1,·)이 무효화된다 */}
-        <div className="[--s:min(1,tan(atan2(100cqw,560px)))]">
+        <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
           {/* 목록·미리보기에서 morph로 도착 (ANIMATION.md #3·#4) */}
           <CardTransition id={wf.id}>
-            <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
+            <div className="h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
               <div className="origin-top-left [transform:scale(var(--s))]">
                 <WorkflowCard id="wf-card" workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" />
               </div>
