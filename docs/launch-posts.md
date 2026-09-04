@@ -6,11 +6,11 @@
 
 ## 링크표 (전 링크 UTM 필수 — 이 표 밖의 stackd.kr 링크는 게시 금지)
 
-| 채널 | 홈 | 예시 카드(0번 카드 상세 — id는 게시 전 프로덕션에서 확정) |
+| 채널 | 홈 | 예시 카드(0번 카드 상세 — `934c9228`, 2026-09-04 프로덕션 저장·실측 완료) |
 |---|---|---|
-| GeekNews | `https://stackd.kr/?utm_source=geeknews&utm_medium=community` | `https://stackd.kr/card-detail/{id}?utm_source=geeknews&utm_medium=community` |
-| 디스콰이엇 | `https://stackd.kr/?utm_source=disquiet&utm_medium=community` | `https://stackd.kr/card-detail/{id}?utm_source=disquiet&utm_medium=community` |
-| Threads | `https://stackd.kr/?utm_source=threads&utm_medium=social` | `https://stackd.kr/card-detail/{id}?utm_source=threads&utm_medium=social` |
+| GeekNews | `https://stackd.kr/?utm_source=geeknews&utm_medium=community` | `https://stackd.kr/card-detail/934c9228?utm_source=geeknews&utm_medium=community` |
+| 디스콰이엇 | `https://stackd.kr/?utm_source=disquiet&utm_medium=community` | `https://stackd.kr/card-detail/934c9228?utm_source=disquiet&utm_medium=community` |
+| Threads | `https://stackd.kr/?utm_source=threads&utm_medium=social` | `https://stackd.kr/card-detail/934c9228?utm_source=threads&utm_medium=social` |
 
 ## 소재 (실측 근거 — 포스트에 쓰는 숫자는 여기서만 가져온다)
 
@@ -40,7 +40,7 @@ https://stackd.kr/?utm_source=geeknews&utm_medium=community
 **어떻게 만들었나**
 
 혼자 3주(실작업 20일 + 버퍼 2일)로 잡고, 이 일정 자체를 첫 번째 카드로 만들었습니다:
-https://stackd.kr/card-detail/{id}?utm_source=geeknews&utm_medium=community
+https://stackd.kr/card-detail/934c9228?utm_source=geeknews&utm_medium=community
 
 기술 쪽에서 남길 만한 판단 몇 가지:
 
@@ -81,7 +81,7 @@ Claude Code 같은 AI 코딩 도구는 "뭘 쓰면 좋다"는 정보는 많은�
 - 라이브러리에서 다른 개발자의 워크플로우 구경
 
 첫 카드는 이 프로젝트 자체입니다 — "클로드 코드와 서브에이전트로 3주 만에 서비스 출시하기":
-https://stackd.kr/card-detail/{id}?utm_source=disquiet&utm_medium=community
+https://stackd.kr/card-detail/934c9228?utm_source=disquiet&utm_medium=community
 
 **3주 동안 있었던 일**
 
@@ -119,7 +119,7 @@ https://stackd.kr/?utm_source=threads&utm_medium=social
 **3번 글 (선택 — 재게시용으로 아껴둘 소재)**
 
 첫 카드는 이 프로젝트 자체 — 3주 동안 실제로 돌린 워크플로우 8단계.
-https://stackd.kr/card-detail/{id}?utm_source=threads&utm_medium=social
+https://stackd.kr/card-detail/934c9228?utm_source=threads&utm_medium=social
 
 > ⚠️ 3번 글은 첫 게시에 넣지 않고 남겨두는 것을 권장 — 표본 300명 미달 시 재게시(킬 크라이테리아 ③) 소재로 쓴다. 재게시 후보는 이 외에도: Safari 결함 3건 스토리 / "런칭일이 한 번도 안 밀린 이유" / 라이브러리에 올라온 다른 분 카드 소개.
 
@@ -127,7 +127,7 @@ https://stackd.kr/card-detail/{id}?utm_source=threads&utm_medium=social
 
 ## 게시 전 체크 (Day 19 밤)
 
-- [ ] `{id}` 전부 프로덕션 0번 카드 실제 id로 치환 — `grep -c '{id}'` 결과 0
+- [x] ~~카드 id 치환~~ → **`934c9228` 반영 완료 (2026-09-04)**. 프로덕션 실측: 상세 200 · OG PNG 45KB 200 · 라이브러리 노출 · 8단계 도구명 전부 서버 HTML 존재 · UTM 왕복 3종(www→apex 쿼리 보존 포함)
 - [ ] 링크 6개 전부 UTM 존재 — `grep -o 'stackd.kr[^ )]*' docs/launch-posts.md | grep -vc utm_` 결과 0
 - [ ] 각 채널 작성창에 링크 붙여넣어 OG 미리보기 실측(본인) — Threads 포함
 - [ ] 제목 후보 중 1개 확정 (본인)
