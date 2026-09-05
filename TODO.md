@@ -150,4 +150,8 @@
 - [x] **iOS Safari 순회**(본인) ← 실기기 부재로 macOS Safari 반응형 모드 폴백, 9개 화면 전수 점검. **결함 3건 발견·당일 수정·재검증 완료**: ①도구 검색 결과가 뷰포트 밖으로 넘침 — 설명 열 표시 제거(`3f75f1d`) ②`/card` 카드 우측 여백 ③`/card-detail` 카드 우측 여백 — 둘 다 축소 상자 `mx-auto` 누락이 원인(`1ece175`). 컨테이너 쿼리 기반 유동 배율로 먼저 시도했다가 Safari 렌더 회귀가 나 전량 revert(`3196404`) — 상세는 Notion TS-D17-2. 나머지 화면은 전부 정상
 - [x] **Vercel 플랜 판단**(본인) ← **Hobby(무료) 유지** — 유료 전환은 런칭 후 실사용량(Usage 탭 수치)을 확인하고 재판정
 - [x] **버퍼 이월**: 라이브러리 카드 링크 `aria-label`이 보이는 텍스트를 가려 WCAG 2.5.3(Label in Name) 위반 ← `aria-label` **제거**로 판정(`aria-labelledby` 아님) — 접근성 이름이 카드 article의 aria-label에서 오도록 하고, Link 자체의 aria-label은 내부 텍스트를 대체하지 않게 뺐다. `/workflows`·`/me` 2곳 동일 패턴 수정(`77d9866`), 실측: Lighthouse `label-content-name-mismatch` 4건 → 0건
+
+### 버퍼 (9/4~9/5) — 커스텀 도구 토글 (BR-026)
+
+- [x] **`steps[].tool.custom` 신설 + 빌더 체크박스 + 카드·상세·OG 3표면 배지 + 문서 동기화** ← `feat/custom-tool-toggle` 브랜치, 테스트 39개 통과·lint 0·tsc 0·build 통과. **머지 미결정** — 프리뷰 시각 확인(모바일·데스크톱) 통과 후 계획서 §머지 판정 기준에 따라 판단
 - 검색 키워드 검수는 **조건 미충족으로 스킵** — Day 1 유입 전략이 "입소문·공유 주채널, 검색은 기본 메타데이터 수준으로 경량화"(`docs/day1-decisions.md:50`)

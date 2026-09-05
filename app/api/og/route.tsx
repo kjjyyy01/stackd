@@ -52,7 +52,7 @@ async function load(id: string): Promise<Payload | null> {
 
     // 서브셋 요청에 넘길 글자 — 한글은 Sans, 기계 식별자는 Mono가 그린다
     const koText = `${wf.title}${wf.situation_short}${wf.role ?? ""}외 ${rest}단계`;
-    // "custom" 7글자는 배지용 — 서브셋에 없으면 OG에서만 글리프가 빈다
+    // "custom" 6글자는 배지용 — 서브셋에 없으면 OG에서만 글리프가 빈다
     const monoText = `${shown.map((s) => s.tool.name).join("")}${stack}${meta}stackd.krcustom0123456789`;
 
     const [sans600, sans400, mono] = await Promise.all([
