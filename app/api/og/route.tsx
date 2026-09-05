@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 // GET /api/og?id={id}&v={updated_at epoch} — 공개 카드의 동적 OG (PRD-06 · REQ-WF-007)
 // v는 캐시 버스팅 전용이라 읽지 않는다. 실패·미존재·비공개·hidden은 전부 기본 이미지 200 (ERR-OG-001)
 
-type Step = { tool: { name: string }; note: string };
+type Step = { tool: { name: string; custom?: boolean }; note: string };
 type Row = {
   title: string;
   situation_short: string;
@@ -52,7 +52,8 @@ async function load(id: string): Promise<Payload | null> {
 
     // 서브셋 요청에 넘길 글자 — 한글은 Sans, 기계 식별자는 Mono가 그린다
     const koText = `${wf.title}${wf.situation_short}${wf.role ?? ""}외 ${rest}단계`;
-    const monoText = `${shown.map((s) => s.tool.name).join("")}${stack}${meta}stackd.kr0123456789`;
+    // "custom" 7글자는 배지용 — 서브셋에 없으면 OG에서만 글리프가 빈다
+    const monoText = `${shown.map((s) => s.tool.name).join("")}${stack}${meta}stackd.krcustom0123456789`;
 
     const [sans600, sans400, mono] = await Promise.all([
       subsetFont("IBM+Plex+Sans+KR", 600, koText),
@@ -148,7 +149,12 @@ export async function GET(request: Request) {
               >
                 {String(i + 1).padStart(2, "0")}
               </div>
-              <div style={{ fontSize: 28, fontFamily: "Mono" }}>{s.tool.name}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <div style={{ fontSize: 28, fontFamily: "Mono" }}>{s.tool.name}</div>
+                {s.tool.custom && (
+                  <div style={{ fontSize: 18, fontFamily: "Mono", color: MUTED, display: "flex" }}>custom</div>
+                )}
+              </div>
             </div>
           ))}
           {p.rest > 0 && (
