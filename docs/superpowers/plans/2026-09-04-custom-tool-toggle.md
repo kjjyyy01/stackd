@@ -20,6 +20,7 @@
 - **주석은 30자 내외**로 간결하게, 무엇을 하는 코드인지 이해되게
 - **커밋은 Conventional Commits** (`feat:`/`fix:`/`docs:`), 한국어
 - **검증 명령**: `npm test` / `npm run lint` / `npx tsc --noEmit` / `npm run build`
+- **테스트에서 `custom`을 넣을 땐 객체 리터럴 대입 금지** — `valid()`의 `tool`이 `{name, category}`로 추론돼 `TS2353`이 난다. `(v.steps[i].tool as Record<string, unknown>).custom = …` 캐스트를 쓴다(`limits.test.ts:53`의 기존 관행)
 - **시각 확인 필수**: 구현 후 chrome-devtools 스크린샷(모바일·데스크톱) + 본인 눈, 둘 다 통과해야 완료
 - **브랜치**: `feat/custom-tool-toggle` (이미 생성됨, `main`에서 분기)
 
@@ -45,7 +46,9 @@
 ```ts
 test("custom true + skill 계열이면 통과하고 값이 보존된다 (BR-026)", () => {
   const v = valid();
-  v.steps[0].tool = { name: "commit-push", category: "skill", custom: true };
+  v.steps[0].tool.name = "commit-push";
+  v.steps[0].tool.category = "skill";
+  (v.steps[0].tool as Record<string, unknown>).custom = true;
   const r = validateWorkflow(v);
   assert.equal(r.ok, true);
   assert.deepEqual(r.ok && r.value.steps[0].tool, { name: "commit-push", category: "skill", custom: true });
@@ -53,13 +56,13 @@ test("custom true + skill 계열이면 통과하고 값이 보존된다 (BR-026)
 
 test("custom true + language/framework/tool이면 ERR-BLDR-008 (BR-026)", () => {
   const v = valid();
-  v.steps[1].tool = { name: "gh", category: "tool", custom: true };
+  (v.steps[1].tool as Record<string, unknown>).custom = true; // steps[1]은 category "tool"
   assert.deepEqual(validateWorkflow(v), { ok: false, code: "ERR-BLDR-008", field: "steps.1.tool.custom" });
 });
 
 test("custom false면 통과하되 키가 제거된다 (BR-026)", () => {
   const v = valid();
-  v.steps[0].tool = { name: "Claude Code", category: "agent", custom: false };
+  (v.steps[0].tool as Record<string, unknown>).custom = false;
   const r = validateWorkflow(v);
   assert.equal(r.ok, true);
   assert.deepEqual(r.ok && r.value.steps[0].tool, { name: "Claude Code", category: "agent" });
@@ -183,7 +186,8 @@ Expected: FAIL — `Cannot find module './catalog.ts'`
 
 ```ts
 // 카탈로그 조회 (BR-026) — 등재 = 공개된 도구. 이름 중복 0건이라 name이 키다
-import catalog from "@/data/catalog.json";
+// 상대경로 + 타입 속성 필수 — node --test는 @/ 별칭을 못 풀고, 속성 없으면 JSON import가 실패한다
+import catalog from "../data/catalog.json" with { type: "json" };
 
 const NAMES = new Set((catalog as { name: string }[]).map((i) => i.name));
 
@@ -197,7 +201,7 @@ export function isCatalogTool(name: string) {
 Run: `npm test`
 Expected: PASS — 36 + 3 = 39개 전부 통과
 
-`@/` 별칭이 `node --test`에서 안 풀리면 `import catalog from "../data/catalog.json" with { type: "json" };`로 바꾸고 다시 실행한다.
+**실측 완료(착수 전 프로브)**: 상대경로 + `with { type: "json" }`는 `node --test`·`tsc --noEmit` 둘 다 통과. 속성을 빼면 `ERR_IMPORT_ATTRIBUTE_MISSING`으로 실패한다.
 
 - [ ] **Step 5: 빌더에 체크박스 추가**
 
