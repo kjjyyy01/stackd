@@ -470,15 +470,15 @@ OG는 앞 3단계만 그리므로(slice(0,3)) 4단계 이후의 custom은 이미
 `docs/prd/08_도메인규칙.md`의 BR 표 끝에 추가:
 
 ```markdown
-| BR-026 | **custom 도구 표시**: `steps[].tool.custom`(선택적 boolean). `true`는 `skill·plugin·mcp·agent`에만 허용, 위반 시 `ERR-BLDR-008`. `false`는 저장하지 않고 키를 제거(기본값). 의미는 저작이 아니라 **가용성** — "공개돼 있지 않아 남이 그대로 못 씀". ⚠️ **"카탈로그 등재 도구는 custom 불가"는 서버가 강제하지 못한다** — 카탈로그가 클라이언트 정적 JSON(`data/catalog.json`)이라 서버 검증 경로에 없다. UI 계약이며, API 직접 호출 시 모순 데이터가 들어갈 수 있다(피해는 잘못된 배지 1개, 데이터 손상 아님) | SCR-001·003·004 | ERR-BLDR-008 |
+| BR-026 | **custom 도구 표시**: `steps[].tool.custom`(선택적 boolean). `true`는 `skill·plugin·mcp·agent`에만 허용. `false`는 저장하지 않고 키를 제거(기본값). 의미는 저작이 아니라 **가용성** — "공개돼 있지 않아 남이 그대로 못 씀". 노출 조건은 카탈로그 미등재(`isCatalogTool`). ⚠️ **"카탈로그 등재 도구는 custom 불가"는 서버가 강제하지 못한다** — 카탈로그가 클라이언트 정적 JSON(`data/catalog.json`)이라 서버 검증 경로에 없다. UI 계약이며, API 직접 호출 시 모순 데이터가 들어갈 수 있다(피해는 잘못된 배지 1개, 데이터 손상 아님) | `validateWorkflow` | `ERR-BLDR-008` |
 ```
 
 - [ ] **Step 2: ERR-BLDR-008 신설**
 
-`docs/prd/10_에러코드_카탈로그.md`의 BLDR 표 끝에 추가:
+`docs/prd/10_에러코드_카탈로그.md`의 BLDR 표 끝에 추가. **이 표는 5열이다** (`ERR-ID | HTTP | 발생 조건 | 처리 | 문구`, `:14`) — 열 수를 맞추지 않으면 표가 깨진다:
 
 ```markdown
-| ERR-BLDR-008 | `custom`이 boolean이 아니거나, `true`인데 카테고리가 `skill·plugin·mcp·agent`가 아님 | `steps.{i}.tool.custom` | BR-026 |
+| ERR-BLDR-008 | — | `custom`이 boolean이 아니거나, `true`인데 카테고리가 `skill·plugin·mcp·agent`가 아님 (BR-026) | 저장 차단 — **서버 방어용, UI에서 도달 불가**(체크박스가 해당 카테고리에만 뜨고 값은 boolean 고정) | — |
 ```
 
 - [ ] **Step 3: 데이터 모델 갱신**
