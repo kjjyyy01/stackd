@@ -11,22 +11,6 @@ export type FeedbackType = (typeof TYPES)[number];
 
 export type FeedbackResult = { status: "ok" | "error" };
 
-// Slack 알림 — 3초 타임아웃, 재시도 없음, 실패는 무시 (PRD-13 · BR-021)
-async function notifySlack(text: string) {
-  const url = process.env.SLACK_WEBHOOK_URL;
-  if (!url) return;
-  try {
-    await fetch(url, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ text }),
-      signal: AbortSignal.timeout(3000),
-    });
-  } catch {
-    // 웹훅 실패는 저장 성공에 영향 없음 — /admin이 최종 확인 경로
-  }
-}
-
 export async function submitFeedback(formData: FormData): Promise<FeedbackResult> {
   // 입력은 전부 서버에서 재검증 — 클라이언트 값을 믿지 않는다
   const rawType = String(formData.get("type") ?? "");
@@ -56,10 +40,24 @@ export async function submitFeedback(formData: FormData): Promise<FeedbackResult
 
   if (error) return { status: "error" }; // ERR-FB-001
 
-  // 웹훅은 응답 뒤로 — 사용자가 Slack 왕복(~1.5초)을 기다릴 이유가 없다
-  after(() =>
-    notifySlack(`[stackd/${type}]${workflowId ? ` card=${workflowId}` : ""} ${parsed.value}`),
-  );
+  // 웹훅은 응답 뒤로 — 사용자가 Slack 왕복(~1.5초)을 기다릴 이유가 없다.
+  // 3초 타임아웃, 재시도 없음, 실패는 무시(저장 성공에 영향 없음 — /admin이 최종 확인 경로) (PRD-13 · BR-021)
+  after(async () => {
+    const url = process.env.SLACK_WEBHOOK_URL;
+    if (!url) return;
+    try {
+      await fetch(url, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          text: `[stackd/${type}]${workflowId ? ` card=${workflowId}` : ""} ${parsed.value}`,
+        }),
+        signal: AbortSignal.timeout(3000),
+      });
+    } catch {
+      // 무시
+    }
+  });
 
   return { status: "ok" };
 }
