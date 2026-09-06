@@ -43,7 +43,8 @@ export default async function WorkflowsPage({ searchParams }: Props) {
   // count는 별도 head 쿼리로 먼저 받는다 — PostgREST는 range(from,to)의 from이 총 개수를
   // 넘으면 count: "exact"와 함께 쓸 때 416(PGRST103)을 던진다(실측: from=7·total=6 재현).
   // 그래서 유효 페이지인지 먼저 이걸로 판정한 뒤에만 메인 쿼리를 range와 함께 실행한다
-  const { count, error: countError } = await supabase
+  // count 쿼리 실패 시 count는 null → totalPages는 1이 되어 아래 조건이 그대로 걸러준다
+  const { count } = await supabase
     .from("workflows")
     .select("id", { count: "exact", head: true })
     .eq("is_public", true)
@@ -51,7 +52,7 @@ export default async function WorkflowsPage({ searchParams }: Props) {
 
   const totalPages = pageCount(count ?? 0);
   // 총 페이지 수를 넘는 page 요청 = 범위 초과 — Empty 문구 오노출 방지 (REQ-LIB-002 AC-2)
-  if (!countError && page > totalPages) redirect("/workflows");
+  if (page > totalPages) redirect("/workflows");
 
   const { data: rows, error } = await supabase
     .from("workflows")
