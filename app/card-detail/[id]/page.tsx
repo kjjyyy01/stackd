@@ -215,6 +215,11 @@ export default async function CardDetailPage({ params }: Params) {
             <li key={`${s.tool.name}-${i}`} className="max-w-[62ch]">
               <p className="font-mono text-sm font-medium">
                 {String(i + 1).padStart(2, "0")} {s.tool.name}
+                {s.tool.custom && (
+                  <span className="ml-2 rounded-sm bg-muted px-1.5 py-0.5 align-middle font-mono text-xs font-medium text-muted-foreground">
+                    custom
+                  </span>
+                )}
                 <span className="ml-2 font-sans text-xs font-normal text-muted-foreground">{s.tool.category}</span>
               </p>
               <p className="mt-1 text-base leading-[1.75]">{s.note}</p>
@@ -224,6 +229,11 @@ export default async function CardDetailPage({ params }: Params) {
             </li>
           ))}
         </ol>
+        {wf.steps.some((s) => s.tool.custom) && (
+          <p className="mt-6 text-sm leading-[1.75] text-muted-foreground" style={{ wordBreak: "keep-all" }}>
+            custom 표시가 붙은 도구는 공개돼 있지 않아 그대로 가져다 쓸 수 없어요.
+          </p>
+        )}
       </section>
     </main>
   );

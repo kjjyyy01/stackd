@@ -18,6 +18,8 @@ export const LIMITS = {
 // 카테고리 enum 7종 (BR-004) — dev_stack은 앞 3종만
 export const CATEGORIES = ["language", "framework", "tool", "skill", "plugin", "mcp", "agent"] as const;
 export const DEV_STACK_CATEGORIES = ["language", "framework", "tool"] as const;
+// custom 표시가 가능한 카테고리 (BR-026) — 언어·프레임워크엔 "공개 안 됨"이 성립하지 않는다
+export const CUSTOMIZABLE_CATEGORIES = ["skill", "plugin", "mcp", "agent"] as const;
 export type Category = (typeof CATEGORIES)[number];
 export type DevStackCategory = (typeof DEV_STACK_CATEGORIES)[number];
 
@@ -26,7 +28,7 @@ export type WorkflowInput = {
   title: string;
   situation_short: string;
   situation: string;
-  steps: { tool: { name: string; category: Category }; note: string; detail: string }[];
+  steps: { tool: { name: string; category: Category; custom?: boolean }; note: string; detail: string }[];
   dev_stack: { name: string; category: DevStackCategory }[];
   role: string;
   accent: string;
@@ -79,7 +81,12 @@ export function validateWorkflow(input: unknown): Result<WorkflowInput> {
     if (note === null) return fail("ERR-BLDR-005", `steps.${i}.note`);
     const detail = str(s.detail, LIMITS.step_detail);
     if (detail === null) return fail("ERR-BLDR-005", `steps.${i}.detail`);
-    steps.push({ tool: { name, category: tool.category }, note, detail });
+    // custom = 카탈로그에 없는 도구 표시 (BR-026). false는 기본값이라 저장하지 않는다
+    if (tool.custom !== undefined && typeof tool.custom !== "boolean") return fail("ERR-BLDR-008", `steps.${i}.tool.custom`);
+    if (tool.custom === true && !isIn(CUSTOMIZABLE_CATEGORIES, tool.category)) return fail("ERR-BLDR-008", `steps.${i}.tool.custom`);
+    const t: WorkflowInput["steps"][number]["tool"] = { name, category: tool.category };
+    if (tool.custom === true) t.custom = true;
+    steps.push({ tool: t, note, detail });
   }
 
   const rawStack = d.dev_stack ?? [];

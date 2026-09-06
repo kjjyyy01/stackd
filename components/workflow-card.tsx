@@ -77,7 +77,18 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
               </span>
               <div className="min-w-0 flex-1">
                 {/* ponytail: 도구명 mono 고정 — 직접 입력으로 한글명이 오면 sans 분기 필요 */}
-                <p className="font-mono text-sm font-medium leading-none">{s.tool.name}</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="min-w-0 truncate font-mono text-sm font-medium leading-none">{s.tool.name}</p>
+                  {/* 카탈로그에 없는 도구 — 남이 그대로 못 쓴다는 표시 (BR-026) */}
+                  {s.tool.custom && (
+                    <span
+                      className="shrink-0 rounded-sm px-1 py-0.5 font-mono text-[0.625rem] font-medium leading-none"
+                      style={{ background: CHIP, color: MUTED }}
+                    >
+                      custom
+                    </span>
+                  )}
+                </div>
                 {/* 1줄 클램프 — 말줄임이 곧 "상세가 더 있다" 신호 (OQ-010 판정) */}
                 <p className="mt-1 line-clamp-1 text-xs leading-[1.6]" style={{ color: MUTED }}>
                   {s.note}

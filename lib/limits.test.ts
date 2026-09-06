@@ -134,3 +134,39 @@ test("탈퇴 확인 입력은 공백 무시·대소문자 무시로 핸들과 �
   assert.equal(matchesHandle("", null), false);
   assert.equal(matchesHandle(undefined, "kjjyyy01"), false);
 });
+
+test("custom true + skill 계열이면 통과하고 값이 보존된다 (BR-026)", () => {
+  const v = valid();
+  v.steps[0].tool.name = "commit-push";
+  v.steps[0].tool.category = "skill";
+  (v.steps[0].tool as Record<string, unknown>).custom = true;
+  const r = validateWorkflow(v);
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.ok && r.value.steps[0].tool, { name: "commit-push", category: "skill", custom: true });
+});
+
+test("custom true + language/framework/tool이면 ERR-BLDR-008 (BR-026)", () => {
+  const v = valid();
+  (v.steps[1].tool as Record<string, unknown>).custom = true; // steps[1]은 category "tool"
+  assert.deepEqual(validateWorkflow(v), { ok: false, code: "ERR-BLDR-008", field: "steps.1.tool.custom" });
+});
+
+test("custom false면 통과하되 키가 제거된다 (BR-026)", () => {
+  const v = valid();
+  (v.steps[0].tool as Record<string, unknown>).custom = false;
+  const r = validateWorkflow(v);
+  assert.equal(r.ok, true);
+  assert.deepEqual(r.ok && r.value.steps[0].tool, { name: "Claude Code", category: "agent" });
+});
+
+test("custom 없으면 통과한다 — 기존 카드 하위호환 (BR-026)", () => {
+  const r = validateWorkflow(valid());
+  assert.equal(r.ok, true);
+  assert.equal(r.ok && "custom" in r.value.steps[0].tool, false);
+});
+
+test("custom이 boolean이 아니면 ERR-BLDR-008 (BR-026)", () => {
+  const v = valid();
+  (v.steps[0].tool as Record<string, unknown>).custom = "yes";
+  assert.deepEqual(validateWorkflow(v), { ok: false, code: "ERR-BLDR-008", field: "steps.0.tool.custom" });
+});

@@ -8,8 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
+import { isCatalogTool } from "@/lib/catalog";
 import { EMPTY_DRAFT, clearDraft, isDraftEmpty, isResuming, loadDraft, saveDraft, type Draft } from "@/lib/draft";
-import { CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow } from "@/lib/limits";
+import { CATEGORIES, CUSTOMIZABLE_CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow } from "@/lib/limits";
 
 type Step = Draft["steps"][number];
 type Props = {
@@ -115,6 +116,10 @@ export default function WorkflowBuilder({ initial }: Props) {
     setPicking(false);
   }
   const patchStep = (i: number, p: Partial<Step>) => setD({ ...d, steps: d.steps.map((s, k) => (k === i ? { ...s, ...p } : s)) });
+
+  // 카탈로그에 없고 skill 계열일 때만 custom 토글을 띄운다 (BR-026·EL-HOME-025)
+  const canMarkCustom = (t: Step["tool"]) =>
+    !isCatalogTool(t.name) && (CUSTOMIZABLE_CATEGORIES as readonly string[]).includes(t.category);
   const moveStep = (i: number, dir: -1 | 1) => {
     const s = [...d.steps]; const j = i + dir;
     [s[i], s[j]] = [s[j], s[i]];
@@ -199,6 +204,17 @@ export default function WorkflowBuilder({ initial }: Props) {
                       placeholder="어떻게 쓰는지 자세히 (상세 페이지에 실려요 — 필수)" aria-invalid={incomplete || undefined} />
                     <Counter n={charCount(s.detail)} max={LIMITS.step_detail.max} over={over === `detail-${i}`} />
                   </div>
+                  {canMarkCustom(s.tool) && (
+                    <label className="mt-2 flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        className="size-4"
+                        checked={s.tool.custom === true}
+                        onChange={(e) => patchStep(i, { tool: { ...s.tool, custom: e.target.checked } })}
+                      />
+                      <span style={{ wordBreak: "keep-all" }}>공개된 도구가 아니에요 — 카드에 표시할게요</span>
+                    </label>
+                  )}
                   {incomplete && <p className="text-xs text-destructive">각 단계에 한 줄 메모와 설명을 채워주세요</p>}
                 </li>
               );
