@@ -6,7 +6,16 @@ import { buttonVariants } from "@/components/ui/button";
 import CardTransition from "@/components/card-transition";
 import GridStagger from "@/components/grid-stagger";
 import WorkflowCard from "@/components/workflow-card";
-import { pageRange, parsePage, splitPage } from "@/lib/paginate";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { pageCount, pageRange, pageWindow, parsePage } from "@/lib/paginate";
 import { BASE_OG } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
@@ -31,6 +40,19 @@ export default async function WorkflowsPage({ searchParams }: Props) {
 
   const supabase = await createClient();
   // 명시 필터 필수 — 로그인 세션의 RLS는 본인 비공개 행을 통과시킨다 (§9)
+  // count는 별도 head 쿼리로 먼저 받는다 — PostgREST는 range(from,to)의 from이 총 개수를
+  // 넘으면 count: "exact"와 함께 쓸 때 416(PGRST103)을 던진다(실측: from=7·total=6 재현).
+  // 그래서 유효 페이지인지 먼저 이걸로 판정한 뒤에만 메인 쿼리를 range와 함께 실행한다
+  const { count, error: countError } = await supabase
+    .from("workflows")
+    .select("id", { count: "exact", head: true })
+    .eq("is_public", true)
+    .eq("hidden", false);
+
+  const totalPages = pageCount(count ?? 0);
+  // 총 페이지 수를 넘는 page 요청 = 범위 초과 — Empty 문구 오노출 방지 (REQ-LIB-002 AC-2)
+  if (!countError && page > totalPages) redirect("/workflows");
+
   const { data: rows, error } = await supabase
     .from("workflows")
     .select(LIST_COLUMNS)
@@ -39,9 +61,7 @@ export default async function WorkflowsPage({ searchParams }: Props) {
     .order("created_at", { ascending: false })
     .range(from, to);
 
-  const { items, hasNext } = splitPage(rows ?? []);
-  // 2페이지 이상이 0건 = 범위 초과 — Empty 문구 오노출 방지 (REQ-LIB-002 AC-2)
-  if (!error && page > 1 && !items.length) redirect("/workflows");
+  const items = rows ?? [];
 
   return (
     <main className="container-page flex-1 py-10 lg:py-14">
@@ -111,16 +131,46 @@ export default async function WorkflowsPage({ searchParams }: Props) {
             ))}
           </GridStagger>
 
-          {/* EL-LIB-004 더 보기 (CPY-LIB-004) — 전체 페이지 이동이라 JS 없이 동작 */}
-          {hasNext && (
-            <div className="mt-12 flex justify-center">
-              <Link
-                href={`/workflows?page=${page + 1}`}
-                className={buttonVariants({ variant: "outline", size: "lg" })}
-              >
-                더 보기
-              </Link>
-            </div>
+          {/* EL-LIB-004 페이지네이션 (CPY-LIB-005·006) — 전부 <a href> 실링크, JS 없이 동작.
+              size-8/9(32~36px)만으론 §15 터치 타깃 44×44에 못 미쳐 min-h-11 min-w-11로 보정 */}
+          {totalPages > 1 && (
+            <Pagination className="mt-12">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    text="이전"
+                    href={page > 1 ? `/workflows?page=${page - 1}` : undefined}
+                    aria-disabled={page <= 1}
+                    className={`min-h-11 min-w-11 ${page <= 1 ? "pointer-events-none opacity-50" : ""}`}
+                  />
+                </PaginationItem>
+                {pageWindow(page, totalPages).map((p, i) =>
+                  p === "ellipsis" ? (
+                    <PaginationItem key={`ellipsis-${i}`}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  ) : (
+                    <PaginationItem key={p}>
+                      <PaginationLink
+                        href={`/workflows?page=${p}`}
+                        isActive={p === page}
+                        className="min-h-11 min-w-11"
+                      >
+                        {p}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ),
+                )}
+                <PaginationItem>
+                  <PaginationNext
+                    text="다음"
+                    href={page < totalPages ? `/workflows?page=${page + 1}` : undefined}
+                    aria-disabled={page >= totalPages}
+                    className={`min-h-11 min-w-11 ${page >= totalPages ? "pointer-events-none opacity-50" : ""}`}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
           )}
         </>
       )}
