@@ -25,10 +25,10 @@ test("게이트를 채우면 카드 미리보기까지 간다", async ({ page })
     await steps.getByPlaceholder("이름", { exact: true }).fill(tool);
     await steps.getByRole("button", { name: "담기" }).click();
   }
-  for (const [i, note] of [["0", "설계한다"], ["1", "구현한다"]]) {
-    await builder.locator(`#note-${i}`).fill(note);
-    await builder.locator(`#detail-${i}`).fill(`${note} — 상세 설명`);
-  }
+  await builder.locator("#note-0").fill("설계한다");
+  await builder.locator("#detail-0").fill("설계한다 — 상세 설명");
+  await builder.locator("#note-1").fill("구현한다");
+  await builder.locator("#detail-1").fill("구현한다 — 상세 설명");
 
   // 게이트 충족 → CTA가 링크로 바뀐다 (validateWorkflow SSOT가 살아있다는 증거)
   const cta = builder.getByRole("link", { name: "카드 만들기" });
