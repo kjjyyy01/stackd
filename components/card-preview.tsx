@@ -10,7 +10,7 @@ import { signInWithGitHub } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import CardTransition from "@/components/card-transition";
-import WorkflowCard, { ACCENTS } from "@/components/workflow-card";
+import WorkflowCard from "@/components/workflow-card";
 import { track } from "@/lib/analytics";
 import { clearDraft, loadDraft, markResume, saveDraft, type Draft } from "@/lib/draft";
 import { LIMITS, validateWorkflow } from "@/lib/limits";
@@ -140,7 +140,6 @@ export default function CardPreview({ handle, loggedIn }: Props) {
   }
 
   const gate = validateWorkflow(draft).ok;
-  const swatches = Object.entries(ACCENTS);
 
   return (
     <div className="mt-8 lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
@@ -158,26 +157,8 @@ export default function CardPreview({ handle, loggedIn }: Props) {
       </div>
 
       <div className="mt-8 lg:mt-0">
-        {/* EL-CARD-010 액센트 — 팔레트가 늘면 스와치도 함께 늘어난다 */}
-        {swatches.length > 1 && (
-          <div role="radiogroup" aria-label="카드 색" className="flex gap-2">
-            {swatches.map(([slug, color]) => (
-              <button
-                key={slug}
-                type="button"
-                role="radio"
-                aria-checked={draft.accent === slug}
-                aria-label={slug}
-                onClick={() => patch({ accent: slug })}
-                className={`size-8 rounded-full ring-offset-2 ${draft.accent === slug ? "ring-2 ring-foreground" : "ring-1 ring-border"}`}
-                style={{ background: color }}
-              />
-            ))}
-          </div>
-        )}
-
         {/* EL-CARD-011 공개 스위치 — 기본 켜짐 (BR-017) */}
-        <div className={swatches.length > 1 ? "mt-6" : ""}>
+        <div>
           <label className="flex items-center gap-3 text-sm">
             <Switch
               checked={draft.is_public}
