@@ -32,9 +32,7 @@ export const metadata: Metadata = {
 const LIST_COLUMNS =
   "id, title, situation_short, steps, dev_stack, role, accent, author_handle, author_avatar";
 
-type Props = { searchParams: Promise<{ page?: string }> };
-
-export default async function WorkflowsPage({ searchParams }: Props) {
+export default async function WorkflowsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
   const page = parsePage((await searchParams).page);
   const { from, to } = pageRange(page);
 
