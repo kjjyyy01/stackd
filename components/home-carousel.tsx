@@ -1,14 +1,15 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 
-type Props = { children: ReactNode; slideCount: number };
+type Props = { children: ReactNode };
 
 // 캐러셀 셸 (EL-HOME-016) — 슬라이드는 서버 렌더 children, 여기는 화살표·카운터만.
 // 스와이프는 CSS scroll-snap이라 JS 없이도 동작 (REQ-HOME-008 AC-4)
 // lg 미만은 캐러셀을 풀고 세로 스택 — 콘텐츠가 뷰포트(780px)를 99px 넘어
 // 가로 스와이프와 세로 스크롤이 충돌했다 (390×844 실측, 2026-08-28)
-export default function HomeCarousel({ children, slideCount }: Props) {
+export default function HomeCarousel({ children }: Props) {
+  const slideCount = Children.count(children);
   const track = useRef<HTMLDivElement>(null);
   const [current, setCurrent] = useState(1);
 

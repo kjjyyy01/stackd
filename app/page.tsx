@@ -99,7 +99,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
 
       {/* 풀뷰포트 캐러셀 (EL-HOME-016) — 슬라이드는 서버 렌더, 컨트롤만 클라이언트 */}
       <section aria-label="Stackd 소개">
-        <HomeCarousel slideCount={3}>
+        <HomeCarousel>
           {/* 슬라이드 1 = 히어로: h1·부제·CTA + 카톡 공유 장면 DOM 재현 (EL-HOME-002·017·022) */}
           <article className={`${SLIDE} bg-(--chat-bg)`}>
             {/* 오케스트레이션 래퍼 (ANIMATION.md #1) — 콘텐츠는 서버 렌더 유지 */}
