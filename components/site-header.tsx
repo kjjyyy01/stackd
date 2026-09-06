@@ -7,6 +7,18 @@ import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/mobile-nav";
 import UserMenu from "@/components/user-menu";
 
+// 데스크톱·모바일 내비 공용 로그인 폼 — 배치 여백만 className으로 다름
+function LoginForm({ className }: { className?: string }) {
+  return (
+    <form action={signInWithGitHub} className={className}>
+      <input type="hidden" name="next" value="/" />
+      <Button type="submit" size="lg">
+        GitHub으로 로그인
+      </Button>
+    </form>
+  );
+}
+
 // 공통 헤더 — 로고 / 라이브러리 / 로그인 or 내 카드·설정 (PRD-04 사이트맵)
 // ponytail: cookies() 때문에 전 페이지 동적 렌더 — LCP 예산 걸리면 Suspense/cacheComponents로 분리
 export default async function SiteHeader() {
@@ -50,25 +62,13 @@ export default async function SiteHeader() {
             /* 계정 항목은 @핸들 아래로 접는다 (2026-08-28) — 내비에 개인 메뉴가 4개 나열되던 것을 1개로 */
             <UserMenu handle={handle} />
           ) : (
-            <form action={signInWithGitHub} className="ml-1">
-              <input type="hidden" name="next" value="/" />
-              <Button type="submit" size="lg">
-                GitHub으로 로그인
-              </Button>
-            </form>
+            <LoginForm className="ml-1" />
           )}
         </nav>
 
         {/* 모바일·태블릿 — lg 미만. 로그인은 전환의 핵심이라 시트에 숨기지 않는다 */}
         <div className="flex items-center gap-1 lg:hidden">
-          {!handle && (
-            <form action={signInWithGitHub}>
-              <input type="hidden" name="next" value="/" />
-              <Button type="submit" size="lg">
-                GitHub으로 로그인
-              </Button>
-            </form>
-          )}
+          {!handle && <LoginForm />}
           <MobileNav handle={handle} />
         </div>
       </div>
