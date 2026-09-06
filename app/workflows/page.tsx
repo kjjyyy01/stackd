@@ -71,7 +71,7 @@ export default async function WorkflowsPage({ searchParams }: Props) {
       ) : (
         <>
           {/* EL-LIB-002 목록 — 1열 / sm 2열 / lg 3열 (§16) · 진입 stagger는 ANIMATION.md #5 */}
-          <GridStagger className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <GridStagger className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((w) => (
               <li key={w.id}>
                 {/* EL-LIB-003 — 항목 전체가 링크 1개 · 이름은 카드 article의 aria-label에서 온다 (WCAG 2.5.3) */}
@@ -82,8 +82,8 @@ export default async function WorkflowsPage({ searchParams }: Props) {
                   {/* 조판은 560×700 고정, 목록에서는 scale로만 축소 (DESIGN.md §카드 조판) */}
                   {/* 상세로 morph (ANIMATION.md #3) */}
                   <CardTransition id={w.id}>
-                    {/* xl 이상도 lg:grid-cols-3 그대로라 --s는 lg 값(0.52)이 이어져야 함 — xl에서 0.6으로 커지면 컬럼(298px)보다 카드(336px)가 넓어져 gap을 뚫고 옆 카드와 겹친다 */}
-                    <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.58] sm:[--s:0.49] md:[--s:0.6] lg:[--s:0.52]">
+                    {/* gap-4 기준 컬럼폭 실측(sm 288px·md 352px·lg+ 309px)에 맞춰 여유 5~10px만 남기고 최대화 — xl 이상도 lg:grid-cols-3 그대로라 --s를 별도로 안 늘림(늘리면 옆 카드와 겹침, Day 18 실측 결함) */}
+                    <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.58] sm:[--s:0.5] md:[--s:0.61] lg:[--s:0.54]">
                       <div className="origin-top-left [transform:scale(var(--s))]">
                         <WorkflowCard workflow={w} handle={w.author_handle} />
                       </div>
