@@ -82,7 +82,8 @@ export default async function WorkflowsPage({ searchParams }: Props) {
                   {/* 조판은 560×700 고정, 목록에서는 scale로만 축소 (DESIGN.md §카드 조판) */}
                   {/* 상세로 morph (ANIMATION.md #3) */}
                   <CardTransition id={w.id}>
-                    <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.58] sm:[--s:0.49] md:[--s:0.6] lg:[--s:0.52] xl:[--s:0.6]">
+                    {/* xl 이상도 lg:grid-cols-3 그대로라 --s는 lg 값(0.52)이 이어져야 함 — xl에서 0.6으로 커지면 컬럼(298px)보다 카드(336px)가 넓어져 gap을 뚫고 옆 카드와 겹친다 */}
+                    <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.58] sm:[--s:0.49] md:[--s:0.6] lg:[--s:0.52]">
                       <div className="origin-top-left [transform:scale(var(--s))]">
                         <WorkflowCard workflow={w} handle={w.author_handle} />
                       </div>
