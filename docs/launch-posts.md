@@ -128,7 +128,7 @@ https://stackd.kr/card-detail/934c9228?utm_source=threads&utm_medium=social
 ## 게시 전 체크 (Day 19 밤)
 
 - [x] ~~카드 id 치환~~ → **`934c9228` 반영 완료 (2026-09-04)**. 프로덕션 실측: 상세 200 · OG PNG 45KB 200 · 라이브러리 노출 · 8단계 도구명 전부 서버 HTML 존재 · UTM 왕복 3종(www→apex 쿼리 보존 포함)
-- [ ] 링크 6개 전부 UTM 존재 — `grep -o 'stackd.kr[^ )]*' docs/launch-posts.md | grep -vc utm_` 결과 0
+- [x] ~~링크 6개 전부 UTM 존재~~ → **검증 완료 (2026-09-07)**. `grep -o 'stackd.kr[^ )]*' docs/launch-posts.md | grep -vc utm_` 결과 0(진짜 위반 없음, 잡힌 2건은 안내문·grep 예시 텍스트). source/medium 값이 PRD `15_분석및추적.md` §UTM 규격과 전부 일치, 카드 id `934c9228` 6개 링크 전부 일관
 - [ ] 각 채널 작성창에 링크 붙여넣어 OG 미리보기 실측(본인) — Threads 포함
 - [ ] 제목 후보 중 1개 확정 (본인)
 - [ ] 본인 목소리로 리라이팅 완료 (본인)
