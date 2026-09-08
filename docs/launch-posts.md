@@ -1,17 +1,17 @@
 # 런칭 포스트 초안 3종 (Day 18~19 · 게시 9/8 화 오전)
 
-> **상태: 초안 — 본인 리라이팅 전.** AI 문체가 남아 있는 글은 커뮤니티에서 바로 티가 난다. 사실·숫자·링크는 그대로 두고 문장은 본인 목소리로 바꿀 것.
+> **상태 (2026-09-08)**: Threads = 실게시물 작성창에서 리라이팅 완료(이 파일 본문은 초안 기록) / GeekNews·디스콰이엇 = **초안 그대로, 게시 가능 시점에 리라이팅 필요**. AI 문체가 남아 있는 글은 커뮤니티에서 바로 티가 난다. 사실·숫자·링크는 그대로 두고 문장은 본인 목소리로 바꿀 것.
 > 채널 확정 2026-09-04: 게시판 = GeekNews·디스콰이엇 (`utm_medium=community`) / 소셜 = Threads (`utm_medium=social`). UTM 규격은 `docs/prd/15_분석및추적.md` §UTM이 SSOT.
 > **Threads는 예비 채널을 겸한다** — 첫 게시에 소재를 다 쓰지 않는다(킬 크라이테리아 ③ 재게시용으로 남긴다).
 > **채널 순서 변경 (2026-09-07, 사용자 결정)**: GeekNews는 가입 후 1주 대기, 디스콰이엇은 제품 승인 필요 — 둘 다 런칭 당일(9/8) 게시 불가 확인. **런칭은 Threads 단독으로 진행**, GeekNews·디스콰이엇은 각 조건(대기 기간 종료·승인 완료) 충족 시 순차 합류. 원래 "게시판 2곳 먼저 태우고 Threads는 재게시용으로 아껴둔다"는 전제가 뒤집혔으므로, Threads 3번 글(재게시 예비 소재)도 첫 게시부터 쓸지는 별도 판단 필요.
 
 ## 링크표 (전 링크 UTM 필수 — 이 표 밖의 stackd.kr 링크는 게시 금지)
 
-| 채널 | 홈 | 예시 카드(0번 카드 상세 — `934c9228`, 2026-09-04 프로덕션 저장·실측 완료) |
-|---|---|---|
-| GeekNews | `https://stackd.kr/?utm_source=geeknews&utm_medium=community` | `https://stackd.kr/card-detail/934c9228?utm_source=geeknews&utm_medium=community` |
+| 채널       | 홈                                                            | 예시 카드(0번 카드 상세 — `934c9228`, 2026-09-04 프로덕션 저장·실측 완료)         |
+| ---------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| GeekNews   | `https://stackd.kr/?utm_source=geeknews&utm_medium=community` | `https://stackd.kr/card-detail/934c9228?utm_source=geeknews&utm_medium=community` |
 | 디스콰이엇 | `https://stackd.kr/?utm_source=disquiet&utm_medium=community` | `https://stackd.kr/card-detail/934c9228?utm_source=disquiet&utm_medium=community` |
-| Threads | `https://stackd.kr/?utm_source=threads&utm_medium=social` | `https://stackd.kr/card-detail/934c9228?utm_source=threads&utm_medium=social` |
+| Threads    | `https://stackd.kr/?utm_source=threads&utm_medium=social`     | `https://stackd.kr/card-detail/934c9228?utm_source=threads&utm_medium=social`     |
 
 ## 소재 (실측 근거 — 포스트에 쓰는 숫자는 여기서만 가져온다)
 
@@ -26,9 +26,7 @@
 
 ## 1. GeekNews — 기술 커뮤니티 톤 (구현 판단 중심)
 
-**제목 후보** (하나 고른다)
-- Stackd — 내 AI 워크플로우를 카드 한 장으로 공유하는 사이트를 3주 만에 만들었습니다
-- 도구는 아는데 어떻게 쓰는지 모르겠어서, 남들 워크플로우를 카드로 모으는 곳을 만들었습니다
+**제목 확정 (2026-09-07)**: 도구는 아는데 어떻게 쓰는지 모르겠어서, 남들 워크플로우를 카드로 모으는 곳을 만들었습니다
 
 **본문**
 
@@ -61,9 +59,7 @@ v1은 Claude Code 생태계 한정이고, 검색·필터·포크는 일부러 �
 
 ## 2. 디스콰이엇 — 메이커 톤 (과정 + 제품)
 
-**제목 후보**
-- 혼자 3주 만에 기획→출시까지: 내 AI 워크플로우를 카드로 공유하는 Stackd를 런칭했습니다
-- "도구는 아는데 어떻게 쓰는지 모르겠다" — 실제 개발자들의 AI 워크플로우 카드 모음, Stackd
+**제목 확정 (2026-09-07)**: "도구는 아는데 어떻게 쓰는지 모르겠다" — 실제 개발자들의 AI 워크플로우 카드 모음, Stackd
 
 **본문**
 
@@ -108,7 +104,6 @@ https://stackd.kr/card-detail/934c9228?utm_source=disquiet&utm_medium=community
 
 내 AI 워크플로우를 카드 한 장으로.
 Claude Code 쓰면서 "이 상황엔 이 순서로 이 도구" 같은 거, 남들 건 어떻게 하는지 궁금하지 않았나요.
-그걸 모으는 사이트를 3주 만에 만들어서 오늘 열었습니다.
 
 [첨부: 0번 카드 PNG 또는 히어로 GIF]
 
@@ -130,6 +125,6 @@ https://stackd.kr/card-detail/934c9228?utm_source=threads&utm_medium=social
 
 - [x] ~~카드 id 치환~~ → **`934c9228` 반영 완료 (2026-09-04)**. 프로덕션 실측: 상세 200 · OG PNG 45KB 200 · 라이브러리 노출 · 8단계 도구명 전부 서버 HTML 존재 · UTM 왕복 3종(www→apex 쿼리 보존 포함)
 - [x] ~~링크 6개 전부 UTM 존재~~ → **검증 완료 (2026-09-07)**. `grep -o 'stackd.kr[^ )]*' docs/launch-posts.md | grep -vc utm_` 결과 0(진짜 위반 없음, 잡힌 2건은 안내문·grep 예시 텍스트). source/medium 값이 PRD `15_분석및추적.md` §UTM 규격과 전부 일치, 카드 id `934c9228` 6개 링크 전부 일관
-- [ ] 각 채널 작성창에 링크 붙여넣어 OG 미리보기 실측(본인) — Threads 포함
-- [ ] 제목 후보 중 1개 확정 (본인)
-- [ ] 본인 목소리로 리라이팅 완료 (본인)
+- [ ] 각 채널 작성창에 링크 붙여넣어 OG 미리보기 실측(본인) — **Threads 완료 (2026-09-07)**: `og:title`·이미지 정상 렌더링 확인. GeekNews·디스콰이엇은 게시 가능 시점에 별도 확인
+- [x] ~~제목 후보 중 1개 확정~~ → **확정 완료 (2026-09-07)**: GeekNews·디스콰이엇 둘 다 2번 후보(문제 제기형)로 확정
+- [x] ~~본인 목소리로 리라이팅 완료~~ → **완료 (2026-09-08)**. Threads 실게시물 작성창에서 직접 리라이팅 — 이 파일의 본문은 초안 기록으로 보존한다(실제 게시 문구와 다를 수 있음). UTM 링크 12개·숫자 무결성은 diff 대조로 검증 완료
