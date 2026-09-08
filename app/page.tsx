@@ -104,7 +104,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
           alternateName: "스택드",
           url: SITE_URL,
           logo: `${SITE_URL}/apple-icon.png`,
-          sameAs: ["https://github.com/kjjyyy01/stackd"],
+          sameAs: ["https://github.com/kjjyyy01/stackd", "https://www.threads.com/@kjjyyy_"],
         }}
       />
       {/* 수정 모드에서는 같은 카드의 초안일 때만 배너 (SCR-001 §11 #3) */}
