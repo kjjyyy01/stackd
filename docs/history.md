@@ -933,3 +933,22 @@
 - 실측: 4개 뷰포트 전부 카드 폭 < 셀 폭(겹침 없음) · 44×44 터치 타깃(`min-h-11 min-w-11`) 확인 · `?page=99`·프로덕션 조건 재현(`?page=2`, 실제 6건) 둘 다 정상 리다이렉트 확인(수정 전엔 두 번째가 에러 화면으로 깨짐)
 - PRD `SCR-006` v1.0.0→v1.1.0, `11_UX카피사전.md`(CPY-LIB-004 결번, 005·006 신설)
 - 커밋 3개: 겹침 수정 · gap·카드 크기 · 페이지네이션 교체(+416 수정), 브랜치 `fix/workflows-card-overflow-xl`
+
+## 2026-09-08 — Day 20: 보안 점검 7종·모의 침투(PT-01/02 조치) + 런칭 9/10 통일 + SEO 점검·조치 3건
+
+**무엇을**: ①Anthropic Cybersecurity Skills 7종으로 보안 점검 + 프로덕션 모의 침투(WSTG) → PT-01·PT-02 조치 배포 ②런칭·게시일 9/8→**9/10(목) 통일**, 판정일 9/22→**9/24(목)** (사용자 판정) + 포스트에서 "런칭일 불변" 소재 삭제 ③`claude-seo audit` SEO 점검(90/100) → 코드 조치 3건 + 백로그 기록
+
+**어떻게**:
+- **보안 점검**: gitleaks(커밋 시크릿 0 — 44건 전부 gitignore 대상 파일) · OSV(864 패키지 0건) · semgrep(0건) · 설치 스크립트(unrs-resolver 1건, 무해) · IDOR(삭제는 세션 uid만 사용 + RLS with-check가 hidden 잠금) · forced-browsing(페이지 가드 + admin 404) · SSRF(사용자 제어 URL fetch 없음) · JWT(자체 처리 없음, `sb_publishable_` 키). 전부 PASS/N-A.
+- **모의 침투**: 정찰(robots·sitemap)·민감 파일 노출(전부 404)·헤더 분석. **PT-01** 보안 헤더 부재(Low) · **PT-02** `x-powered-by` 노출(Info). 버스트 요청에 **Vercel Attack Challenge Mode**(403 `x-vercel-mitigated: challenge`)가 켜져 WAF 확인 후 능동 테스트 중단. IDOR-write·JWT 위조는 인증 세션 필요로 미실행.
+- **PT-01/02 조치**: `next.config.ts`에 `poweredByHeader: false` + `headers()`로 X-Frame-Options DENY·nosniff·Referrer-Policy·Permissions-Policy. CSP는 런칭 당일 GSAP·GA4·Supabase 파손 위험으로 **의도적 제외**. 프리뷰 → 프로덕션 양쪽 실측.
+- **일정 통일**: CLAUDE.md·PLAN.md(매핑표·판정일·체크리스트)·TODO.md·launch-posts.md 4종 갱신. 조정 이력·버퍼 소진 기록(9/22 표기)은 **과거 이벤트 로그라 보존**. 포스트의 "8/19 이후 런칭일 불변" 소재는 사실과 어긋나 4곳에서 삭제.
+- **SEO 점검**: 통제 크롤(10 URL, 1req/s — WAF 미유발) + 홈 렌더. 페이지별 title·description·self-canonical·h1 1개·alt 100%·JSON-LD 유효 전부 확인. 실결함은 Breadcrumb 부재(Medium)·ItemList 부재·정적 lastmod 부재(Low). 도구가 High로 올린 "GSC 미등록"은 **오탐** — Day 17에 도메인 속성(DNS TXT, dig 실측 유효)·sitemap 제출·6 URL 색인 요청 완료.
+- **SEO 조치**: 카드 상세 `BreadcrumbList`(기존 `is_public && !hidden` 게이트 안) · `/workflows` `ItemList`(position에 페이지 오프셋 반영) · sitemap 홈·라이브러리 `lastmod`=최신 카드 `updated_at`(privacy·terms는 신뢰할 날짜 소스가 없어 생략 — 부정확한 lastmod는 Google이 무시). HowTo 스키마는 Google이 2023-08 리치결과를 종료해 **하지 않음**, llms.txt는 효과 미검증으로 백로그(발동: AI 검색 유입 유의미).
+
+**왜**: 런칭 후 2주는 신기능 금지 구간 — 보안·SEO는 판정을 오염시키지 않는 하드닝 패스라 PLAN "런칭 직후 점검"으로 명문화. 스테일 브랜치(`docs/plan-security-seo-checks`)는 옛 main에서 분기해 4개 문서와 충돌 위험 → 실제 의도(PLAN 2줄)만 새 브랜치에 재적용하고 폐기.
+
+**결과**:
+- 보안 7종 PASS · PT-01/02 프로덕션 적용 실측(`2a32426`) · SEO 90/100 → 실결함 3건 당일 조치, 테스트 40/40 · lint 0 · 빌드 ✓ · 프리뷰 실측 ✓
+- 커밋: 일정 통일 `42938ad`·소재 삭제 `b5986f5`·보안 헤더 `2a32426`·PLAN 점검 항목 `9425b71`·SEO 3건 `8490e31`·`07d8d9d`·`889166a`, 브랜치 `feat/seo-schema-hardening`
+- 남은 사용자 몫: GSC 페이지 색인 보고서에서 10 URL 색인 확인(요청 후 5일 경과) · PLAN "런칭 직후 점검" 체크 여부 판정
