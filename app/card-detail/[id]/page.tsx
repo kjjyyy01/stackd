@@ -103,6 +103,19 @@ export default async function CardDetailPage({ params }: Params) {
     <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       {/* 색인 대상일 때만 구조화 데이터 — noindex 카드에 내보내면 메타와 모순 (BR-017·018) */}
       {wf.is_public && !wf.hidden && (
+        <>
+          {/* 홈 › 라이브러리 › 카드 — Breadcrumb 리치결과 (SEO 점검 9/8) */}
+          <JsonLd
+            data={{
+              "@context": "https://schema.org",
+              "@type": "BreadcrumbList",
+              itemListElement: [
+                { "@type": "ListItem", position: 1, name: "홈", item: `${SITE_URL}/` },
+                { "@type": "ListItem", position: 2, name: "라이브러리", item: `${SITE_URL}/workflows` },
+                { "@type": "ListItem", position: 3, name: wf.title },
+              ],
+            }}
+          />
         <JsonLd
           data={{
             "@context": "https://schema.org",
@@ -122,6 +135,7 @@ export default async function CardDetailPage({ params }: Params) {
             },
           }}
         />
+        </>
       )}
       <div className="lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
         {/* EL-WF-001 요약 카드 — 유도 문구는 미노출(이미 상세다) */}
