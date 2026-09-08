@@ -2,7 +2,21 @@ import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  poweredByHeader: false, // x-powered-by 제거 (PT-02)
+  // 전역 보안 응답 헤더 (PT-01) — 클릭재킹·MIME 스니핑 방어
+  async headers() {
+    return [
+      {
+        source: "/:path*{/}?",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
+        ],
+      },
+    ];
+  },
 };
 
 // 소스맵 업로드는 토큰이 있을 때만 — 없는 환경에서 빌드가 깨지지 않게 감싼다
