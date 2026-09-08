@@ -18,7 +18,7 @@
 ## 소재 (실측 근거 — 포스트에 쓰는 숫자는 여기서만 가져온다)
 
 - 기간: 8/11(Day 0) → 9/8 런칭, 실작업일 20 + 버퍼 2. 일정 조정 4회·버퍼 소진 2회, **런칭일은 8/19 이후 한 번도 안 움직임**
-- 산출: 화면 7 + admin 1, 커밋 220, 카탈로그 268개(skills·plugins·MCP·agents), GA4 이벤트 7종, 테스트 31/31, E2E 1
+- 산출: 화면 7 + admin 1, 커밋 253, 카탈로그 268개(skills·plugins·MCP·agents), GA4 이벤트 7종, 테스트 40/40, E2E 1 *(커밋·테스트 수치 2026-09-08 재실측 — 이전 표기 220/31은 Day 17 시점 값)*
 - 품질: Lighthouse a11y·SEO·BP 100(홈·상세·라이브러리), 프로덕션 LCP 824ms(예산 2.5초)
 - 사건: Day 14 본인 신규 계정 유저 테스트 → 치명 5건 / Day 17 iOS Safari 순회 → 결함 3건 당일 수정 / 카드 전환 딜레이 원인 = Vercel 함수 리전(iad1→icn1)
 - 도구: 오케스트레이터는 superpowers 하나 · 기획은 make-plan→make-prd(ID 스킴) · 구현은 ponytail 상시 · 기록은 claude-mem→Notion/Obsidian
@@ -49,7 +49,7 @@ https://stackd.kr/card-detail/934c9228?utm_source=geeknews&utm_medium=community
 - **카드 4:5 비율은 숙고가 아니라 실측으로 정했습니다.** 상한 케이스(제목 30자·단계 8개·메모 60자)를 px로 재서 확정. 모바일에서 카드가 컨테이너를 넘치던 버그는 Safari에서만 났고, 원인은 `transform: scale()`이 레이아웃 박스를 안 줄인다는 걸 잊은 것.
 - **카드 전환이 느린 원인이 코드가 아니라 Vercel 함수 리전이었습니다.** iad1 → icn1로 옮기니 해결. 프로파일링 전에 인프라부터 의심했어야 했습니다.
 - **런칭 준비에서 가장 오래 걸린 건 OG 메타.** Next의 `openGraph`는 하위 라우트가 선언하면 상위와 병합이 아니라 교체라서 site_name·locale이 통째로 사라졌습니다. 3라운드 만에 잡았습니다.
-- 프로덕션 LCP 824ms, Lighthouse a11y·SEO·BP 100. 테스트는 도메인 로직만 31개, E2E는 핵심 플로우 1개.
+- 프로덕션 LCP 824ms, Lighthouse a11y·SEO·BP 100. 테스트는 도메인 로직만 40개, E2E는 핵심 플로우 1개.
 
 AI 도구 쪽은 superpowers를 유일한 오케스트레이터로 두고, 기획은 make-plan → make-prd로 ID 스킴(SCR/BR/EVT…)을 박아서 구현 중 스코프가 조용히 흔들리는 걸 막았습니다. 구현 구간엔 YAGNI 강제(ponytail)를 상시로. 일정은 4번 조정했는데 런칭일은 한 번도 안 밀렸습니다 — 버퍼를 런칭 직전에 둔 덕입니다.
 
