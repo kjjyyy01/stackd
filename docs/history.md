@@ -952,3 +952,4 @@
 - 보안 7종 PASS · PT-01/02 프로덕션 적용 실측(`2a32426`) · SEO 90/100 → 실결함 3건 당일 조치, 테스트 40/40 · lint 0 · 빌드 ✓ · 프리뷰 실측 ✓
 - 커밋: 일정 통일 `42938ad`·소재 삭제 `b5986f5`·보안 헤더 `2a32426`·PLAN 점검 항목 `9425b71`·SEO 3건 `8490e31`·`07d8d9d`·`889166a`, 브랜치 `feat/seo-schema-hardening`
 - 남은 사용자 몫: GSC 페이지 색인 보고서에서 10 URL 색인 확인(요청 후 5일 경과) · PLAN "런칭 직후 점검" 체크 여부 판정
+- **"점수 전부 100" 후속(같은 날)**: Content — 카드 description에 도구 체인 추가(25→~90자, 160자 상한) + `/workflows` 리드 문단(CPY-LIB-007, 메타와 같은 문장) / On-Page — 상세에 **가시 breadcrumb**(CPY-WF-018, Google 권장: BreadcrumbList 마크업=보이는 경로) / AI Search — `app/llms.txt/route.ts` 최소형(백로그 직후 지시로 즉시 실행) / Images — 실측 결과 결함 0(전부 next/image + width/height + alt, `unoptimized`는 외부 아바타 의도) / Performance — CrUX 필드데이터는 코드로 불가(실사용 28일 필요), 랩 지표는 전부 녹색. 모바일·데스크톱 스크린샷 확인, 프리뷰 실측 4종 통과. 커밋 `f84e19a`·`ece9b46`·`78c738c`
