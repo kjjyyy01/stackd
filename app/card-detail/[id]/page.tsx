@@ -45,7 +45,9 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   const { wf } = found;
   const title = `${wf.title} — @${wf.author_handle}`;
-  const description = `${wf.situation_short} · ${wf.steps.length}단계 워크플로우`;
+  // 도구 체인을 붙여 검색 스니펫에 실제 내용이 보이게 (SEO 점검 9/8 — 권장 70~160자)
+  const chain = wf.steps.map((s) => s.tool.name).join(" → ");
+  const description = `${wf.situation_short} · ${wf.steps.length}단계 워크플로우: ${chain}`.slice(0, 160);
   // 비공개·hidden은 색인·동적 OG 제외 (BR-017·018) — 기본 OG로 폴백
   const shareable = wf.is_public && !wf.hidden;
 
@@ -121,7 +123,7 @@ export default async function CardDetailPage({ params }: Params) {
             "@context": "https://schema.org",
             "@type": "Article",
             headline: wf.title,
-            description: `${wf.situation_short} · ${wf.steps.length}단계 워크플로우`,
+            description: `${wf.situation_short} · ${wf.steps.length}단계 워크플로우: ${wf.steps.map((s) => s.tool.name).join(" → ")}`.slice(0, 160),
             url: `${SITE_URL}/card-detail/${wf.id}`,
             // JSON-LD는 metadataBase를 상속받지 않는다 — 절대 URL로 적는다
             image: `${SITE_URL}/api/og?id=${wf.id}&v=${Math.floor(new Date(wf.updated_at).getTime() / 1000)}`,
@@ -137,6 +139,16 @@ export default async function CardDetailPage({ params }: Params) {
         />
         </>
       )}
+      {/* EL-WF-012 가시 breadcrumb — BreadcrumbList 스키마와 같은 경로 (CPY-WF-018) */}
+      <nav aria-label="현재 위치" className="mb-6 text-sm text-muted-foreground">
+        <ol className="flex flex-wrap items-center gap-1.5">
+          <li><Link href="/" className="hover:text-foreground">홈</Link></li>
+          <li aria-hidden>›</li>
+          <li><Link href="/workflows" className="hover:text-foreground">라이브러리</Link></li>
+          <li aria-hidden>›</li>
+          <li aria-current="page" className="truncate max-w-[24ch] text-foreground">{wf.title}</li>
+        </ol>
+      </nav>
       <div className="lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
         {/* EL-WF-001 요약 카드 — 유도 문구는 미노출(이미 상세다) */}
         <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">

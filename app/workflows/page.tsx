@@ -21,10 +21,13 @@ import { BASE_OG, SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
 // SCR-006 메타 — 색인 대상. ?page≥2도 canonical은 /workflows (첫 페이지만 색인, §13)
+// 메타와 리드 문단이 같은 문장 (CPY-LIB-007) — 스니펫과 본문이 어긋나지 않게
+const LIB_DESCRIPTION =
+  "개발자들이 실제로 쓰는 AI 워크플로우 카드 모음 — 상황·단계·도구를 한 장으로 보고 내 것도 만들어보세요.";
+
 export const metadata: Metadata = {
   title: "라이브러리",
-  description:
-    "개발자들이 실제로 쓰는 AI 워크플로우 카드 모음 — 상황·단계·도구를 한 장으로 보고 내 것도 만들어보세요.",
+  description: LIB_DESCRIPTION,
   alternates: { canonical: "/workflows" },
   openGraph: { ...BASE_OG, url: "/workflows" }, // BASE_OG 없으면 site_name·type·이미지 메타가 사라진다
 };
@@ -69,6 +72,8 @@ export default async function WorkflowsPage({ searchParams }: { searchParams: Pr
       <h1 className="text-2xl font-semibold tracking-[-0.015em] sm:text-3xl">
         개발자들의 워크플로우
       </h1>
+      {/* EL-LIB-007 리드 문단 — 목록 페이지의 유일한 본문 텍스트 (SEO 점검 9/8) */}
+      <p className="mt-3 max-w-[62ch] leading-[1.75] text-muted-foreground">{LIB_DESCRIPTION}</p>
 
       {error ? (
         /* EL-LIB-006 (CPY-LIB-002 · ERR-LIB-001) — 재시도는 같은 URL 재요청 */
