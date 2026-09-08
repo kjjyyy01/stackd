@@ -15,9 +15,9 @@ import { createClient } from "@/lib/supabase/server";
 
 // SCR-001 홈 메타 — 제목·설명은 PRD-04 표 그대로. OG는 app/opengraph-image.tsx 상속
 export const metadata: Metadata = {
-  title: { absolute: "Stackd — 내 AI 워크플로우 카드 만들기" },
+  title: { absolute: "Stackd(스택드) — 내 AI 워크플로우 카드 만들기" },
   alternates: { canonical: "/" },
-  openGraph: { ...BASE_OG, title: "Stackd — 내 AI 워크플로우 카드 만들기", url: "/" },
+  openGraph: { ...BASE_OG, title: "Stackd(스택드) — 내 AI 워크플로우 카드 만들기", url: "/" },
 };
 
 // 0번 카드 축소 렌더 (EL-HOME-003) — 배율은 호출부 --s, 값은 DESIGN.md §홈 캐러셀 조판
@@ -89,9 +89,22 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: SITE_NAME,
+          alternateName: "스택드", // 한글 브랜드 검색어 매칭 (SEO 9/8)
           url: SITE_URL,
           description: SITE_DESCRIPTION,
           inLanguage: "ko-KR",
+        }}
+      />
+      {/* 브랜드 주체 신호 — "stackd.kr = 이 브랜드" 엔티티 묶기. 로고는 PNG 규칙(180×180) */}
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: SITE_NAME,
+          alternateName: "스택드",
+          url: SITE_URL,
+          logo: `${SITE_URL}/apple-icon.png`,
+          sameAs: ["https://github.com/kjjyyy01/stackd"],
         }}
       />
       {/* 수정 모드에서는 같은 카드의 초안일 때만 배너 (SCR-001 §11 #3) */}

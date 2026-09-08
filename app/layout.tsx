@@ -28,7 +28,7 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL), // 프리뷰는 그 배포 주소 — og:image가 읽혀야 한다 (lib/site.ts)
   title: {
-    default: "Stackd — 내 AI 워크플로우 카드 만들기",
+    default: "Stackd(스택드) — 내 AI 워크플로우 카드 만들기",
     template: "%s | Stackd",
   },
   description: SITE_DESCRIPTION,
