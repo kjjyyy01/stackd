@@ -33,6 +33,8 @@ export const metadata: Metadata = {
   },
   description: SITE_DESCRIPTION,
   alternates: { canonical: "/" },
+  // 네이버 서치어드바이저 소유확인 (2026-09-08) — 공개돼도 되는 값, 지우면 재인증
+  verification: { other: { "naver-site-verification": "f0593660372baef4f64c0749d57a48127ca521cd" } },
   openGraph: {
     type: "website",
     siteName: SITE_NAME,
