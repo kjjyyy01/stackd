@@ -17,7 +17,8 @@ export default function PrivacyPage() {
 
         {/* EL-LEGAL-003 시행일·개정 이력 */}
         <p className="mt-3 text-sm text-muted-foreground">
-          시행일 <time dateTime="2026-09-08">2026년 9월 8일</time> · 최초 제정 (개정 이력 없음)
+          시행일 <time dateTime="2026-09-13">2026년 9월 13일</time> · 최초 제정{" "}
+          <time dateTime="2026-09-08">2026년 9월 8일</time>
         </p>
 
         <p className="mt-8 leading-[1.75]">
@@ -124,6 +125,33 @@ export default function PrivacyPage() {
         <p className="mt-3 leading-[1.75]">
           그 밖의 문의는 모든 페이지 하단의 <strong className="font-medium">문의·피드백</strong>을 통해 보내주세요.
         </p>
+
+        <h2 className="mt-10 text-lg font-semibold sm:text-xl">6. 개인정보 보호책임자</h2>
+        <p className="mt-3 leading-[1.75]">
+          서비스는 개인정보 처리에 관한 업무를 총괄해 책임지고 이용자의 문의를 처리하기 위해 아래와 같이 개인정보
+          보호책임자를 지정하고 있습니다.
+        </p>
+        <ul className="mt-3 list-disc space-y-2 pl-5 leading-[1.75]">
+          <li>
+            <strong className="font-medium">담당</strong> — 운영자 (개인이 운영하는 서비스로 별도의 담당 부서를 두지
+            않습니다)
+          </li>
+          <li>
+            <strong className="font-medium">연락처</strong> — 모든 페이지 하단의 문의·피드백
+          </li>
+        </ul>
+
+        <h2 className="mt-10 text-lg font-semibold sm:text-xl">7. 권익침해 구제 방법</h2>
+        <p className="mt-3 leading-[1.75]">
+          이용자는 개인정보 침해로 인한 피해를 구제받기 위해 아래 기관에 상담과 분쟁 조정을 신청할 수 있습니다. 서비스의
+          처리에 만족하지 못한 경우에도 같습니다.
+        </p>
+        <ul className="mt-3 list-disc space-y-2 pl-5 leading-[1.75]">
+          <li>개인정보침해신고센터 — 국번 없이 118 (privacy.kisa.or.kr)</li>
+          <li>개인정보 분쟁조정위원회 — 1833-6972 (kopico.go.kr)</li>
+          <li>대검찰청 사이버수사과 — 국번 없이 1301 (spo.go.kr)</li>
+          <li>경찰청 사이버수사국 — 국번 없이 182 (ecrm.police.go.kr)</li>
+        </ul>
 
         {/* EL-LEGAL-004 상호 링크 */}
         <p className="mt-12 border-t border-border pt-6 leading-[1.75]">
