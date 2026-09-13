@@ -14,7 +14,7 @@ export const HERO_CARD: WorkflowInput = {
       detail: "superpowers 하나만 오케스트레이터로 쓴다 — 동시에 여러 개를 켜지 않는다. 착수 전 brainstorming으로 의도를 캐묻고, /grill-me로 가설과 스코프를 스트레스 테스트한다. 기획서는 make-plan으로 — 화면은 7개 이하로 강제하고, 넘치는 아이디어는 backlog.md로 보낸다.",
     },
     {
-      tool: { name: "make-prd", category: "skill" },
+      tool: { name: "make-prd", category: "skill", custom: true },
       note: "화면별 수용 기준을 ID로 고정해서 구현 도중에 스코프가 조용히 흔들리지 않게 단단히 못을 박아 둔다",
       detail: "MVP 기획서를 화면 단위 PRD로 바꾼다. SCR·EL·REQ·BR·CPY 같은 ID 스킴으로 값은 한 곳에만 두고 나머지는 참조만 한다. 수정도 항상 이 스킬로 돌려 정합성 검사 9항목을 통과시킨다 — 검사가 미검증 P0 하나를 잡아낸 적이 있다.",
     },
@@ -34,7 +34,7 @@ export const HERO_CARD: WorkflowInput = {
       detail: "코드만 보고 넘어가지 않는다. 모바일·데스크톱 브레이크포인트별로 스크린샷을 찍고, 본인 눈으로 한 번 더 본다. 비율처럼 숙고로 안 나오는 건 렌더해서 잰다 — 카드 4:5는 상한 케이스를 px 단위로 재서 확정했다.",
     },
     {
-      tool: { name: "commit-push", category: "skill" },
+      tool: { name: "commit-push", category: "skill", custom: true },
       note: "작업 브랜치에서 Vercel 프리뷰로 확인한 뒤 main에 머지하고 원인과 해결은 커밋 메시지에 꼭 남긴다",
       detail: "직접 만든 개인 스킬이다(카탈로그엔 없음 — git add·commit·push를 Conventional Commits로 감싼 것). 첫 파일을 건드리기 전에 브랜치부터 만들고, 트러블슈팅 해결 커밋에는 원인·해결 한 줄을 반드시 넣는다 — 세션 기록이 유실돼도 git log에서 복원할 수 있게(이중화). main 직커밋은 핫픽스만. 같은 역할은 superpowers의 finishing-a-development-branch로도 된다.",
     },
