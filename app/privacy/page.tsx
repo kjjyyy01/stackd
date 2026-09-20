@@ -49,6 +49,11 @@ export default function PrivacyPage() {
             Google Analytics를 통해 수집합니다.
           </li>
           <li>
+            <strong className="font-medium">화면 조작 기록</strong> — 클릭·스크롤·마우스 이동 등 화면에서의 조작을
+            Microsoft Clarity를 통해 재생 가능한 형태로 기록합니다. 입력란에 적은 내용은 가려진 상태로 저장하며,
+            이용자를 알아볼 수 있는 정보는 포함하지 않습니다.
+          </li>
+          <li>
             <strong className="font-medium">오류 기록</strong> — 서비스에 오류가 발생한 시점의 페이지 주소와 오류
             내용을 Sentry를 통해 수집합니다. 이용자를 알아볼 수 있는 정보는 포함하지 않습니다.
           </li>
@@ -99,6 +104,9 @@ export default function PrivacyPage() {
           </li>
           <li>
             <strong className="font-medium">Google (Google Analytics)</strong> — 이용 행태 통계 분석
+          </li>
+          <li>
+            <strong className="font-medium">Microsoft (Clarity)</strong> — 화면 조작 기록 분석
           </li>
           <li>
             <strong className="font-medium">Vercel</strong> — 웹사이트 호스팅

@@ -1178,3 +1178,24 @@
 - 커밋 `be0757e` → 머지 `7b39807`. 함께 미머지 상태였던 `docs/todo-sync-day18-21`(`39577f5`)도 `528ad10`으로 머지
 - **미결 1건**: 연락처가 웹 폼뿐이다. 조문은 연락처의 형태를 이메일로 특정하지 않지만 실무 관행은 이메일 명시 쪽 — `privacy@stackd.kr` 등 전용 주소가 생기면 6장 연락처 한 줄만 교체하면 된다
 - **영구 제외 1건**: 푸터 사업자 정보 블록. 유료화로 통신판매업 신고를 하는 시점에만 부활
+
+## 2026-09-20 — Microsoft Clarity 도입 (세션 리플레이·히트맵) + 자가 트래픽 3겹 차단
+
+**무엇을**: `components/analytics.tsx`에 Clarity 태그를 추가하고, `.env.example`에 `NEXT_PUBLIC_CLARITY_ID`를 등록, `app/privacy/page.tsx`에 수집 항목(화면 조작 기록)과 처리 위탁처(Microsoft) 고지를 신설. 로컬·프리뷰·본인 방문 3개 경로의 자가 트래픽을 차단.
+
+**어떻게**:
+- 기존 `if (!gaId) return null` 조기 return은 **GA4와 Clarity를 한 운명으로 묶는다** — GA4 ID가 비면 Clarity까지 죽는다. 스크립트별 개별 가드(`{gaId && ...}`, `{clarityId && ...}`)로 분리
+- Clarity 공식 스니펫의 `(function(c,l,a,r,i,t,y){...})` IIFE는 `<script>` 태그를 만들어 DOM에 끼워 넣는 코드인데, **`next/script`가 이미 그 일을 한다**. 스니펫을 그대로 복붙하지 않고 `<Script src=... strategy="afterInteractive" />` 한 줄로 대체
+- `afterInteractive`는 하이드레이션 이후 로드라 **LCP 2.5초 예산에 영향 없음**(`node_modules/next/dist/docs/01-app/03-api-reference/02-components/script.md:163`). `beforeInteractive`는 퍼스트파티 코드보다 먼저 받아오므로 금지
+- 검증은 dev 서버를 띄우지 않고 **빌드 산출물 정적 분석**으로 수행 — `.next/server/chunks/ssr/`에서 `c&&(Script src=clarity.ms/tag/${c})` 분기와 `let a="…",c="…"` 인라인을 직접 확인. `NEXT_PUBLIC_*`는 빌드 시점 치환이라 이것만으로 환경변수 연결까지 증명된다(= **환경변수 변경 시 재배포 필수**)
+- 처리방침은 GA4 '이용 행태 정보'에 덧붙이지 않고 **'화면 조작 기록'을 별도 항목으로 신설**. 집계 통계와 재생 가능한 녹화는 정보주체가 체감하는 민감도가 달라, 한 항목에 묶으면 고지의 실질이 약해진다
+- 자가 트래픽 3겹: ① `.env.local` 값 비움(키는 보존) ② `vercel env rm NEXT_PUBLIC_CLARITY_ID preview` ③ Clarity `IP blocking`에 본인 IP 등록. ③은 대시보드의 **「내 현재 IP 차단」 체크박스**를 사용 — `curl ifconfig.me`는 IPv4를 주는데 브라우저가 IPv6로 접속하면 등록값이 어긋나 차단이 조용히 실패한다
+
+**왜**: 판정일(9/24) 4일 전, 하루 유입 2~3명. 이 표본에서는 GA4 집계보다 **리플레이 몇 건을 눈으로 보는 쪽이 정보량이 크다** — "전환율 6%"는 숫자일 뿐이지만 리플레이는 빌더 어느 단계에서 이탈하는지를 보여준다. 다만 판정 기준 3종은 GA4 기반이라 **Clarity는 판정을 바꾸지 않는다**. 보류 판정 시 "무엇을 고칠지"를 정하는 도구다.
+자가 트래픽 차단을 같은 작업에 묶은 이유는, 작업 중 `.env.local`에 `NEXT_PUBLIC_GA_ID`가 채워져 있는 것을 발견했기 때문이다. `analytics.tsx`의 "로컬·프리뷰 오염 방지" 주석이 **의도만 남고 실제로는 무력화된 상태**였다. 같은 실수를 Clarity에서 반복하면 하루 2~3명짜리 리플레이 목록이 본인 세션으로 덮인다.
+
+**결과**:
+- `components/analytics.tsx` +16/−9, `.env.example` +3/−1, `app/privacy/page.tsx` +8, lint·build 통과(18개 라우트)
+- 로컬 `npm run dev`에서 `clarity.ms` 요청 미발생 확인, `vercel env ls`에서 `Production` 단독 확인, Clarity IP 차단 등록 완료
+- **미결 1건**: `NEXT_PUBLIC_GA_ID`는 Preview 수집을 유지한다. 측정 기간(9/10~9/24) 중간에 수집 범위를 바꾸면 판정 데이터의 성격이 앞뒤로 달라져 판정 자체의 일관성이 깨진다. **판정 이후 정리 항목**
+- **한계 1건**: 가정용 회선은 유동 IP라 ③의 효력이 몇 주 뒤 사라진다. IP 차단 항목 이름에 등록일(`집 와이파이 (2026-09-20)`)을 넣어 만료 판단이 가능하도록 했다
