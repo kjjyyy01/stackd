@@ -64,3 +64,8 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 /.playwright*/
+
+# archify 다이어그램 산출물 — 스펙(architecture.archify.json)에서 재생성 가능(2026-09-20)
+# HTML 824KB + 검증 PNG 746KB. 원본은 스펙 1개뿐이라 산출물은 추적하지 않는다
+/docs/architecture.html
+/docs/architecture.visual-check.*
