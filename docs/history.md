@@ -1185,7 +1185,7 @@
 
 **어떻게**:
 - 기존 `if (!gaId) return null` 조기 return은 **GA4와 Clarity를 한 운명으로 묶는다** — GA4 ID가 비면 Clarity까지 죽는다. 스크립트별 개별 가드(`{gaId && ...}`, `{clarityId && ...}`)로 분리
-- Clarity 공식 스니펫의 `(function(c,l,a,r,i,t,y){...})` IIFE는 `<script>` 태그를 만들어 DOM에 끼워 넣는 코드인데, **`next/script`가 이미 그 일을 한다**. 스니펫을 그대로 복붙하지 않고 `<Script src=... strategy="afterInteractive" />` 한 줄로 대체
+- Clarity 공식 스니펫의 `(function(c,l,a,r,i,t,y){...})` IIFE는 `<script>` 태그를 만들어 DOM에 끼워 넣는 코드인데, **`next/script`가 이미 그 일을 한다**. 스니펫을 그대로 복붙하지 않고 `<Script src=... strategy="afterInteractive" />` 한 줄로 대체 — ⚠️ **이 판단은 오류였다. IIFE는 태그 삽입 외에 `window.clarity` 큐 스텁도 만든다. 2026-09-21 항목 참조**
 - `afterInteractive`는 하이드레이션 이후 로드라 **LCP 2.5초 예산에 영향 없음**(`node_modules/next/dist/docs/01-app/03-api-reference/02-components/script.md:163`). `beforeInteractive`는 퍼스트파티 코드보다 먼저 받아오므로 금지
 - 검증은 dev 서버를 띄우지 않고 **빌드 산출물 정적 분석**으로 수행 — `.next/server/chunks/ssr/`에서 `c&&(Script src=clarity.ms/tag/${c})` 분기와 `let a="…",c="…"` 인라인을 직접 확인. `NEXT_PUBLIC_*`는 빌드 시점 치환이라 이것만으로 환경변수 연결까지 증명된다(= **환경변수 변경 시 재배포 필수**)
 - 처리방침은 GA4 '이용 행태 정보'에 덧붙이지 않고 **'화면 조작 기록'을 별도 항목으로 신설**. 집계 통계와 재생 가능한 녹화는 정보주체가 체감하는 민감도가 달라, 한 항목에 묶으면 고지의 실질이 약해진다
@@ -1199,3 +1199,21 @@
 - 로컬 `npm run dev`에서 `clarity.ms` 요청 미발생 확인, `vercel env ls`에서 `Production` 단독 확인, Clarity IP 차단 등록 완료
 - **미결 1건**: `NEXT_PUBLIC_GA_ID`는 Preview 수집을 유지한다. 측정 기간(9/10~9/24) 중간에 수집 범위를 바꾸면 판정 데이터의 성격이 앞뒤로 달라져 판정 자체의 일관성이 깨진다. **판정 이후 정리 항목**
 - **한계 1건**: 가정용 회선은 유동 IP라 ③의 효력이 몇 주 뒤 사라진다. IP 차단 항목 이름에 등록일(`집 와이파이 (2026-09-20)`)을 넣어 만료 판단이 가능하도록 했다
+
+## 2026-09-21 — Clarity 수집 불능 수정: 공식 스니펫 IIFE를 임의로 제거해 런타임 TypeError
+
+**무엇을**: 전날 추가한 Clarity 태그가 브라우저에서 즉시 예외를 던져 **데이터를 한 건도 수집하지 못하고 있었다.** `components/analytics.tsx`에서 `<Script src>` 단독 호출을 공식 스니펫 IIFE로 되돌렸다.
+
+**어떻게**:
+- 증상은 콘솔의 `yktp2fzgk7:1 Uncaught TypeError: Cannot read properties of undefined (reading 'v')`. 발생 파일이 프로젝트 ID라 태그 스크립트 내부임이 특정됐다
+- 태그 스크립트(809B)를 직접 받아 읽으니 첫 동작이 `a[c].v||a[c].t||a[c]("metadata",…)`이고 `c="clarity"`, `a=window`. 즉 **`window.clarity.v`를 읽는다** — 스텁이 없으면 undefined 참조로 즉사. 뒤쪽 `a[c].q.unshift(a[c].q.pop())`도 스텁이 만든 `.q` 배열을 전제한다
+- 전날의 오판: 공식 스니펫 IIFE가 하는 일을 **`<script>` 태그 삽입 하나**로 봤고 `next/script`가 대체 가능하다고 판단했다. 실제로는 **① `window.clarity` 큐 스텁 생성 ② 태그 삽입** 두 가지이며, 대체 가능한 것은 ②뿐이었다
+- 수정은 스텁을 별도 `<Script>`로 분리하지 않고 **공식 스니펫 전체를 인라인 `<Script>` 하나**로 넣는 방식을 택했다. `afterInteractive`는 인라인과 src 스크립트 사이의 실행 순서를 보장하지 않으므로, 스텁 생성과 태그 삽입이 같은 동기 블록 안에 있어야 순서가 확정된다
+
+**왜**: 놓친 것은 코드가 아니라 **검증의 성격**이다. 전날 수행한 확인은 「HTML에 태그가 있다 / 스크립트가 200이다 / `<head>` 안에 있다」 3종이었고, 이는 전부 **배달됐다**는 증거지 **실행된다**는 증거가 아니다. 정적 검증은 런타임 예외를 원리적으로 관측할 수 없는데 그 한계를 인지하지 않고 "설치 정상"을 단정했다. 프로젝트 규칙이 "구현 후 반드시 시각 확인 — 스크린샷 + 본인 눈"을 요구하는 이유가 정확히 이것이며, 이번엔 서드파티 스크립트라는 이유로 그 절차를 건너뛰었다.
+발견 경로도 기록해둔다. 빈 대시보드를 **IP 차단이 작동한 결과**로 설명할 수 있었기 때문에, 그럴듯한 설명이 진짜 원인을 덮고 있었다. 사용자가 콘솔을 직접 확인하지 않았다면 판정일까지 수집 0건인 채로 갔다.
+
+**결과**:
+- `components/analytics.tsx` — `<Script src>` → 공식 스니펫 인라인 IIFE
+- 전날 history 항목의 잘못된 기술 서술에 정정 표시를 달았다. 틀린 판단이 기록으로 남으면 다음에 같은 결론을 재생산한다
+- **교훈**: 서드파티 스크립트는 "로드됐는가"가 아니라 **"콘솔이 깨끗한가"**로 검증한다. 200 응답은 실행 성공을 의미하지 않는다
