@@ -32,7 +32,8 @@ export default function MyCardActions({ id, isPublic, hidden, hiddenReason }: Pr
   function toggle(next: boolean) {
     setShown(next); // 배지·스위치 즉시 반영
     startTransition(async () => {
-      const r = await togglePublic(id, next);
+      // 네트워크 실패는 반환값이 아니라 예외로 온다 — 서버 오류와 같은 롤백 경로로
+      const r = await togglePublic(id, next).catch(() => ({ ok: false }));
       if (!r.ok) {
         setShown(!next); // 롤백 (AC-2·3·4)
         toast.error(FAIL);

@@ -88,7 +88,8 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
   function toggle(next: boolean) {
     setShown(next); // 스위치·라벨 즉시 반영
     startTransition(async () => {
-      const r = await togglePublic(id, next);
+      // 네트워크 실패는 반환값이 아니라 예외로 온다 — 서버 오류와 같은 롤백 경로로
+      const r = await togglePublic(id, next).catch(() => ({ ok: false }));
       if (!r.ok) {
         setShown(!next); // 롤백 (AC-3·4)
         toast.error("처리에 실패했어요 — 다시 시도해주세요");
