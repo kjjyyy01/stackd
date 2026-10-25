@@ -25,6 +25,7 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
   const [confirming, setConfirming] = useState(false);
   const [pending, startTransition] = useTransition();
   const [saving, setSaving] = useState(false);
+  const [shown, setShown] = useState(isPublic); // 낙관적 값 — 실패하면 되돌린다 (REQ-WF-006)
 
   // REQ-WF-002 PNG 저장 — 화면의 세로 카드(560×700) DOM을 그대로 이미지로.
   // /api/og(가로 1200×630)는 용도가 달라 재사용하지 않는다 (OQ-008 해소)
@@ -85,13 +86,15 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
   }
 
   function toggle(next: boolean) {
+    setShown(next); // 스위치·라벨 즉시 반영
     startTransition(async () => {
       const r = await togglePublic(id, next);
       if (!r.ok) {
+        setShown(!next); // 롤백 (AC-3·4)
         toast.error("처리에 실패했어요 — 다시 시도해주세요");
         return;
       }
-      router.refresh(); // 서버가 배지·스위치의 원본 — 낙관적 갱신을 되돌릴 필요가 없다
+      router.refresh(); // 서버 값으로 확정 — 상단 배지도 여기서 갱신
     });
   }
 
@@ -125,12 +128,12 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
           {/* hidden이면 공개해도 타인에게 안 보인다 — 토글 자체를 막는다 (BR-018) */}
           <label className="mt-6 flex items-center gap-3 text-sm">
             <Switch
-              checked={isPublic}
+              checked={shown}
               disabled={hidden || pending}
               onCheckedChange={toggle}
               aria-label="공개 전환"
             />
-            <span>{isPublic ? "공개" : "비공개"}</span>
+            <span>{shown ? "공개" : "비공개"}</span>
           </label>
         </div>
       )}
