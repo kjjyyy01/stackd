@@ -44,6 +44,11 @@
 - **admin 신고자 표기에 상태 도트 병기** — Day 14 유저 테스트(2026-08-31, 본인)에서 나온 제안. `app/admin/page.tsx`가 "신고자 로그인/익명"을 텍스트로만 표기하는데, 도트를 얹으면 목록 스캔이 빨라진다. **단 색만으로 구분하면 안 된다** — 같은 파일이 "배지는 텍스트 병기(§15)"를 지키고 있고 초록/빨강은 적록색각 이상에서 최악의 조합이다. **도트 + 기존 텍스트 유지**가 맞는 형태. 운영 전용 화면이라 사용자 영향 0 = 우선순위 낮음
 - **llms.txt / HowTo 스키마 (AI 검색 최적화)** — 2026-09-08 SEO 점검(`claude-seo audit`, 90/100)에서 나온 Info 2건, **의도적 미조치**. ①`llms.txt`: 비표준 커뮤니티 규격, Google 무시·주요 AI 벤더 공식 지원 없음·트래픽 효과 측정 사례 없음 = 검증 안 된 추측성 최적화 — 백로그 등재 직후 **"점수 전부 100" 지시(2026-09-08)로 최소형(사이트 요약 + 공개 카드 목록, `app/llms.txt/route.ts`) 즉시 추가**. 카드 본문 변환은 여전히 A6-①의 변환 함수 몫(별도 구현 금지). ②HowTo: Google이 2023-08 HowTo 리치결과를 종료해 SERP 효과 0, 기존 `Article`과 겹치면 주 타입 판정만 흐려진다 → **하지 않는다**. AI 검색 관점에서만 재검토. 점검에서 실제 결함(Breadcrumb·ItemList·lastmod)은 당일 조치 완료
 
+- **과잉 구현 정리 3건** (2026-10-06 `/ponytail-audit`, 2026-11-03 유효성 재확인) — 합계 약 -6줄 · -1 의존성
+  - 삭제: `next-themes` 의존성 — import 0건(`components/ui/sonner.tsx:6`이 이미 걷어냄). `package.json:24`
+  - YAGNI: `ACCENTS` 1색 팔레트 + 서버 `in ACCENTS` 재확인 — 결과는 항상 ink. `workflow-card.tsx:12,36` · `app/actions/workflow.ts:4,28` · `lib/limits.ts:111`. 덤: 서버 액션이 클라이언트 컴포넌트 파일을 import하는 의존이 사라진다. ※ 위 "카드 액센트 팔레트 확장"을 되살리면 무효
+  - 축소: 파일 내부에서만 쓰는 export 제거 — `CARD_W`·`CARD_H`(workflow-card) · `PageWindowItem`(paginate) · `LimitError`·`DevStackCategory`(limits)
+
 ## 비즈니스·수익화 (판정일 전 착수 금지 — 판정 오염 방지)
 
 - 단계 0 (지금~판정일): 수익화 0 — 비로그인·무료 유지, 킬 크라이테리아 측정 순수성 우선
