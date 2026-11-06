@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
 import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
 import { isCatalogTool } from "@/lib/catalog";
@@ -239,10 +240,12 @@ export default function WorkflowBuilder({ initial }: Props) {
             <ul className="flex flex-wrap gap-2" aria-label="선택한 스택">
               {d.dev_stack.map((t) => (
                 <li key={t.name}>
-                  <button type="button" onClick={() => setD({ ...d, dev_stack: d.dev_stack.filter((x) => x.name !== t.name) })}
-                    className="rounded-full bg-muted px-3 py-1 font-mono text-xs hover:bg-destructive/10 hover:text-destructive" aria-label={`${t.name} 해제`}>
-                    {t.name} ×
-                  </button>
+                  {/* Badge asChild = 칩 모양 + 포커스 링, 요소는 button 유지 */}
+                  <Badge asChild variant="secondary" className="h-auto px-3 py-1 font-mono font-normal hover:bg-destructive/10 hover:text-destructive">
+                    <button type="button" onClick={() => setD({ ...d, dev_stack: d.dev_stack.filter((x) => x.name !== t.name) })} aria-label={`${t.name} 해제`}>
+                      {t.name} ×
+                    </button>
+                  </Badge>
                 </li>
               ))}
             </ul>

@@ -10,6 +10,7 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel";
+import { Badge } from "@/components/ui/badge";
 
 type Props = { children: ReactNode };
 
@@ -49,12 +50,12 @@ export default function HomeCarousel({ children }: Props) {
       </CarouselContent>
       <CarouselPrevious aria-label="이전 슬라이드" className={`${arrowCls} left-5 my-0`} />
       <CarouselNext aria-label="다음 슬라이드" className={`${arrowCls} right-5 my-0`} />
-      <span
+      <Badge
         aria-hidden
-        className="absolute bottom-4 right-4 z-10 hidden rounded-full bg-foreground/70 px-3 py-1.5 font-mono text-xs font-medium tracking-[0.08em] text-white lg:block"
+        className="absolute bottom-4 right-4 z-10 hidden h-auto rounded-full bg-foreground/70 px-3 py-1.5 font-mono tracking-[0.08em] text-white lg:inline-flex"
       >
         {current} / {slides.length}
-      </span>
+      </Badge>
     </Carousel>
   );
 }

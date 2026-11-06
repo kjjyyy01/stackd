@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { saveWorkflow } from "@/app/actions/workflow";
 import { signInWithGitHub } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
@@ -136,7 +137,7 @@ export default function CardPreview({ handle, loggedIn }: Props) {
 
   // Loading — 초안을 읽기 전 1프레임
   if (!draft) {
-    return <div className="mt-8 h-[406px] w-[325px] animate-pulse rounded-xl bg-muted" aria-hidden />;
+    return <Skeleton className="mt-8 h-[406px] w-[325px] rounded-xl" aria-hidden />;
   }
 
   const gate = validateWorkflow(draft).ok;
