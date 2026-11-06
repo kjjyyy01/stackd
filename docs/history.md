@@ -1318,3 +1318,46 @@
   - 아바타: 갤러리 6곳과 상세에 표시됐다. 아바타 요청을 막으면 대체 글자 "K"가 보였다.
   - 신고 버튼과 FAB: 키보드 포커스 링이 보였다(스크린샷). 신고 버튼은 다이얼로그를 열었고, FAB는 Enter로 맨 위까지 이동했다.
   - 콘솔 오류는 0건이었다. 아바타 요청을 일부러 막아서 생긴 1건은 제외했다.
+
+## 2026-11-06 — 스택 칩·로딩·캐러셀 카운터를 shadcn Badge·Skeleton으로 (우선순위 4~6)
+
+**무엇을**: 빌더 스택 칩을 `Badge asChild`(button 유지)로, `/card` 로딩 자리를 `Skeleton`으로, 홈 캐러셀 카운터를 `Badge`로 바꿨다.
+
+**어떻게**:
+- 스택 칩은 `variant="secondary"`를 쓴다. 이 프로젝트의 `--secondary`는 `var(--muted)`라서 색은 기존과 같다(`app/globals.css:74`). 크기와 hover 색(destructive)은 className으로 유지했다.
+- 로딩은 `npx shadcn add skeleton`으로 추가했다. 이번에도 `cn` import를 `@/lib/utils`로 바꿨고, 함께 설치된 `cn` 패키지는 제거했다. Skeleton 기본값(`animate-pulse bg-muted`)이 기존 클래스와 같아서 크기와 `rounded-xl`만 넘겼다.
+- 카운터는 Badge가 inline-flex라서 `lg:block`을 `lg:inline-flex`로 바꿨다.
+
+**왜**: 스택 칩에는 포커스 링이 없었고, 이미 Badge를 쓰는 다른 3곳과 모양이 달랐다. 로딩과 카운터는 직접 만든 클래스 조합을 shadcn 이름 있는 컴포넌트로 통일하려고 바꿨다.
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- Playwright(3002)로 확인했다.
+  - 칩: button 요소가 그대로이고 해제 동작도 같다. 키보드로 포커스하면 링이 보인다(스크린샷).
+  - `/card`에 들어가면 Skeleton이 렌더됐다.
+  - 카운터: 1440px에서 `1 / 3` → `2 / 3`으로 바뀌었다. 390px에서는 숨겨진다.
+  - 콘솔 오류는 0건이었다.
+- 측정 메모: 포커스 직후 `getComputedStyle().boxShadow`가 0으로 읽힌다. Button과 Badge에 `transition-all`이 걸려 있어서 transition 시작 시점 값을 읽기 때문이다. 포커스 링은 스크린샷으로 판정했다.
+
+## 2026-11-06 — 브레드크럼·label·카드 래퍼를 shadcn Breadcrumb·Label·Card로 (우선순위 7~9)
+
+**무엇을**: 상세 페이지 브레드크럼을 Breadcrumb로 바꿨다. `<label>` 15곳은 전부 Label로 바꿨다. 카드형 래퍼 8곳 중 실제로 카드 역할을 하는 3곳(`/me` 목록 항목, 빌더 단계 항목, 도구 선택 패널)만 Card로 바꿨다.
+
+**어떻게**:
+- `npx shadcn add breadcrumb label card`로 추가했다. 이번에도 `cn` import를 `@/lib/utils`로 바꾸고 함께 설치된 `cn` 패키지를 제거했다.
+- Breadcrumb: `BreadcrumbLink asChild`로 next `Link`를 감쌌다. 구분자는 children으로 `›`를 넘겨 그대로 유지했다. JSON-LD BreadcrumbList는 건드리지 않았다.
+- Label: `components/ui/label.tsx` 기본값에서 `leading-none`을 뺐다. 빼고 나면 text-sm 기본 행간 20px가 남는데, 기존 `<label class="text-sm">`과 같은 값이다(390px 실측). 원래 `font-medium`이 아니던 6곳에는 `font-normal`을 붙여 굵기를 유지했다.
+- Card: `li` 안에 Card를 넣어 목록 의미를 유지했다. 기본 여백은 className으로 기존 값에 맞췄다(`gap-0 p-4 sm:p-5`, `gap-3 p-4`, `gap-4 p-4`). 테두리는 shadcn 기본인 `ring-1 ring-foreground/10`을 따랐다.
+- **Card로 바꾸지 않은 5곳(`app/page.tsx` 홈 장면 일러스트)**: `<ol>`, `role="img"`, `aria-hidden` mockup이다. Card는 `div`에 flex-col과 overflow-hidden이 고정이라, 바꾸면 의미가 사라지거나 DESIGN.md §홈 캐러셀 조판의 치수를 덮어써야 한다.
+
+**왜**: 직접 구현한 UI 15곳 중 마지막으로 남은 순위들이다. 제외한 2곳(`<details>`, 초안 배너)과 위 5곳을 빼면 전환이 끝난다.
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- Playwright(3002)로 확인했다.
+  - 브레드크럼: 텍스트는 `홈 › 라이브러리 › …`이고 긴 제목은 잘린다. 링크도 이동한다.
+  - label 4곳이 Label로 연결되고, 클릭하면 입력에 포커스가 간다. 체크박스는 label 클릭으로 토글된다.
+  - 단계 Card와 선택기 Card를 1440px·390px 스크린샷으로 확인했다.
+  - 콘솔 오류는 0건이었다.
+  - `/me`, `/admin`, `/settings`는 로그인이 필요해 빌드와 타입 검사로만 확인했다.
+- **별건 발견(기존 결함, 범위 밖)**: 제목이나 상황 입력에서 포커스가 빠지면(`onBlur` → `touch`) 검증 문구가 나타나면서 아래 요소가 24px 밀린다. 그래서 입력 직후 "단계 추가"를 처음 클릭하면 마우스를 누르는 순간 버튼이 밀려 클릭이 먹힌다(Playwright 실측: y 434→458). 검증 문구 자리를 미리 확보해 두면 해결된다.
