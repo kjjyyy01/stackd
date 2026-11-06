@@ -6,6 +6,7 @@ import ToolPicker from "@/components/tool-picker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
 import { isCatalogTool } from "@/lib/catalog";
@@ -206,11 +207,9 @@ export default function WorkflowBuilder({ initial }: Props) {
                   </div>
                   {canMarkCustom(s.tool) && (
                     <label className="mt-2 flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        className="size-4"
+                      <Checkbox
                         checked={s.tool.custom === true}
-                        onChange={(e) => patchStep(i, { tool: { ...s.tool, custom: e.target.checked } })}
+                        onCheckedChange={(c) => patchStep(i, { tool: { ...s.tool, custom: c === true } })}
                       />
                       <span style={{ wordBreak: "keep-all" }}>공개된 도구가 아니에요 — 카드에 표시할게요</span>
                     </label>
