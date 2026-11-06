@@ -1361,3 +1361,30 @@
   - 콘솔 오류는 0건이었다.
   - `/me`, `/admin`, `/settings`는 로그인이 필요해 빌드와 타입 검사로만 확인했다.
 - **별건 발견(기존 결함, 범위 밖)**: 제목이나 상황 입력에서 포커스가 빠지면(`onBlur` → `touch`) 검증 문구가 나타나면서 아래 요소가 24px 밀린다. 그래서 입력 직후 "단계 추가"를 처음 클릭하면 마우스를 누르는 순간 버튼이 밀려 클릭이 먹힌다(Playwright 실측: y 434→458). 검증 문구 자리를 미리 확보해 두면 해결된다.
+
+## 2026-11-06 — 검색 입력창·맨 위로 아이콘 통일 + 검증 문구 24px 밀림 수정
+
+**무엇을**: 프리뷰를 확인한 뒤 남았던 결정 3건을 권장안대로 처리했다.
+- 도구·스택 검색 입력창(CommandInput)을 프로젝트 Input과 같은 모양으로 맞췄다.
+- 맨 위로 FAB의 `↑` 글자를 lucide `ArrowUp`으로 바꿨다.
+- blur 검증 문구가 나타날 때 레이아웃이 밀려 "단계 추가" 첫 클릭이 빗나가던 결함을 고쳤다.
+
+**어떻게**:
+- `components/ui/command.tsx`
+  - InputGroup의 `border-input/30 bg-input/30`을 `border-input bg-transparent`로 바꿨다.
+  - 래퍼의 `p-1 pb-0`을 지워 좌우 가장자리를 아래 "이름" 입력과 맞췄다(4px 들여쓰기 제거).
+  - **원본 결함**: InputGroup 포커스 링은 `[data-slot=input-group-control]:focus-visible` 조건만 보는데, cmdk 입력은 `data-slot="command-input"`이라 링이 아예 켜지지 않았다. 같은 링 클래스를 `command-input` 조건으로 추가했다.
+- `components/back-to-top.tsx`: `<ArrowUp />`으로 바꾸고 Button 기본 svg 크기(size-4)를 써서 캐러셀 Chevron과 같은 시각 어휘로 맞췄다.
+- `components/workflow-builder.tsx`(title, situation_short): 조건부로 렌더하던 `{showErr && <p>}`를 항상 렌더하는 `<p className="min-h-4">`로 바꿨다. 문구 자리를 미리 확보하는 방식이다. 덕분에 `aria-describedby`가 없는 id를 가리키던 문제도 같이 사라졌다.
+
+**왜**: 검색 입력창은 바로 아래 Input과 회색 배경이 달라 어긋나 보였다. FAB만 글자 화살표로 남아 있었다. 밀림 결함은 blur 순간 `gap-2`(8px)와 한 줄(16px)이 새로 생기면서 아래 요소가 24px 내려가, 마우스를 누르는 사이 버튼이 빠져나가는 문제였다(Playwright 실측 y 434→458).
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- Playwright(3002)로 확인했다.
+  - blur 전후 "단계 추가" 위치 변화가 1440px·390px 모두 **0px**이다.
+  - 제목에 포커스한 직후 첫 클릭으로 선택기가 열린다.
+  - situation_short 문구는 390px에서도 한 줄(16px)이라 모바일용 추가 높이는 필요 없었다.
+  - 검색 입력창 가장자리와 포커스 링, FAB 아이콘과 동작을 스크린샷으로 확인했다.
+  - 콘솔 오류는 0건이었다.
+- 트레이드오프: 입력란 아래 여백이 문구가 없을 때도 24px 늘었다.
