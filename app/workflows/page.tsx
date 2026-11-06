@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
@@ -129,17 +129,11 @@ export default async function WorkflowsPage({ searchParams }: { searchParams: Pr
                   </CardTransition>
                   <h2 className="mt-4 text-lg font-semibold leading-[1.4]">{w.title}</h2>
                   <div className="mt-2 flex items-center gap-2">
-                    {w.author_avatar && (
-                      /* alt="" — 바로 옆 핸들 텍스트가 접근 가능한 이름이다 (§15) */
-                      <Image
-                        src={w.author_avatar}
-                        alt=""
-                        width={24}
-                        height={24}
-                        className="rounded-full"
-                        unoptimized
-                      />
-                    )}
+                    {/* 대체 글자 포함 장식 — 바로 옆 핸들 텍스트가 접근 가능한 이름이다 (§15) */}
+                    <Avatar size="sm" aria-hidden>
+                      <AvatarImage src={w.author_avatar ?? undefined} alt="" />
+                      <AvatarFallback className="font-mono">{w.author_handle.charAt(0).toUpperCase()}</AvatarFallback>
+                    </Avatar>
                     <span className="font-mono text-xs text-muted-foreground">
                       @{w.author_handle}
                     </span>

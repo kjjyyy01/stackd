@@ -8,7 +8,9 @@ import { toast } from "sonner";
 import { saveWorkflow } from "@/app/actions/workflow";
 import { signInWithGitHub } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import { track } from "@/lib/analytics";
@@ -136,7 +138,7 @@ export default function CardPreview({ handle, loggedIn }: Props) {
 
   // Loading — 초안을 읽기 전 1프레임
   if (!draft) {
-    return <div className="mt-8 h-[406px] w-[325px] animate-pulse rounded-xl bg-muted" aria-hidden />;
+    return <Skeleton className="mt-8 h-[406px] w-[325px] rounded-xl" aria-hidden />;
   }
 
   const gate = validateWorkflow(draft).ok;
@@ -159,14 +161,14 @@ export default function CardPreview({ handle, loggedIn }: Props) {
       <div className="mt-8 lg:mt-0">
         {/* EL-CARD-011 공개 스위치 — 기본 켜짐 (BR-017) */}
         <div>
-          <label className="flex items-center gap-3 text-sm">
+          <Label className="font-normal flex items-center gap-3 text-sm">
             <Switch
               checked={draft.is_public}
               onCheckedChange={(v) => patch({ is_public: v })}
               aria-label="라이브러리에 공개"
             />
             <span>라이브러리에 공개 — 검색 엔진에도 노출돼요</span>
-          </label>
+          </Label>
           {!draft.is_public && (
             <p className="mt-2 text-sm leading-[1.75] text-muted-foreground">
               비공개 카드는 나만 볼 수 있어요 — 링크로도, 검색으로도 열리지 않아요

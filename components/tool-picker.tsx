@@ -4,6 +4,10 @@ import { useId, useState } from "react";
 import catalog from "@/data/catalog.json";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 import { LIMITS, charCount, type Category } from "@/lib/limits";
 
 type Item = { id: string; name: string; category: Category; description: string };
@@ -48,49 +52,41 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
   }
 
   return (
-    <div className="grid gap-4 rounded-lg border border-border bg-card p-4">
-      {/* 카탈로그 검색 */}
-      <div>
-        <label htmlFor={`${uid}-q`} className="sr-only">{searchPlaceholder}</label>
-        <Input
-          id={`${uid}-q`}
+    <Card className="gap-4 p-4">
+      {/* 카탈로그 검색 — cmdk 자체 필터는 끄고 위 정렬(이름→설명)을 쓴다. ↑↓·Enter 선택 */}
+      {/* label prop = cmdk가 sr-only label을 입력에 연결 — CommandInput의 id는 cmdk가 덮어쓴다 */}
+      <Command shouldFilter={false} label={searchPlaceholder} className="rounded-none! bg-transparent p-0">
+        <CommandInput
           value={q}
-          onChange={(e) => setQ(e.target.value)}
+          onValueChange={setQ}
           placeholder={searchPlaceholder}
           autoFocus={autoFocus}
-          autoComplete="off"
         />
         {query && (
-          <ul className="mt-2 max-h-64 divide-y divide-border overflow-y-auto rounded-lg border border-border" aria-label="검색 결과">
-            {results.length === 0 && (
-              <li className="px-3 py-2 text-sm text-muted-foreground">찾는 도구가 없나요? 직접 입력으로 담아보세요</li>
-            )}
-            {results.map((i) => {
-              const dup = taken.has(i.name);
-              return (
-                <li key={i.id}>
-                  <button
-                    type="button"
-                    disabled={dup}
-                    onClick={() => { onPick({ name: i.name, category: i.category }, "catalog"); setQ(""); }}
-                    className="flex w-full items-baseline gap-2 px-3 py-2 text-left hover:bg-muted disabled:opacity-50 focus-visible:bg-muted focus-visible:outline-none"
-                  >
-                    {/* 설명은 표시하지 않는다 — 좁은 폭에서 넘쳐 목록을 밀어냈다. 검색 매칭에는 계속 쓴다 */}
-                    <span className="min-w-0 break-words font-mono text-sm font-medium">{i.name}</span>
-                    <span className="shrink-0 font-mono text-xs text-muted-foreground">{i.category}</span>
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
+          <CommandList className="mt-2 max-h-64 rounded-lg border border-border p-1" aria-label="검색 결과">
+            <CommandEmpty className="px-2 py-1.5 text-left text-muted-foreground">찾는 도구가 없나요? 직접 입력으로 담아보세요</CommandEmpty>
+            {results.map((i) => (
+              <CommandItem
+                key={i.id}
+                value={i.id}
+                disabled={taken.has(i.name)}
+                onSelect={() => { onPick({ name: i.name, category: i.category }, "catalog"); setQ(""); }}
+                className="items-baseline"
+              >
+                {/* 설명은 표시하지 않는다 — 좁은 폭에서 넘쳐 목록을 밀어냈다. 검색 매칭에는 계속 쓴다 */}
+                <span className="min-w-0 break-words font-mono text-sm font-medium">{i.name}</span>
+                <span className="shrink-0 font-mono text-xs text-muted-foreground">{i.category}</span>
+              </CommandItem>
+            ))}
+          </CommandList>
         )}
-      </div>
+      </Command>
 
       {/* 직접 입력 — 검색 결과와 무관하게 항상 (CPY-HOME-026) */}
       <div className="grid gap-2">
         <span className="text-sm text-muted-foreground">직접 입력</span>
         <div className="flex flex-wrap gap-2">
-          <label htmlFor={`${uid}-name`} className="sr-only">이름</label>
+          <Label htmlFor={`${uid}-name`} className="sr-only">이름</Label>
           <Input
             id={`${uid}-name`}
             value={manualName}
@@ -101,19 +97,19 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
             aria-describedby={manualErr ? `${uid}-err` : undefined}
             className="min-w-0 flex-1"
           />
-          <label htmlFor={`${uid}-cat`} className="sr-only">카테고리</label>
-          <select
-            id={`${uid}-cat`}
-            value={manualCat}
-            onChange={(e) => setManualCat(e.target.value as Category)}
-            className="h-8 rounded-lg border border-input bg-background px-2 font-mono text-sm focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-          >
-            {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-          </select>
+          <Label htmlFor={`${uid}-cat`} className="sr-only">카테고리</Label>
+          <Select value={manualCat} onValueChange={(v) => setManualCat(v as Category)}>
+            <SelectTrigger id={`${uid}-cat`} className="font-mono">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((c) => <SelectItem key={c} value={c} className="font-mono">{c}</SelectItem>)}
+            </SelectContent>
+          </Select>
           <Button type="button" variant="outline" onClick={confirmManual}>담기</Button>
         </div>
         {manualErr && <p id={`${uid}-err`} className="text-xs text-destructive">이름을 1~40자로 입력해주세요</p>}
       </div>
-    </div>
+    </Card>
   );
 }

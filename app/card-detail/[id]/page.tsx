@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -7,7 +8,7 @@ import CardActions from "@/components/card-actions";
 import FeedbackDialog from "@/components/feedback-dialog";
 import JsonLd from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import type { WorkflowInput } from "@/lib/limits";
@@ -140,15 +141,15 @@ export default async function CardDetailPage({ params }: Params) {
         </>
       )}
       {/* EL-WF-012 가시 breadcrumb — BreadcrumbList 스키마와 같은 경로 (CPY-WF-018) */}
-      <nav aria-label="현재 위치" className="mb-6 text-sm text-muted-foreground">
-        <ol className="flex flex-wrap items-center gap-1.5">
-          <li><Link href="/" className="hover:text-foreground">홈</Link></li>
-          <li aria-hidden>›</li>
-          <li><Link href="/workflows" className="hover:text-foreground">라이브러리</Link></li>
-          <li aria-hidden>›</li>
-          <li aria-current="page" className="truncate max-w-[24ch] text-foreground">{wf.title}</li>
-        </ol>
-      </nav>
+      <Breadcrumb aria-label="현재 위치" className="mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink asChild><Link href="/">홈</Link></BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator>›</BreadcrumbSeparator>
+          <BreadcrumbItem><BreadcrumbLink asChild><Link href="/workflows">라이브러리</Link></BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator>›</BreadcrumbSeparator>
+          <BreadcrumbItem><BreadcrumbPage className="max-w-[24ch] truncate">{wf.title}</BreadcrumbPage></BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
         {/* EL-WF-001 요약 카드 — 유도 문구는 미노출(이미 상세다) */}
         <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">
@@ -176,16 +177,11 @@ export default async function CardDetailPage({ params }: Params) {
 
           {/* EL-WF-005 작성자 — 이메일 미노출, GitHub 프로필로만 (BR-025) */}
           <div className="mt-6 flex items-center gap-3">
-            {wf.author_avatar && (
-              <Image
-                src={wf.author_avatar}
-                alt={`@${wf.author_handle} 프로필 이미지`}
-                width={40}
-                height={40}
-                className="rounded-full"
-                unoptimized
-              />
-            )}
+            {/* 이미지 없음·로드 실패 시 핸들 첫 글자 (shadcn Avatar) */}
+            <Avatar size="lg">
+              <AvatarImage src={wf.author_avatar ?? undefined} alt={`@${wf.author_handle} 프로필 이미지`} />
+              <AvatarFallback className="font-mono">{wf.author_handle.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
             <a
               href={`https://github.com/${wf.author_handle}`}
               target="_blank"
@@ -216,9 +212,9 @@ export default async function CardDetailPage({ params }: Params) {
               title="이 워크플로우 신고하기"
               description="문제가 되는 부분을 알려주시면 확인 후 조치할게요."
               trigger={
-                <button type="button" className="py-2.5 text-sm text-muted-foreground underline underline-offset-4">
+                <Button variant="link" className="h-auto px-0 py-2.5 font-normal text-muted-foreground underline">
                   이 워크플로우 신고하기
-                </button>
+                </Button>
               }
             />
           </div>

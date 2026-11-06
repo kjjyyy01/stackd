@@ -6,6 +6,10 @@ import ToolPicker from "@/components/tool-picker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
 import { isCatalogTool } from "@/lib/catalog";
@@ -144,25 +148,26 @@ export default function WorkflowBuilder({ initial }: Props) {
           <legend className="sr-only">기본 정보</legend>
           <div className="grid gap-2">
             <div className="flex items-baseline justify-between gap-4">
-              <label htmlFor="title" className="text-sm font-medium">제목 — 이 워크플로우를 한 줄로</label>
+              <Label htmlFor="title" className="text-sm font-medium">제목 — 이 워크플로우를 한 줄로</Label>
               <Counter n={charCount(d.title)} max={LIMITS.title.max} over={over === "title"} />
             </div>
             <Input id="title" value={d.title} onChange={(e) => limited("title", LIMITS.title.max, (s) => setD({ ...d, title: s }))(e.target.value)}
               onBlur={() => touch("title")} placeholder="제목 — 이 워크플로우를 한 줄로" aria-invalid={showErr("title") || undefined} aria-describedby="title-err" />
-            {showErr("title") && <p id="title-err" className="text-xs text-destructive">제목을 1~30자로 입력해주세요</p>}
+            {/* 문구 자리 상시 확보 — blur 때 레이아웃 밀림 방지 */}
+            <p id="title-err" className="min-h-4 text-xs text-destructive">{showErr("title") ? "제목을 1~30자로 입력해주세요" : null}</p>
           </div>
           <div className="grid gap-2">
             <div className="flex items-baseline justify-between gap-4">
-              <label htmlFor="situation_short" className="text-sm font-medium">상황</label>
+              <Label htmlFor="situation_short" className="text-sm font-medium">상황</Label>
               <Counter n={charCount(d.situation_short)} max={LIMITS.situation_short.max} over={over === "situation_short"} />
             </div>
             <Input id="situation_short" value={d.situation_short} onChange={(e) => limited("situation_short", LIMITS.situation_short.max, (s) => setD({ ...d, situation_short: s }))(e.target.value)}
               onBlur={() => touch("situation_short")} placeholder="상황을 20자 안으로 짧게 적어주세요 (예: 웹 페이지 개발, 백엔드 디버깅)" aria-invalid={showErr("situation_short") || undefined} aria-describedby="situation_short-err" />
-            {showErr("situation_short") && <p id="situation_short-err" className="text-xs text-destructive">상황을 20자 안으로 짧게 적어주세요 (예: 웹 페이지 개발, 백엔드 디버깅)</p>}
+            <p id="situation_short-err" className="min-h-4 text-xs text-destructive">{showErr("situation_short") ? "상황을 20자 안으로 짧게 적어주세요 (예: 웹 페이지 개발, 백엔드 디버깅)" : null}</p>
           </div>
           <div className="grid gap-2">
             <div className="flex items-baseline justify-between gap-4">
-              <label htmlFor="situation" className="text-sm font-medium">상황 상세 (선택)</label>
+              <Label htmlFor="situation" className="text-sm font-medium">상황 상세 (선택)</Label>
               <Counter n={charCount(d.situation)} max={LIMITS.situation.max} over={over === "situation"} />
             </div>
             <Textarea id="situation" rows={3} value={d.situation} onChange={(e) => limited("situation", LIMITS.situation.max, (s) => setD({ ...d, situation: s }))(e.target.value)}
@@ -181,41 +186,41 @@ export default function WorkflowBuilder({ initial }: Props) {
             {d.steps.map((s, i) => {
               const incomplete = ctaTried && stepIncomplete(s);
               return (
-                <li key={i} className="grid gap-3 rounded-lg border border-border bg-card p-4">
-                  <div className="flex items-center gap-3">
-                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-foreground font-mono text-[0.625rem] font-medium text-background">{String(i + 1).padStart(2, "0")}</span>
-                    <span className="font-mono text-sm font-medium">{s.tool.name}</span>
-                    <span className="font-mono text-xs text-muted-foreground">{s.tool.category}</span>
-                    <div className="ml-auto flex gap-1">
-                      <Button type="button" variant="ghost" size="icon-sm" aria-label="위로" disabled={i === 0} onClick={() => moveStep(i, -1)}>↑</Button>
-                      <Button type="button" variant="ghost" size="icon-sm" aria-label="아래로" disabled={i === d.steps.length - 1} onClick={() => moveStep(i, 1)}>↓</Button>
-                      <Button type="button" variant="ghost" size="icon-sm" aria-label="단계 삭제" onClick={() => removeStep(i)}>×</Button>
+                <li key={i}>
+                  <Card className="gap-3 p-4">
+                    <div className="flex items-center gap-3">
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-foreground font-mono text-[0.625rem] font-medium text-background">{String(i + 1).padStart(2, "0")}</span>
+                      <span className="font-mono text-sm font-medium">{s.tool.name}</span>
+                      <span className="font-mono text-xs text-muted-foreground">{s.tool.category}</span>
+                      <div className="ml-auto flex gap-1">
+                        <Button type="button" variant="ghost" size="icon-sm" aria-label="위로" disabled={i === 0} onClick={() => moveStep(i, -1)}>↑</Button>
+                        <Button type="button" variant="ghost" size="icon-sm" aria-label="아래로" disabled={i === d.steps.length - 1} onClick={() => moveStep(i, 1)}>↓</Button>
+                        <Button type="button" variant="ghost" size="icon-sm" aria-label="단계 삭제" onClick={() => removeStep(i)}>×</Button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="grid gap-1">
-                    <label htmlFor={`note-${i}`} className="sr-only">단계 {i + 1} 메모</label>
-                    <Input id={`note-${i}`} value={s.note} onChange={(e) => limited(`note-${i}`, LIMITS.step_note.max, (v) => patchStep(i, { note: v }))(e.target.value)}
-                      placeholder="이 단계에서 이 도구로 뭘 하나요? (카드에 한 줄로 — 필수)" aria-invalid={incomplete || undefined} />
-                    <Counter n={charCount(s.note)} max={LIMITS.step_note.max} over={over === `note-${i}`} />
-                  </div>
-                  <div className="grid gap-1">
-                    <label htmlFor={`detail-${i}`} className="sr-only">단계 {i + 1} 상세</label>
-                    <Textarea id={`detail-${i}`} rows={2} value={s.detail} onChange={(e) => limited(`detail-${i}`, LIMITS.step_detail.max, (v) => patchStep(i, { detail: v }))(e.target.value)}
-                      placeholder="어떻게 쓰는지 자세히 (상세 페이지에 실려요 — 필수)" aria-invalid={incomplete || undefined} />
-                    <Counter n={charCount(s.detail)} max={LIMITS.step_detail.max} over={over === `detail-${i}`} />
-                  </div>
-                  {canMarkCustom(s.tool) && (
-                    <label className="mt-2 flex items-center gap-2 text-sm">
-                      <input
-                        type="checkbox"
-                        className="size-4"
-                        checked={s.tool.custom === true}
-                        onChange={(e) => patchStep(i, { tool: { ...s.tool, custom: e.target.checked } })}
-                      />
-                      <span style={{ wordBreak: "keep-all" }}>공개된 도구가 아니에요 — 카드에 표시할게요</span>
-                    </label>
-                  )}
-                  {incomplete && <p className="text-xs text-destructive">각 단계에 한 줄 메모와 설명을 채워주세요</p>}
+                    <div className="grid gap-1">
+                      <Label htmlFor={`note-${i}`} className="sr-only">단계 {i + 1} 메모</Label>
+                      <Input id={`note-${i}`} value={s.note} onChange={(e) => limited(`note-${i}`, LIMITS.step_note.max, (v) => patchStep(i, { note: v }))(e.target.value)}
+                        placeholder="이 단계에서 이 도구로 뭘 하나요? (카드에 한 줄로 — 필수)" aria-invalid={incomplete || undefined} />
+                      <Counter n={charCount(s.note)} max={LIMITS.step_note.max} over={over === `note-${i}`} />
+                    </div>
+                    <div className="grid gap-1">
+                      <Label htmlFor={`detail-${i}`} className="sr-only">단계 {i + 1} 상세</Label>
+                      <Textarea id={`detail-${i}`} rows={2} value={s.detail} onChange={(e) => limited(`detail-${i}`, LIMITS.step_detail.max, (v) => patchStep(i, { detail: v }))(e.target.value)}
+                        placeholder="어떻게 쓰는지 자세히 (상세 페이지에 실려요 — 필수)" aria-invalid={incomplete || undefined} />
+                      <Counter n={charCount(s.detail)} max={LIMITS.step_detail.max} over={over === `detail-${i}`} />
+                    </div>
+                    {canMarkCustom(s.tool) && (
+                      <Label className="font-normal mt-2 flex items-center gap-2 text-sm">
+                        <Checkbox
+                          checked={s.tool.custom === true}
+                          onCheckedChange={(c) => patchStep(i, { tool: { ...s.tool, custom: c === true } })}
+                        />
+                        <span style={{ wordBreak: "keep-all" }}>공개된 도구가 아니에요 — 카드에 표시할게요</span>
+                      </Label>
+                    )}
+                    {incomplete && <p className="text-xs text-destructive">각 단계에 한 줄 메모와 설명을 채워주세요</p>}
+                  </Card>
                 </li>
               );
             })}
@@ -240,10 +245,12 @@ export default function WorkflowBuilder({ initial }: Props) {
             <ul className="flex flex-wrap gap-2" aria-label="선택한 스택">
               {d.dev_stack.map((t) => (
                 <li key={t.name}>
-                  <button type="button" onClick={() => setD({ ...d, dev_stack: d.dev_stack.filter((x) => x.name !== t.name) })}
-                    className="rounded-full bg-muted px-3 py-1 font-mono text-xs hover:bg-destructive/10 hover:text-destructive" aria-label={`${t.name} 해제`}>
-                    {t.name} ×
-                  </button>
+                  {/* Badge asChild = 칩 모양 + 포커스 링, 요소는 button 유지 */}
+                  <Badge asChild variant="secondary" className="h-auto px-3 py-1 font-mono font-normal hover:bg-destructive/10 hover:text-destructive">
+                    <button type="button" onClick={() => setD({ ...d, dev_stack: d.dev_stack.filter((x) => x.name !== t.name) })} aria-label={`${t.name} 해제`}>
+                      {t.name} ×
+                    </button>
+                  </Badge>
                 </li>
               ))}
             </ul>
@@ -258,7 +265,7 @@ export default function WorkflowBuilder({ initial }: Props) {
         {/* 소속·역할 (EL-HOME-013) */}
         <div className="grid gap-2">
           <div className="flex items-baseline justify-between gap-4">
-            <label htmlFor="role" className="text-sm font-medium">소속·역할 (선택 — 회사, 학교, 사이드 프로젝트 뭐든)</label>
+            <Label htmlFor="role" className="text-sm font-medium">소속·역할 (선택 — 회사, 학교, 사이드 프로젝트 뭐든)</Label>
             <Counter n={charCount(d.role)} max={LIMITS.role.max} over={over === "role"} />
           </div>
           <Input id="role" value={d.role} onChange={(e) => limited("role", LIMITS.role.max, (s) => setD({ ...d, role: s }))(e.target.value)} />

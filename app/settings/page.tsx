@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { redirect } from "next/navigation";
 import { signOut } from "@/app/auth/actions";
 import { DeleteAccountForm } from "@/components/settings-forms";
@@ -30,16 +30,11 @@ export default async function SettingsPage() {
       <div className="mt-8 grid gap-10">
         {/* EL-SET-002 계정 표시 — 이메일은 노출하지 않는다 (PRD-14) */}
         <section className="flex items-center gap-3">
-          {avatar && (
-            <Image
-              src={avatar}
-              alt={`@${handle} 프로필 이미지`}
-              width={40}
-              height={40}
-              className="rounded-full"
-              unoptimized
-            />
-          )}
+          {/* 이미지 없음·로드 실패 시 핸들 첫 글자 (shadcn Avatar) */}
+          <Avatar size="lg">
+            <AvatarImage src={avatar} alt={`@${handle} 프로필 이미지`} />
+            <AvatarFallback className="font-mono">{handle.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
           <span className="font-mono text-sm">@{handle}</span>
         </section>
 

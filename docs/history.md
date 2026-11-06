@@ -1271,3 +1271,120 @@
 - 재현: fetch가 `TypeError`로 실패하도록 흉내 낸 상태로 수정 전 2회 재현했다. 수정 후에는 상세와 `/me` 모두 오류 화면 없이 롤백되고 토스트가 떴다. 콘솔 오류도 0건이었다. 정상 토글은 회귀 없이 동작했다.
 - 남은 일: 같은 원인의 비낙관적 호출부 5곳(삭제 2, 계정 삭제, 저장, 피드백)은 범위 밖이다. 계정 삭제는 `redirect()` 예외를 삼키지 않도록 `unstable_rethrow`를 함께 검토해야 한다.
 - 실제 DevTools Offline 교차 확인(chrome-devtools `emulate` Offline): 상세와 `/me` 모두 롤백되고 토스트가 떴으며 오류 화면은 나오지 않았다. 서버에 도달한 요청은 0건이었다.
+
+## 2026-11-06 — 직접 구현 UI 4종을 shadcn으로 교체 (Carousel·Command·Select·Checkbox)
+
+**무엇을**: 홈 히어로 캐러셀, 도구 검색 결과 목록, 카테고리 select, "공개된 도구가 아니에요" 체크박스를 shadcn 컴포넌트로 바꿨다. 캐러셀은 끝에서 다음을 누르면 처음으로 돌아간다(순환).
+
+**어떻게**:
+- `npx shadcn add carousel command select checkbox`로 추가했다. 새 의존성은 `embla-carousel-react`와 `cmdk`다. shadcn 4.23이 생성 파일에 `cn` npm 패키지 import를 넣어서, 기존 `@/lib/utils`의 `cn`으로 바꾸고 패키지는 제거했다. dialog, button, input, textarea는 덮어쓰지 않았다.
+- 캐러셀(`home-carousel.tsx`): `opts`에 `loop: true`를 주고, lg 미만은 `breakpoints`로 Embla를 끈 뒤 세로 스택을 유지했다. 슬라이드는 서버 렌더 children을 `CarouselItem`으로 감쌌다. 카운터는 `selectedScrollSnap()`으로 읽는다. reduced-motion이면 `duration: 0`을 준다(Embla 소스에서 `isInstant = !scrollDuration` 확인).
+- 도구 검색(`tool-picker.tsx`): `Command shouldFilter={false}`로 기존 정렬(이름→설명)을 유지했다. ↑↓와 Enter로 선택할 수 있다.
+- `carousel.tsx` 원본이 린트 규칙 `react-hooks/set-state-in-effect`에 걸려서, 사유를 적은 disable 주석 1줄을 달았다.
+
+**왜**: 원래 요청은 "끝에서 처음으로 가는 무한 캐러셀"이었다. 직접 짠 코드 대신 라이브러리 기능을 쓰기로 했고(사용자 결정), 그 김에 shadcn 대응 컴포넌트가 있는데 직접 구현돼 있던 15곳 중 체감 차이가 있는 4곳을 함께 바꿨다.
+
+**결과**:
+- lint, tsc, test(40/40), build 모두 통과했다.
+- 트레이드오프: JS가 없으면 lg 이상에서는 슬라이드 1만 보인다. 트랙패드 가로 스크롤은 지원하지 않는다(→ 바로 아래 항목에서 플러그인으로 복원). PRD REQ-HOME-008 AC-4를 재정의했다(SCR-001 v3.1.0).
+- 시각 확인: 아래 2026-11-06 Avatar 항목의 Playwright 검증에서 함께 확인했다.
+
+## 2026-11-06 — 홈 캐러셀에 트랙패드 가로 넘김 복원 (wheel-gestures 플러그인)
+
+**무엇을**: Embla로 바꾼 뒤 트랙패드로 가로로 밀어 넘기는 동작이 사라졌던 것을 되살렸다.
+
+**어떻게**: `embla-carousel-wheel-gestures`(8.1.0, MIT, 의존성 `wheel-gestures` 1개)를 설치하고 `<Carousel plugins={[WheelGesturesPlugin()]}>`로 연결했다. shadcn Carousel이 이미 열어 둔 `plugins` prop을 썼다. 옵션은 기본값이다. 캐러셀 축(x)의 휠만 받으므로 세로 휠은 페이지 스크롤로 그대로 넘어간다.
+
+**왜**: Embla 8.6.0 본체는 `mousedown`, `touchstart`만 처리하고 wheel 처리는 0건이다. shadcn 문서(Carousel)에도 휠 기능은 없고 `plugins` 자리만 있다. 이 플러그인은 Embla 공식 Plugins 페이지에 실려 있다. 직접 구현하면 트랙패드 관성 이벤트를 묶는 잠금 시간을 손으로 맞춰야 해서 플러그인을 택했다.
+
+**결과**: PRD REQ-HOME-008 AC-1·AC-4에 트랙패드 지원을 반영했다. 관성 꼬리가 있는 가로 휠로 한 번에 한 장씩 넘어갔다(1→2, 2→3). 세로 휠은 페이지 스크롤로 넘어갔다.
+
+## 2026-11-06 — 아바타·신고 버튼·맨 위로 FAB를 shadcn으로 (우선순위 1~3)
+
+**무엇을**: 아바타 3곳을 shadcn Avatar로, 상세 페이지 신고 버튼을 `Button variant="link"`로, 홈 맨 위로 FAB를 `Button variant="outline" size="icon"`으로 바꿨다. 같은 김에 도구 검색 label 연결 결함 1건도 고쳤다.
+
+**어떻게**:
+- `npx shadcn add avatar`로 추가했다. 이번에도 생성 파일이 `cn` npm 패키지를 import해서 `@/lib/utils`로 바꾸고 패키지를 제거했다.
+- 아바타 크기는 `size="lg"`(40px)와 `size="sm"`(24px)가 기존 값과 정확히 맞았다. `{avatar && …}` 조건을 없애서, URL이 없거나 이미지 로드에 실패하면 핸들 첫 글자를 보여 준다. 갤러리 아바타는 옆 핸들 텍스트가 이름 역할을 하므로 `aria-hidden`으로 숨겼다(§15). 세 페이지의 `next/image` import도 지웠다. 전부 `unoptimized`라 next/image로 얻던 최적화는 원래 없었다.
+- **결함 수정**: cmdk가 `CommandInput`에 넘긴 `id`를 자기 id로 덮어써서 sr-only `<label htmlFor>`가 연결되지 않았다(Playwright에서 `id="radix-_r_16_"` 확인). `Command label={…}` prop으로 바꿔 cmdk가 label을 직접 렌더하고 연결하게 했다.
+
+**왜**: 아바타는 이미지 로드에 실패하면 대체 표시가 없었다. 신고 버튼과 FAB에는 `focus-visible` 스타일이 없어서 키보드 포커스 표시가 shadcn 버튼과 달랐다.
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- dev 서버(3002)를 Playwright로 확인했다. chrome-devtools MCP는 다른 세션이 프로필을 쓰고 있어 실행되지 않았다.
+  - 캐러셀: 카운터가 1→2→3→1로 순환했다. 이전 버튼은 1→3으로, →키도 동작했다. h1은 1개였다. 390px에서는 세로 스택이 유지되고 가로 넘침이 없었다(scrollWidth 390).
+  - 빌더: 검색 결과에서 ↓와 Enter로 단계가 추가됐다. 검색 입력과 Select 모두 label이 연결됐다. Select에서 카테고리를 바꾸면 그 값으로 담겼다. Checkbox를 켜면 `checked`가 되고 초안에 `custom:true`가 저장됐다. label 클릭과 Space로도 토글됐다.
+  - 아바타: 갤러리 6곳과 상세에 표시됐다. 아바타 요청을 막으면 대체 글자 "K"가 보였다.
+  - 신고 버튼과 FAB: 키보드 포커스 링이 보였다(스크린샷). 신고 버튼은 다이얼로그를 열었고, FAB는 Enter로 맨 위까지 이동했다.
+  - 콘솔 오류는 0건이었다. 아바타 요청을 일부러 막아서 생긴 1건은 제외했다.
+
+## 2026-11-06 — 스택 칩·로딩·캐러셀 카운터를 shadcn Badge·Skeleton으로 (우선순위 4~6)
+
+**무엇을**: 빌더 스택 칩을 `Badge asChild`(button 유지)로, `/card` 로딩 자리를 `Skeleton`으로, 홈 캐러셀 카운터를 `Badge`로 바꿨다.
+
+**어떻게**:
+- 스택 칩은 `variant="secondary"`를 쓴다. 이 프로젝트의 `--secondary`는 `var(--muted)`라서 색은 기존과 같다(`app/globals.css:74`). 크기와 hover 색(destructive)은 className으로 유지했다.
+- 로딩은 `npx shadcn add skeleton`으로 추가했다. 이번에도 `cn` import를 `@/lib/utils`로 바꿨고, 함께 설치된 `cn` 패키지는 제거했다. Skeleton 기본값(`animate-pulse bg-muted`)이 기존 클래스와 같아서 크기와 `rounded-xl`만 넘겼다.
+- 카운터는 Badge가 inline-flex라서 `lg:block`을 `lg:inline-flex`로 바꿨다.
+
+**왜**: 스택 칩에는 포커스 링이 없었고, 이미 Badge를 쓰는 다른 3곳과 모양이 달랐다. 로딩과 카운터는 직접 만든 클래스 조합을 shadcn 이름 있는 컴포넌트로 통일하려고 바꿨다.
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- Playwright(3002)로 확인했다.
+  - 칩: button 요소가 그대로이고 해제 동작도 같다. 키보드로 포커스하면 링이 보인다(스크린샷).
+  - `/card`에 들어가면 Skeleton이 렌더됐다.
+  - 카운터: 1440px에서 `1 / 3` → `2 / 3`으로 바뀌었다. 390px에서는 숨겨진다.
+  - 콘솔 오류는 0건이었다.
+- 측정 메모: 포커스 직후 `getComputedStyle().boxShadow`가 0으로 읽힌다. Button과 Badge에 `transition-all`이 걸려 있어서 transition 시작 시점 값을 읽기 때문이다. 포커스 링은 스크린샷으로 판정했다.
+
+## 2026-11-06 — 브레드크럼·label·카드 래퍼를 shadcn Breadcrumb·Label·Card로 (우선순위 7~9)
+
+**무엇을**: 상세 페이지 브레드크럼을 Breadcrumb로 바꿨다. `<label>` 15곳은 전부 Label로 바꿨다. 카드형 래퍼 8곳 중 실제로 카드 역할을 하는 3곳(`/me` 목록 항목, 빌더 단계 항목, 도구 선택 패널)만 Card로 바꿨다.
+
+**어떻게**:
+- `npx shadcn add breadcrumb label card`로 추가했다. 이번에도 `cn` import를 `@/lib/utils`로 바꾸고 함께 설치된 `cn` 패키지를 제거했다.
+- Breadcrumb: `BreadcrumbLink asChild`로 next `Link`를 감쌌다. 구분자는 children으로 `›`를 넘겨 그대로 유지했다. JSON-LD BreadcrumbList는 건드리지 않았다.
+- Label: `components/ui/label.tsx` 기본값에서 `leading-none`을 뺐다. 빼고 나면 text-sm 기본 행간 20px가 남는데, 기존 `<label class="text-sm">`과 같은 값이다(390px 실측). 원래 `font-medium`이 아니던 6곳에는 `font-normal`을 붙여 굵기를 유지했다.
+- Card: `li` 안에 Card를 넣어 목록 의미를 유지했다. 기본 여백은 className으로 기존 값에 맞췄다(`gap-0 p-4 sm:p-5`, `gap-3 p-4`, `gap-4 p-4`). 테두리는 shadcn 기본인 `ring-1 ring-foreground/10`을 따랐다.
+- **Card로 바꾸지 않은 5곳(`app/page.tsx` 홈 장면 일러스트)**: `<ol>`, `role="img"`, `aria-hidden` mockup이다. Card는 `div`에 flex-col과 overflow-hidden이 고정이라, 바꾸면 의미가 사라지거나 DESIGN.md §홈 캐러셀 조판의 치수를 덮어써야 한다.
+
+**왜**: 직접 구현한 UI 15곳 중 마지막으로 남은 순위들이다. 제외한 2곳(`<details>`, 초안 배너)과 위 5곳을 빼면 전환이 끝난다.
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- Playwright(3002)로 확인했다.
+  - 브레드크럼: 텍스트는 `홈 › 라이브러리 › …`이고 긴 제목은 잘린다. 링크도 이동한다.
+  - label 4곳이 Label로 연결되고, 클릭하면 입력에 포커스가 간다. 체크박스는 label 클릭으로 토글된다.
+  - 단계 Card와 선택기 Card를 1440px·390px 스크린샷으로 확인했다.
+  - 콘솔 오류는 0건이었다.
+  - `/me`, `/admin`, `/settings`는 로그인이 필요해 빌드와 타입 검사로만 확인했다.
+- **별건 발견(기존 결함, 범위 밖)**: 제목이나 상황 입력에서 포커스가 빠지면(`onBlur` → `touch`) 검증 문구가 나타나면서 아래 요소가 24px 밀린다. 그래서 입력 직후 "단계 추가"를 처음 클릭하면 마우스를 누르는 순간 버튼이 밀려 클릭이 먹힌다(Playwright 실측: y 434→458). 검증 문구 자리를 미리 확보해 두면 해결된다.
+
+## 2026-11-06 — 검색 입력창·맨 위로 아이콘 통일 + 검증 문구 24px 밀림 수정
+
+**무엇을**: 프리뷰를 확인한 뒤 남았던 결정 3건을 권장안대로 처리했다.
+- 도구·스택 검색 입력창(CommandInput)을 프로젝트 Input과 같은 모양으로 맞췄다.
+- 맨 위로 FAB의 `↑` 글자를 lucide `ArrowUp`으로 바꿨다.
+- blur 검증 문구가 나타날 때 레이아웃이 밀려 "단계 추가" 첫 클릭이 빗나가던 결함을 고쳤다.
+
+**어떻게**:
+- `components/ui/command.tsx`
+  - InputGroup의 `border-input/30 bg-input/30`을 `border-input bg-transparent`로 바꿨다.
+  - 래퍼의 `p-1 pb-0`을 지워 좌우 가장자리를 아래 "이름" 입력과 맞췄다(4px 들여쓰기 제거).
+  - **원본 결함**: InputGroup 포커스 링은 `[data-slot=input-group-control]:focus-visible` 조건만 보는데, cmdk 입력은 `data-slot="command-input"`이라 링이 아예 켜지지 않았다. 같은 링 클래스를 `command-input` 조건으로 추가했다.
+- `components/back-to-top.tsx`: `<ArrowUp />`으로 바꾸고 Button 기본 svg 크기(size-4)를 써서 캐러셀 Chevron과 같은 시각 어휘로 맞췄다.
+- `components/workflow-builder.tsx`(title, situation_short): 조건부로 렌더하던 `{showErr && <p>}`를 항상 렌더하는 `<p className="min-h-4">`로 바꿨다. 문구 자리를 미리 확보하는 방식이다. 덕분에 `aria-describedby`가 없는 id를 가리키던 문제도 같이 사라졌다.
+
+**왜**: 검색 입력창은 바로 아래 Input과 회색 배경이 달라 어긋나 보였다. FAB만 글자 화살표로 남아 있었다. 밀림 결함은 blur 순간 `gap-2`(8px)와 한 줄(16px)이 새로 생기면서 아래 요소가 24px 내려가, 마우스를 누르는 사이 버튼이 빠져나가는 문제였다(Playwright 실측 y 434→458).
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- Playwright(3002)로 확인했다.
+  - blur 전후 "단계 추가" 위치 변화가 1440px·390px 모두 **0px**이다.
+  - 제목에 포커스한 직후 첫 클릭으로 선택기가 열린다.
+  - situation_short 문구는 390px에서도 한 줄(16px)이라 모바일용 추가 높이는 필요 없었다.
+  - 검색 입력창 가장자리와 포커스 링, FAB 아이콘과 동작을 스크린샷으로 확인했다.
+  - 콘솔 오류는 0건이었다.
+- 트레이드오프: 입력란 아래 여백이 문구가 없을 때도 24px 늘었다.

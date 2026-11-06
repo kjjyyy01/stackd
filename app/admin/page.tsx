@@ -5,6 +5,7 @@ import { adminResolve, adminSetHidden } from "@/app/actions/admin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { isAdmin } from "@/lib/admin";
 import { LIMITS } from "@/lib/limits";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -184,7 +185,7 @@ function HiddenForm({ workflow: w }: { workflow: Workflow }) {
       <input type="hidden" name="id" value={w.id} />
       <input type="hidden" name="hidden" value={String(!w.hidden)} />
       {!w.hidden && (
-        <label className="text-sm">
+        <Label className="font-normal text-sm">
           <span className="sr-only">숨김 사유</span>
           <Input
             name="reason"
@@ -194,7 +195,7 @@ function HiddenForm({ workflow: w }: { workflow: Workflow }) {
             placeholder="숨김 사유 (카드 자리에 모두에게 표시돼요, 1~200자)"
             className="h-11 w-full sm:w-96"
           />
-        </label>
+        </Label>
       )}
       <Button type="submit" variant={w.hidden ? "outline" : "destructive"} size="lg" className="h-11">
         {w.hidden ? "다시 보이기" : "숨기기"}

@@ -6,6 +6,7 @@ import { submitFeedback, type FeedbackType } from "@/app/actions/feedback";
 import { LIMITS } from "@/lib/limits";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -62,9 +63,9 @@ export default function FeedbackDialog({
           <input type="hidden" name="type" value={type} />
           {workflowId && <input type="hidden" name="workflowId" value={workflowId} />}
           <div className="grid gap-2">
-            <label htmlFor="feedback-body" className="text-sm font-medium">
+            <Label htmlFor="feedback-body" className="text-sm font-medium">
               내용
-            </label>
+            </Label>
             <Textarea
               id="feedback-body"
               name="body"
