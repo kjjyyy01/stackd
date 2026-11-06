@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { matchesHandle } from "@/lib/limits";
 
 const DELETE_FAIL = "탈퇴 처리에 실패했어요 — 잠시 후 다시 시도해주세요"; // CPY-SET-004 · ERR-SET-001
@@ -61,9 +62,9 @@ export function DeleteAccountForm({ handle }: { handle: string }) {
           </DialogHeader>
 
           <div className="grid gap-2">
-            <label htmlFor="delete-confirm" className="text-sm leading-[1.75]">
+            <Label htmlFor="delete-confirm" className="font-normal text-sm leading-[1.75]">
               확인을 위해 <span className="font-mono">{handle}</span> 를 입력해주세요
-            </label>
+            </Label>
             <Input
               id="delete-confirm"
               value={confirm}

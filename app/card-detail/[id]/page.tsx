@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -140,15 +141,15 @@ export default async function CardDetailPage({ params }: Params) {
         </>
       )}
       {/* EL-WF-012 가시 breadcrumb — BreadcrumbList 스키마와 같은 경로 (CPY-WF-018) */}
-      <nav aria-label="현재 위치" className="mb-6 text-sm text-muted-foreground">
-        <ol className="flex flex-wrap items-center gap-1.5">
-          <li><Link href="/" className="hover:text-foreground">홈</Link></li>
-          <li aria-hidden>›</li>
-          <li><Link href="/workflows" className="hover:text-foreground">라이브러리</Link></li>
-          <li aria-hidden>›</li>
-          <li aria-current="page" className="truncate max-w-[24ch] text-foreground">{wf.title}</li>
-        </ol>
-      </nav>
+      <Breadcrumb aria-label="현재 위치" className="mb-6">
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink asChild><Link href="/">홈</Link></BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator>›</BreadcrumbSeparator>
+          <BreadcrumbItem><BreadcrumbLink asChild><Link href="/workflows">라이브러리</Link></BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator>›</BreadcrumbSeparator>
+          <BreadcrumbItem><BreadcrumbPage className="max-w-[24ch] truncate">{wf.title}</BreadcrumbPage></BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <div className="lg:grid lg:grid-cols-[560px_minmax(0,1fr)] lg:items-start lg:gap-10">
         {/* EL-WF-001 요약 카드 — 유도 문구는 미노출(이미 상세다) */}
         <div className="[--s:0.58] sm:[--s:0.78] lg:[--s:1]">

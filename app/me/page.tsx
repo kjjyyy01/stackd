@@ -3,6 +3,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import MyCardActions from "@/components/my-card-actions";
 import { buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import { createClient } from "@/lib/supabase/server";
@@ -68,25 +69,27 @@ export default async function MePage() {
         /* EL-ME-003·004 — 최신순. 카드는 소유자라 비공개·hidden도 열린다 (PRD-09) */
         <ul className="mt-10 grid gap-8 md:grid-cols-2">
           {rows.map((w) => (
-            <li key={w.id} className="rounded-xl border border-border bg-card p-4 sm:p-5">
-              <Link href={`/card-detail/${w.id}`}>
-                {/* 조판은 560×700 고정, 목록에서는 scale로만 축소 (DESIGN.md §카드 조판) */}
-                {/* 상세로 morph (ANIMATION.md #3) */}
-                <CardTransition id={w.id}>
-                  <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.55] sm:[--s:0.62] md:[--s:0.6]">
-                    <div className="origin-top-left [transform:scale(var(--s))]">
-                      <WorkflowCard workflow={w} handle={handle} />
+            <li key={w.id}>
+              <Card className="gap-0 p-4 sm:p-5">
+                <Link href={`/card-detail/${w.id}`}>
+                  {/* 조판은 560×700 고정, 목록에서는 scale로만 축소 (DESIGN.md §카드 조판) */}
+                  {/* 상세로 morph (ANIMATION.md #3) */}
+                  <CardTransition id={w.id}>
+                    <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden [--s:0.55] sm:[--s:0.62] md:[--s:0.6]">
+                      <div className="origin-top-left [transform:scale(var(--s))]">
+                        <WorkflowCard workflow={w} handle={handle} />
+                      </div>
                     </div>
-                  </div>
-                </CardTransition>
-              </Link>
-              <h2 className="mt-4 text-lg font-semibold leading-[1.4]">{w.title}</h2>
-              <MyCardActions
-                id={w.id}
-                isPublic={w.is_public}
-                hidden={w.hidden}
-                hiddenReason={w.hidden_reason}
-              />
+                  </CardTransition>
+                </Link>
+                <h2 className="mt-4 text-lg font-semibold leading-[1.4]">{w.title}</h2>
+                <MyCardActions
+                  id={w.id}
+                  isPublic={w.is_public}
+                  hidden={w.hidden}
+                  hiddenReason={w.hidden_reason}
+                />
+              </Card>
             </li>
           ))}
         </ul>

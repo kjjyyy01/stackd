@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 type Props = { id: string; isPublic: boolean; hidden: boolean; hiddenReason?: string | null };
 
@@ -70,7 +71,7 @@ export default function MyCardActions({ id, isPublic, hidden, hiddenReason }: Pr
 
       <div className="flex flex-wrap items-center gap-3">
         {/* EL-ME-008 — hidden이면 공개해도 타인에게 안 보이므로 토글 자체를 막는다 (BR-018) */}
-        <label className="flex items-center gap-2.5 text-sm">
+        <Label className="font-normal flex items-center gap-2.5 text-sm">
           <Switch
             checked={shown}
             disabled={hidden || pending}
@@ -78,7 +79,7 @@ export default function MyCardActions({ id, isPublic, hidden, hiddenReason }: Pr
             aria-label="공개 전환"
           />
           <span>공개 전환</span>
-        </label>
+        </Label>
 
         <div className="ml-auto flex gap-2">
           {/* EL-ME-006 — 로드·소유자 확인은 SCR-001 몫 (REQ-ME-005) */}

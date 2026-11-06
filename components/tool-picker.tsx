@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 import { LIMITS, charCount, type Category } from "@/lib/limits";
 
 type Item = { id: string; name: string; category: Category; description: string };
@@ -50,7 +52,7 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
   }
 
   return (
-    <div className="grid gap-4 rounded-lg border border-border bg-card p-4">
+    <Card className="gap-4 p-4">
       {/* 카탈로그 검색 — cmdk 자체 필터는 끄고 위 정렬(이름→설명)을 쓴다. ↑↓·Enter 선택 */}
       {/* label prop = cmdk가 sr-only label을 입력에 연결 — CommandInput의 id는 cmdk가 덮어쓴다 */}
       <Command shouldFilter={false} label={searchPlaceholder} className="rounded-none! bg-transparent p-0">
@@ -84,7 +86,7 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
       <div className="grid gap-2">
         <span className="text-sm text-muted-foreground">직접 입력</span>
         <div className="flex flex-wrap gap-2">
-          <label htmlFor={`${uid}-name`} className="sr-only">이름</label>
+          <Label htmlFor={`${uid}-name`} className="sr-only">이름</Label>
           <Input
             id={`${uid}-name`}
             value={manualName}
@@ -95,7 +97,7 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
             aria-describedby={manualErr ? `${uid}-err` : undefined}
             className="min-w-0 flex-1"
           />
-          <label htmlFor={`${uid}-cat`} className="sr-only">카테고리</label>
+          <Label htmlFor={`${uid}-cat`} className="sr-only">카테고리</Label>
           <Select value={manualCat} onValueChange={(v) => setManualCat(v as Category)}>
             <SelectTrigger id={`${uid}-cat`} className="font-mono">
               <SelectValue />
@@ -108,6 +110,6 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
         </div>
         {manualErr && <p id={`${uid}-err`} className="text-xs text-destructive">이름을 1~40자로 입력해주세요</p>}
       </div>
-    </div>
+    </Card>
   );
 }

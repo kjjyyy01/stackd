@@ -15,6 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { track } from "@/lib/analytics";
 
 type Props = { id: string; isOwner: boolean; isPublic: boolean; hidden: boolean };
@@ -127,7 +128,7 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
           </div>
 
           {/* hidden이면 공개해도 타인에게 안 보인다 — 토글 자체를 막는다 (BR-018) */}
-          <label className="mt-6 flex items-center gap-3 text-sm">
+          <Label className="font-normal mt-6 flex items-center gap-3 text-sm">
             <Switch
               checked={shown}
               disabled={hidden || pending}
@@ -135,7 +136,7 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
               aria-label="공개 전환"
             />
             <span>{shown ? "공개" : "비공개"}</span>
-          </label>
+          </Label>
         </div>
       )}
 
