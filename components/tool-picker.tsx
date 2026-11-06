@@ -52,10 +52,9 @@ export default function ToolPicker({ categories, onPick, searchPlaceholder, excl
   return (
     <div className="grid gap-4 rounded-lg border border-border bg-card p-4">
       {/* 카탈로그 검색 — cmdk 자체 필터는 끄고 위 정렬(이름→설명)을 쓴다. ↑↓·Enter 선택 */}
-      <Command shouldFilter={false} className="rounded-none! bg-transparent p-0">
-        <label htmlFor={`${uid}-q`} className="sr-only">{searchPlaceholder}</label>
+      {/* label prop = cmdk가 sr-only label을 입력에 연결 — CommandInput의 id는 cmdk가 덮어쓴다 */}
+      <Command shouldFilter={false} label={searchPlaceholder} className="rounded-none! bg-transparent p-0">
         <CommandInput
-          id={`${uid}-q`}
           value={q}
           onValueChange={setQ}
           placeholder={searchPlaceholder}
