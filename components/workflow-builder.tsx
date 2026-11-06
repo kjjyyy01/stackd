@@ -153,7 +153,8 @@ export default function WorkflowBuilder({ initial }: Props) {
             </div>
             <Input id="title" value={d.title} onChange={(e) => limited("title", LIMITS.title.max, (s) => setD({ ...d, title: s }))(e.target.value)}
               onBlur={() => touch("title")} placeholder="제목 — 이 워크플로우를 한 줄로" aria-invalid={showErr("title") || undefined} aria-describedby="title-err" />
-            {showErr("title") && <p id="title-err" className="text-xs text-destructive">제목을 1~30자로 입력해주세요</p>}
+            {/* 문구 자리 상시 확보 — blur 때 레이아웃 밀림 방지 */}
+            <p id="title-err" className="min-h-4 text-xs text-destructive">{showErr("title") ? "제목을 1~30자로 입력해주세요" : null}</p>
           </div>
           <div className="grid gap-2">
             <div className="flex items-baseline justify-between gap-4">
@@ -162,7 +163,7 @@ export default function WorkflowBuilder({ initial }: Props) {
             </div>
             <Input id="situation_short" value={d.situation_short} onChange={(e) => limited("situation_short", LIMITS.situation_short.max, (s) => setD({ ...d, situation_short: s }))(e.target.value)}
               onBlur={() => touch("situation_short")} placeholder="상황을 20자 안으로 짧게 적어주세요 (예: 웹 페이지 개발, 백엔드 디버깅)" aria-invalid={showErr("situation_short") || undefined} aria-describedby="situation_short-err" />
-            {showErr("situation_short") && <p id="situation_short-err" className="text-xs text-destructive">상황을 20자 안으로 짧게 적어주세요 (예: 웹 페이지 개발, 백엔드 디버깅)</p>}
+            <p id="situation_short-err" className="min-h-4 text-xs text-destructive">{showErr("situation_short") ? "상황을 20자 안으로 짧게 적어주세요 (예: 웹 페이지 개발, 백엔드 디버깅)" : null}</p>
           </div>
           <div className="grid gap-2">
             <div className="flex items-baseline justify-between gap-4">
