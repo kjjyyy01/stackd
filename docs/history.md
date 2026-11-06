@@ -1287,7 +1287,7 @@
 **결과**:
 - lint, tsc, test(40/40), build 모두 통과했다.
 - 트레이드오프: JS가 없으면 lg 이상에서는 슬라이드 1만 보인다. 트랙패드 가로 스크롤은 지원하지 않는다(→ 바로 아래 항목에서 플러그인으로 복원). PRD REQ-HOME-008 AC-4를 재정의했다(SCR-001 v3.1.0).
-- 시각 확인은 stackd dev 서버가 없어 대기 중이다.
+- 시각 확인: 아래 2026-11-06 Avatar 항목의 Playwright 검증에서 함께 확인했다.
 
 ## 2026-11-06 — 홈 캐러셀에 트랙패드 가로 넘김 복원 (wheel-gestures 플러그인)
 
@@ -1297,4 +1297,24 @@
 
 **왜**: Embla 8.6.0 본체는 `mousedown`, `touchstart`만 처리하고 wheel 처리는 0건이다. shadcn 문서(Carousel)에도 휠 기능은 없고 `plugins` 자리만 있다. 이 플러그인은 Embla 공식 Plugins 페이지에 실려 있다. 직접 구현하면 트랙패드 관성 이벤트를 묶는 잠금 시간을 손으로 맞춰야 해서 플러그인을 택했다.
 
-**결과**: PRD REQ-HOME-008 AC-1·AC-4에 트랙패드 지원을 반영했다. 시각 확인은 stackd dev 서버가 없어 대기 중이다.
+**결과**: PRD REQ-HOME-008 AC-1·AC-4에 트랙패드 지원을 반영했다. 관성 꼬리가 있는 가로 휠로 한 번에 한 장씩 넘어갔다(1→2, 2→3). 세로 휠은 페이지 스크롤로 넘어갔다.
+
+## 2026-11-06 — 아바타·신고 버튼·맨 위로 FAB를 shadcn으로 (우선순위 1~3)
+
+**무엇을**: 아바타 3곳을 shadcn Avatar로, 상세 페이지 신고 버튼을 `Button variant="link"`로, 홈 맨 위로 FAB를 `Button variant="outline" size="icon"`으로 바꿨다. 같은 김에 도구 검색 label 연결 결함 1건도 고쳤다.
+
+**어떻게**:
+- `npx shadcn add avatar`로 추가했다. 이번에도 생성 파일이 `cn` npm 패키지를 import해서 `@/lib/utils`로 바꾸고 패키지를 제거했다.
+- 아바타 크기는 `size="lg"`(40px)와 `size="sm"`(24px)가 기존 값과 정확히 맞았다. `{avatar && …}` 조건을 없애서, URL이 없거나 이미지 로드에 실패하면 핸들 첫 글자를 보여 준다. 갤러리 아바타는 옆 핸들 텍스트가 이름 역할을 하므로 `aria-hidden`으로 숨겼다(§15). 세 페이지의 `next/image` import도 지웠다. 전부 `unoptimized`라 next/image로 얻던 최적화는 원래 없었다.
+- **결함 수정**: cmdk가 `CommandInput`에 넘긴 `id`를 자기 id로 덮어써서 sr-only `<label htmlFor>`가 연결되지 않았다(Playwright에서 `id="radix-_r_16_"` 확인). `Command label={…}` prop으로 바꿔 cmdk가 label을 직접 렌더하고 연결하게 했다.
+
+**왜**: 아바타는 이미지 로드에 실패하면 대체 표시가 없었다. 신고 버튼과 FAB에는 `focus-visible` 스타일이 없어서 키보드 포커스 표시가 shadcn 버튼과 달랐다.
+
+**결과**:
+- lint, tsc, test(40/40), build, e2e(1/1)를 통과했다.
+- dev 서버(3002)를 Playwright로 확인했다. chrome-devtools MCP는 다른 세션이 프로필을 쓰고 있어 실행되지 않았다.
+  - 캐러셀: 카운터가 1→2→3→1로 순환했다. 이전 버튼은 1→3으로, →키도 동작했다. h1은 1개였다. 390px에서는 세로 스택이 유지되고 가로 넘침이 없었다(scrollWidth 390).
+  - 빌더: 검색 결과에서 ↓와 Enter로 단계가 추가됐다. 검색 입력과 Select 모두 label이 연결됐다. Select에서 카테고리를 바꾸면 그 값으로 담겼다. Checkbox를 켜면 `checked`가 되고 초안에 `custom:true`가 저장됐다. label 클릭과 Space로도 토글됐다.
+  - 아바타: 갤러리 6곳과 상세에 표시됐다. 아바타 요청을 막으면 대체 글자 "K"가 보였다.
+  - 신고 버튼과 FAB: 키보드 포커스 링이 보였다(스크린샷). 신고 버튼은 다이얼로그를 열었고, FAB는 Enter로 맨 위까지 이동했다.
+  - 콘솔 오류는 0건이었다. 아바타 요청을 일부러 막아서 생긴 1건은 제외했다.
