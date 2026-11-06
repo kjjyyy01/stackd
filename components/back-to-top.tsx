@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // 맨 위로 FAB (EL-HOME-023, 홈 전용) — 1뷰포트 스크롤 후 표시 (REQ-HOME-009)
@@ -20,11 +21,11 @@ export default function BackToTop() {
       size="icon"
       aria-label="맨 위로"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className={`fixed bottom-8 right-8 z-50 size-12 rounded-full border-border bg-white/90 text-lg shadow-lg hover:bg-white ${
+      className={`fixed bottom-8 right-8 z-50 size-12 rounded-full border-border bg-white/90 shadow-lg hover:bg-white ${
         on ? "visible translate-y-0 opacity-100" : "invisible translate-y-2 opacity-0"
       }`}
     >
-      ↑
+      <ArrowUp />
     </Button>
   );
 }
