@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache } from "react";
@@ -7,7 +7,7 @@ import CardActions from "@/components/card-actions";
 import FeedbackDialog from "@/components/feedback-dialog";
 import JsonLd from "@/components/json-ld";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import type { WorkflowInput } from "@/lib/limits";
@@ -176,16 +176,11 @@ export default async function CardDetailPage({ params }: Params) {
 
           {/* EL-WF-005 작성자 — 이메일 미노출, GitHub 프로필로만 (BR-025) */}
           <div className="mt-6 flex items-center gap-3">
-            {wf.author_avatar && (
-              <Image
-                src={wf.author_avatar}
-                alt={`@${wf.author_handle} 프로필 이미지`}
-                width={40}
-                height={40}
-                className="rounded-full"
-                unoptimized
-              />
-            )}
+            {/* 이미지 없음·로드 실패 시 핸들 첫 글자 (shadcn Avatar) */}
+            <Avatar size="lg">
+              <AvatarImage src={wf.author_avatar ?? undefined} alt={`@${wf.author_handle} 프로필 이미지`} />
+              <AvatarFallback className="font-mono">{wf.author_handle.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
             <a
               href={`https://github.com/${wf.author_handle}`}
               target="_blank"
@@ -216,9 +211,9 @@ export default async function CardDetailPage({ params }: Params) {
               title="이 워크플로우 신고하기"
               description="문제가 되는 부분을 알려주시면 확인 후 조치할게요."
               trigger={
-                <button type="button" className="py-2.5 text-sm text-muted-foreground underline underline-offset-4">
+                <Button variant="link" className="h-auto px-0 py-2.5 font-normal text-muted-foreground underline">
                   이 워크플로우 신고하기
-                </button>
+                </Button>
               }
             />
           </div>
