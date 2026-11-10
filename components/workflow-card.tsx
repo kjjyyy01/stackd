@@ -81,7 +81,8 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
               <div className="min-w-0 flex-1">
                 {/* ponytail: 도구명 mono 고정 — 직접 입력으로 한글명이 오면 sans 분기 필요 */}
                 <div className="flex items-center gap-1.5">
-                  <p className="min-w-0 truncate font-mono text-sm font-medium leading-none">
+                  {/* -m-1 p-1 = 레이아웃은 그대로, 잘림 경계만 4px 확장 — truncate가 밑줄·포커스 링을 자르던 문제 */}
+                  <p className="-m-1 min-w-0 truncate p-1 font-mono text-sm font-medium leading-none">
                     {toolLinks?.[i] ? (
                       <a
                         href={toolLinks[i].href}
