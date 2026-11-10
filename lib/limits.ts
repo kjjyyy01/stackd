@@ -7,6 +7,7 @@ export const LIMITS = {
   situation: { min: 0, max: 1000 }, // BR-012
   steps: { min: 2, max: 8 }, // BR-001
   tool_name: { min: 1, max: 40 }, // BR-002
+  tool_url: { min: 0, max: 300 }, // BR-027
   step_note: { min: 1, max: 60 }, // BR-013
   step_detail: { min: 1, max: 500 }, // BR-014
   dev_stack: { min: 0, max: 4 }, // BR-015
@@ -28,7 +29,7 @@ export type WorkflowInput = {
   title: string;
   situation_short: string;
   situation: string;
-  steps: { tool: { name: string; category: Category; custom?: boolean }; note: string; detail: string }[];
+  steps: { tool: { name: string; category: Category; custom?: boolean; url?: string }; note: string; detail: string }[];
   dev_stack: { name: string; category: DevStackCategory }[];
   role: string;
   accent: string;
@@ -56,6 +57,19 @@ function str(v: unknown, { min, max }: { min: number; max: number }) {
 
 const isIn = <T extends readonly string[]>(list: T, v: unknown): v is T[number] =>
   typeof v === "string" && (list as readonly string[]).includes(v);
+
+// 도구 링크 정규화 — "" = 없음, null = 위반 (BR-027)
+export function toolUrl(v: unknown): string | null {
+  const t = str(v ?? "", LIMITS.tool_url);
+  if (t === null) return null;
+  if (!t) return "";
+  try {
+    const u = new URL(t);
+    return u.protocol === "https:" || u.protocol === "http:" ? u.href : null;
+  } catch {
+    return null;
+  }
+}
 
 // 워크플로우 입력 검증 — 실패 시 첫 위반의 에러 코드·필드 반환 (PRD-10)
 export function validateWorkflow(input: unknown): Result<WorkflowInput> {
@@ -86,6 +100,10 @@ export function validateWorkflow(input: unknown): Result<WorkflowInput> {
     if (tool.custom === true && !isIn(CUSTOMIZABLE_CATEGORIES, tool.category)) return fail("ERR-BLDR-008", `steps.${i}.tool.custom`);
     const t: WorkflowInput["steps"][number]["tool"] = { name, category: tool.category };
     if (tool.custom === true) t.custom = true;
+    // 참고 링크 (BR-027) — 빈 값 = 링크 없음, 있으면 http(s)만 (javascript: href 차단)
+    const url = toolUrl(tool.url);
+    if (url === null) return fail("ERR-BLDR-009", `steps.${i}.tool.url`);
+    if (url) t.url = url;
     steps.push({ tool: t, note, detail });
   }
 

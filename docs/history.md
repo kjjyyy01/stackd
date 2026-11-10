@@ -1388,3 +1388,27 @@
   - 검색 입력창 가장자리와 포커스 링, FAB 아이콘과 동작을 스크린샷으로 확인했다.
   - 콘솔 오류는 0건이었다.
 - 트레이드오프: 입력란 아래 여백이 문구가 없을 때도 24px 늘었다.
+
+## 2026-11-10 — 상세 페이지 도구 이름을 출처 링크로 (BR-027)
+
+**무엇을**: 카드 상세 페이지에서 도구 이름을 누르면 GitHub나 참고 페이지가 새 탭으로 열리게 했다.
+- 카탈로그 도구는 `data/catalog.json`의 `source`(268개 전부 있음)로 연결한다.
+- 직접 입력한 도구(custom 포함)는 작성자가 빌더에서 참고 링크를 선택적으로 등록한다. 비우면 텍스트로 남는다. custom 배지는 링크와 관계없이 유지한다.
+- 링크는 상세 페이지의 요약 카드와 단계별 설명 두 곳에 걸린다.
+
+**어떻게**:
+- `lib/limits.ts`: `steps[].tool.url`을 검증한다. 빈 값은 저장하지 않고, 값이 있으면 `new URL()`로 파싱해 `http:`·`https:`만 통과시킨다(300자, 위반 시 `ERR-BLDR-009`). 이 검증기는 허용 필드만 골라 객체를 다시 만들기 때문에, 여기서 빠뜨리면 url이 에러 없이 사라진다.
+- `lib/catalog.ts`: `catalogSource(name)`. 카탈로그 URL은 저장하지 않고 렌더할 때 이름으로 찾는다.
+- `components/workflow-builder.tsx`: 카탈로그에 없는 도구 단계에만 입력칸을 띄운다. 에러 문구 자리는 `min-h-4`로 미리 확보했다(24px 밀림 재발 방지).
+- `app/card-detail/[id]/page.tsx`: `toolLinks()`를 서버에서 한 번 계산해 카드(`toolLinks` prop)와 단계 목록(`StepToolName`)이 같이 쓴다. 우선순위는 카탈로그 출처, 작성자 링크, 텍스트 순이다. 작성자 링크는 `rel="nofollow ugc"`.
+- `components/workflow-card.tsx`: prop이 있을 때만 링크를 그린다. 목록 카드는 전체가 `<Link>`라 링크 안 링크가 되지 않도록 prop을 넘기지 않는다. 카탈로그 JSON을 카드에서 import하지 않아 클라이언트 번들(`card-preview`)이 커지지 않는다.
+- `components/card-actions.tsx`: PNG 저장 시 `data-png-hide`가 붙은 ↗ 아이콘을 뺀다. 아이콘이 `<svg>`라 `HTMLElement`가 아닌 `Element`로 검사한다.
+- DB 마이그레이션은 없다. `steps`가 jsonb이고 CHECK는 배열 길이만 본다.
+
+**왜**: 카드에 나온 도구를 보고 실제로 써 보려면 이름으로 다시 검색해야 했다. 처음에는 단계별 설명에만 넣었다가, 사용자 요청으로 카드에 옮기고 단계별 설명에도 유지했다.
+
+**결과**:
+- test(46/46), tsc, lint, build를 통과했다.
+- dev 서버 HTML 검사: 상세 카드 5장 모두 카드 링크 수와 단계 목록 링크 수가 같다(3·4·3·4·4). `/workflows`·`/me`·`/`의 카드에는 새 탭 링크가 0개다.
+- 브라우저 스크린샷, 콘솔, PNG 결과물, 빌더 입력칸 동작은 확인하지 못했다(chrome-devtools MCP 프로필 충돌). `tool.url`을 저장한 카드는 로그인이 필요해 확인하지 못했다.
+- 별건(범위 밖): `app/admin/page.tsx`가 `s.tool_name`을 읽는데 실제 데이터는 `s.tool.name`이다. 확인 못 함.
