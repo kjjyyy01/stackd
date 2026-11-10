@@ -3,7 +3,13 @@
 import catalog from "../data/catalog.json" with { type: "json" };
 
 const NAMES = new Set((catalog as { name: string }[]).map((i) => i.name));
+// 이름 → 출처 URL (BR-027) — 상세 페이지 도구 링크의 1순위
+const SOURCES = new Map((catalog as { name: string; source: string }[]).map((i) => [i.name, i.source]));
 
 export function isCatalogTool(name: string) {
   return NAMES.has(name.trim());
+}
+
+export function catalogSource(name: string) {
+  return SOURCES.get(name.trim());
 }
