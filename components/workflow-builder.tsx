@@ -14,7 +14,7 @@ import { DRAFT_EVENT } from "@/components/draft-banner";
 import { track } from "@/lib/analytics";
 import { isCatalogTool } from "@/lib/catalog";
 import { EMPTY_DRAFT, clearDraft, isDraftEmpty, isResuming, loadDraft, saveDraft, type Draft } from "@/lib/draft";
-import { CATEGORIES, CUSTOMIZABLE_CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, validateWorkflow } from "@/lib/limits";
+import { CATEGORIES, CUSTOMIZABLE_CATEGORIES, DEV_STACK_CATEGORIES, LIMITS, charCount, toolUrl, validateWorkflow } from "@/lib/limits";
 
 type Step = Draft["steps"][number];
 type Props = {
@@ -138,6 +138,9 @@ export default function WorkflowBuilder({ initial }: Props) {
     setD({ ...d, dev_stack: [...d.dev_stack, t] });
   }
 
+  // 링크 형식 위반 — blur 뒤나 CTA 시도 뒤에만 노출
+  const urlErr = (i: number, s: Step) => (touched.has(`url-${i}`) || ctaTried) && toolUrl(s.tool.url) === null;
+
   const stepIncomplete = (s: Step) => !s.note.trim() || !s.detail.trim();
 
   return (
@@ -210,6 +213,18 @@ export default function WorkflowBuilder({ initial }: Props) {
                         placeholder="어떻게 쓰는지 자세히 (상세 페이지에 실려요 — 필수)" aria-invalid={incomplete || undefined} />
                       <Counter n={charCount(s.detail)} max={LIMITS.step_detail.max} over={over === `detail-${i}`} />
                     </div>
+                    {/* 참고 링크 (BR-027) — 카탈로그 도구는 출처가 이미 있어 숨긴다 */}
+                    {!isCatalogTool(s.tool.name) && (
+                      <div className="grid gap-1">
+                        <Label htmlFor={`url-${i}`} className="text-sm font-normal text-muted-foreground">참고 링크 (선택)</Label>
+                        <Input id={`url-${i}`} type="url" inputMode="url" value={s.tool.url ?? ""}
+                          onChange={(e) => limited(`url-${i}`, LIMITS.tool_url.max, (v) => patchStep(i, { tool: { ...s.tool, url: v } }))(e.target.value)}
+                          onBlur={() => touch(`url-${i}`)} placeholder="https://github.com/… — 비우면 링크 없이 표시돼요"
+                          aria-invalid={urlErr(i, s) || undefined} aria-describedby={`url-${i}-err`} />
+                        {/* 문구 자리 상시 확보 — blur 때 레이아웃 밀림 방지 */}
+                        <p id={`url-${i}-err`} className="min-h-4 text-xs text-destructive">{urlErr(i, s) ? "https://로 시작하는 주소를 입력해주세요" : null}</p>
+                      </div>
+                    )}
                     {canMarkCustom(s.tool) && (
                       <Label className="font-normal mt-2 flex items-center gap-2 text-sm">
                         <Checkbox
