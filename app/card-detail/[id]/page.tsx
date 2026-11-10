@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import CardActions from "@/components/card-actions";
@@ -12,6 +13,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import CardTransition from "@/components/card-transition";
 import WorkflowCard from "@/components/workflow-card";
 import type { WorkflowInput } from "@/lib/limits";
+import { catalogSource } from "@/lib/catalog";
 import { BASE_OG, SITE_URL } from "@/lib/site";
 import { createClient } from "@/lib/supabase/server";
 
@@ -82,6 +84,7 @@ export default async function CardDetailPage({ params }: Params) {
   if (!found) notFound(); // ERR-SHARE-001
 
   const { wf, isOwner } = found;
+  const links = toolLinks(wf.steps); // 카드·단계 목록 공용 (BR-027)
 
   // hidden은 404가 아니라 블러 — 타인에게는 내용을 렌더하지 않는다 (BR-018, EL-WF-011)
   if (wf.hidden && !isOwner) {
@@ -158,7 +161,7 @@ export default async function CardDetailPage({ params }: Params) {
             {/* mx-auto — 없으면 남는 폭이 전부 오른쪽에 몰린다 (/workflows와 동일) */}
             <div className="mx-auto h-[calc(700px*var(--s))] w-[calc(560px*var(--s))] overflow-hidden">
               <div className="origin-top-left [transform:scale(var(--s))]">
-                <WorkflowCard id="wf-card" workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" />
+                <WorkflowCard id="wf-card" workflow={wf} handle={wf.author_handle} showDetailHint={false} titleAs="h1" toolLinks={links} />
               </div>
             </div>
           </CardTransition>
@@ -236,7 +239,7 @@ export default async function CardDetailPage({ params }: Params) {
           {wf.steps.map((s, i) => (
             <li key={`${s.tool.name}-${i}`} className="max-w-[62ch]">
               <p className="font-mono text-sm font-medium">
-                {String(i + 1).padStart(2, "0")} {s.tool.name}
+                {String(i + 1).padStart(2, "0")} <StepToolName name={s.tool.name} link={links[i]} />
                 {s.tool.custom && (
                   <span className="ml-2 rounded-sm bg-muted px-1.5 py-0.5 align-middle font-mono text-xs font-medium text-muted-foreground">
                     custom
@@ -258,5 +261,33 @@ export default async function CardDetailPage({ params }: Params) {
         )}
       </section>
     </main>
+  );
+}
+
+
+// 카드 도구명 링크 (BR-027) — 카탈로그 출처 → 작성자 등록 URL → 없음
+function toolLinks(steps: WorkflowInput["steps"]) {
+  return steps.map(({ tool }) => {
+    const source = catalogSource(tool.name);
+    if (source) return { href: source, ugc: false };
+    return tool.url ? { href: tool.url, ugc: true } : null;
+  });
+}
+
+// 단계 목록 도구명 — 링크 있으면 새 탭 (BR-027)
+function StepToolName({ name, link }: { name: string; link: ReturnType<typeof toolLinks>[number] }) {
+  if (!link) return <>{name}</>;
+  return (
+    <a
+      href={link.href}
+      target="_blank"
+      // 작성자 등록 링크는 사용자 생성 콘텐츠 — 검색엔진 신뢰 전달 차단
+      rel={link.ugc ? "nofollow ugc noopener noreferrer" : "noopener noreferrer"}
+      className="inline-flex items-center gap-0.5 underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground"
+    >
+      {name}
+      <ArrowUpRight aria-hidden className="size-3.5" />
+      <span className="sr-only">(새 탭)</span>
+    </a>
   );
 }

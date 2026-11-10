@@ -1,3 +1,4 @@
+import { ArrowUpRight } from "lucide-react";
 import type { WorkflowInput } from "@/lib/limits";
 
 // 카드 전용 고정 팔레트 — 뷰어 테마 비의존 (PNG·OG로 나가므로, DESIGN.md §색 사용 규칙)
@@ -23,6 +24,8 @@ type Props = {
   showDetailHint?: boolean; // 상세 유도 문구 — SCR-004만 false(화면에서만 감춤, PNG엔 포함)
   titleAs?: "h1" | "h2"; // 상세에서만 h1 — 카드 제목이 페이지 유일 헤딩 (EL-WF-001)
   id?: string; // PNG 저장이 캡처할 DOM을 지목할 때만 (SCR-004 REQ-WF-002)
+  // 도구명 링크 (BR-027) — 상세만 넘긴다. 목록은 카드 전체가 Link라 넘기면 링크 안 링크가 된다
+  toolLinks?: ({ href: string; ugc: boolean } | null)[];
 };
 
 // 카드 고정 조판 — SSOT는 DESIGN.md §카드 조판 (이 상수는 그 사본이다).
@@ -31,7 +34,7 @@ export const CARD_W = 560;
 export const CARD_H = 700;
 
 // 공용 워크플로우 카드 (EL-CARD-002~008) — SCR-003·004·006·007 공용
-export default function WorkflowCard({ workflow, handle, className = "", showDetailHint = true, titleAs: Title = "h2", id }: Props) {
+export default function WorkflowCard({ workflow, handle, className = "", showDetailHint = true, titleAs: Title = "h2", id, toolLinks }: Props) {
   const { title, situation_short, steps, dev_stack, role } = workflow;
   const accent = ACCENTS[workflow.accent] ?? INK;
 
@@ -78,7 +81,24 @@ export default function WorkflowCard({ workflow, handle, className = "", showDet
               <div className="min-w-0 flex-1">
                 {/* ponytail: 도구명 mono 고정 — 직접 입력으로 한글명이 오면 sans 분기 필요 */}
                 <div className="flex items-center gap-1.5">
-                  <p className="min-w-0 truncate font-mono text-sm font-medium leading-none">{s.tool.name}</p>
+                  <p className="min-w-0 truncate font-mono text-sm font-medium leading-none">
+                    {toolLinks?.[i] ? (
+                      <a
+                        href={toolLinks[i].href}
+                        target="_blank"
+                        // 작성자 등록 링크는 사용자 생성 콘텐츠 — 검색엔진 신뢰 전달 차단
+                        rel={toolLinks[i].ugc ? "nofollow ugc noopener noreferrer" : "noopener noreferrer"}
+                        className="rounded-sm underline-offset-4 hover:underline focus-visible:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+                      >
+                        {s.tool.name}
+                        <span className="sr-only"> (새 탭)</span>
+                      </a>
+                    ) : (
+                      s.tool.name
+                    )}
+                  </p>
+                  {/* 링크 표시 — 화면 전용, PNG 저장 시 제외 (card-actions filter) */}
+                  {toolLinks?.[i] && <ArrowUpRight data-png-hide aria-hidden className="size-3 shrink-0" style={{ color: MUTED }} />}
                   {/* 카탈로그에 없는 도구 — 남이 그대로 못 쓴다는 표시 (BR-026) */}
                   {s.tool.custom && (
                     <span

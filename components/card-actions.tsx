@@ -42,7 +42,12 @@ export default function CardActions({ id, isOwner, isPublic, hidden }: Props) {
       // 클릭 시점에만 로드 — 초기 번들에 넣지 않는다 (LCP 예산)
       const { toBlob } = await import("html-to-image");
       // 부모의 scale은 클론에 안 따라오므로 항상 원본 560×700으로 그려진다
-      const blob = await toBlob(node, { pixelRatio: 2, backgroundColor: "#ffffff" });
+      // data-png-hide = 화면 전용 표시(도구 링크 ↗) — 이미지엔 링크가 없으니 뺀다 (BR-027)
+      const blob = await toBlob(node, {
+        pixelRatio: 2,
+        backgroundColor: "#ffffff",
+        filter: (n) => !(n instanceof Element && n.hasAttribute("data-png-hide")),
+      });
       if (!blob) throw new Error("blob 생성 실패");
 
       const url = URL.createObjectURL(blob);
