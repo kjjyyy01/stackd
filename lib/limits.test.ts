@@ -170,3 +170,41 @@ test("custom이 boolean이 아니면 ERR-BLDR-008 (BR-026)", () => {
   (v.steps[0].tool as Record<string, unknown>).custom = "yes";
   assert.deepEqual(validateWorkflow(v), { ok: false, code: "ERR-BLDR-008", field: "steps.0.tool.custom" });
 });
+
+// 도구 참고 링크 (BR-027) — 직접 입력 도구만 작성자가 등록, 상세 페이지에서 링크가 된다
+const withUrl = (url: unknown) => {
+  const v = valid();
+  (v.steps[0].tool as Record<string, unknown>).url = url;
+  return validateWorkflow(v);
+};
+
+test("url https는 통과하고 정규화된 값이 저장된다 (BR-027)", () => {
+  const r = withUrl("  https://github.com/me/tool  ");
+  assert.equal(r.ok && r.value.steps[0].tool.url, "https://github.com/me/tool");
+});
+
+test("url 빈 값·공백은 저장하지 않는다 — 링크 없음 (BR-027)", () => {
+  for (const u of ["", "   ", undefined]) {
+    const r = withUrl(u);
+    assert.equal(r.ok && "url" in r.value.steps[0].tool, false);
+  }
+});
+
+test("url이 http(s)가 아니면 ERR-BLDR-009 — javascript: 차단 (BR-027)", () => {
+  for (const u of ["javascript:alert(1)", "data:text/html,x", "ftp://x.com", "github.com/me", 42]) {
+    assert.deepEqual(withUrl(u), { ok: false, code: "ERR-BLDR-009", field: "steps.0.tool.url" });
+  }
+});
+
+test("url 301자면 ERR-BLDR-009, 300자는 통과 (BR-027)", () => {
+  const base = "https://x.com/";
+  assert.equal(withUrl(base + "a".repeat(LIMITS.tool_url.max - base.length)).ok, true);
+  assert.equal(withUrl(base + "a".repeat(LIMITS.tool_url.max - base.length + 1)).ok, false);
+});
+
+test("custom 도구도 url을 가질 수 있다 (BR-027)", () => {
+  const v = valid();
+  Object.assign(v.steps[0].tool, { name: "commit-push", category: "skill", custom: true, url: "https://x.com" });
+  const r = validateWorkflow(v);
+  assert.deepEqual(r.ok && r.value.steps[0].tool, { name: "commit-push", category: "skill", custom: true, url: "https://x.com/" });
+});
