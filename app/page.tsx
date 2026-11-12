@@ -36,7 +36,7 @@ function ScaledCard({ className = "", cardClassName = "" }: { className?: string
 const SLIDE = "relative w-full overflow-hidden";
 // 풀뷰포트 높이는 lg+에서만 — lg 미만은 세로 스택이라 콘텐츠가 높이를 정한다
 const SLIDE_INNER =
-  "relative z-[1] mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[5fr_6fr] lg:min-h-[max(38rem,calc(100dvh-4rem))] lg:px-8 lg:py-12";
+  "relative z-[1] mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[5fr_6fr] lg:min-h-[max(38rem,calc(100dvh-5.5rem))] lg:px-8 lg:py-12";
 // 질문(q) 타이포 — md 2열 진입 시 열 폭에 맞춰 한 단계 낮추고 xl에서 원 크기 복귀
 const SLIDE_Q =
   "mt-2.5 text-2xl font-semibold leading-[1.35] tracking-[-0.015em] text-balance sm:text-3xl md:text-2xl lg:text-3xl xl:text-[2.5rem]";
@@ -349,7 +349,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
       </section>
 
       {/* 빌더 (EL-HOME-024 + 005~014) — 헤딩은 서버 렌더, 폼은 클라이언트 */}
-      <section id="builder" className="scroll-mt-16 border-t border-border py-16 sm:py-24">
+      <section id="builder" className="scroll-mt-16 md:scroll-mt-19 lg:scroll-mt-22 border-t border-border py-16 sm:py-24">
         <div className="container-page">
           {/* 수정 모드는 헤딩부터 바꾼다 — 같은 화면이라 맥락 표시가 없으면 새로 쓰는 것으로 읽힌다 (CPY-HOME-058) */}
           <h2 className="text-2xl sm:text-3xl">{initial ? "워크플로우 수정하기" : "내 워크플로우 적기"}</h2>
