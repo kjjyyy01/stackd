@@ -8,9 +8,10 @@ import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/mobile-nav";
 import UserMenu from "@/components/user-menu";
 
-// 헤더 로고 기준 크기 (데스크톱, 사용자 지정) — 헤더 88px, 위아래 여백 12. 모바일·태블릿은 className에서 축소
-const LOGO_W = 200;
-const LOGO_H = 64;
+// 헤더 로고 기준 크기(데스크톱). 너비는 파일 비율(여백 없는 록업)에서 계산
+// 높이 40 = 워드마크 x-height 15.5px, 헤더 72px 안 위아래 여백 16
+const LOGO_H = 40;
+const LOGO_W = Math.round((LOGO_H * markHeader.width) / markHeader.height);
 
 // 데스크톱·모바일 내비 공용 로그인 폼 — 배치 여백만 className으로 다름
 function LoginForm({ className }: { className?: string }) {
@@ -33,7 +34,7 @@ export default async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-sm">
-      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-19 lg:h-22">
+      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-18">
         {/* 로고 = mark-header PNG 1장(마크+워드마크 록업). 접근명은 링크 aria-label */}
         <Link
           href="/"
@@ -46,9 +47,8 @@ export default async function SiteHeader() {
             width={LOGO_W}
             height={LOGO_H}
             priority
-            // 로고 높이: 모바일 44(헤더 64)·태블릿 52(헤더 76)·데스크톱 64(헤더 88), 여백 10~12. 가로는 200:64 비율
-            // 높이를 CSS로 고정해야 Tailwind 기본 img height:auto를 이긴다 / object-contain = 비율 차이에도 안 찌그러짐
-            className="h-11 w-[138px] object-contain md:h-13 md:w-[163px] lg:h-16 lg:w-[200px]"
+            // 로고 높이 32·36·40(모바일·태블릿·데스크톱), 가로는 w-auto로 파일 비율을 따른다
+            className="h-8 w-auto md:h-9 lg:h-10"
           />
         </Link>
 
