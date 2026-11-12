@@ -35,8 +35,9 @@ function ScaledCard({ className = "", cardClassName = "" }: { className?: string
 // 슬라이드 공통 프레임 — 풀뷰포트 높이·내부 폭 72rem (DESIGN.md §홈 캐러셀 조판)
 const SLIDE = "relative w-full overflow-hidden";
 // 풀뷰포트 높이는 lg+에서만 — lg 미만은 세로 스택이라 콘텐츠가 높이를 정한다
+// 왼쪽 = 페이지 컨테이너 축(64rem+lg:px-8), 오른쪽만 72rem까지 넓힘 (DESIGN.md 예외: 넓되 좌측 축 유지)
 const SLIDE_INNER =
-  "relative z-[1] mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-6 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[5fr_6fr] lg:min-h-[max(38rem,calc(100dvh-4.5rem))] lg:px-8 lg:py-12";
+  "relative z-[1] grid w-full grid-cols-1 items-center gap-6 px-4 py-12 sm:gap-10 sm:px-6 sm:py-16 md:grid-cols-[5fr_6fr] lg:min-h-[max(38rem,calc(100dvh-4.5rem))] lg:py-12 lg:pl-[max(2rem,calc((100%_-_64rem)/2_+_2rem))] lg:pr-[max(2rem,calc((100%_-_72rem)/2_+_2rem))]";
 // 질문(q) 타이포 — md 2열 진입 시 열 폭에 맞춰 한 단계 낮추고 xl에서 원 크기 복귀
 const SLIDE_Q =
   "mt-2.5 text-2xl font-semibold leading-[1.35] tracking-[-0.015em] text-balance sm:text-3xl md:text-2xl lg:text-3xl xl:text-[2.5rem]";
@@ -118,7 +119,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ e
             {/* 오케스트레이션 래퍼 (ANIMATION.md #1) — 콘텐츠는 서버 렌더 유지 */}
             <HeroIntro className={SLIDE_INNER}>
               <div data-hero="text">
-                <h1 className="max-w-[20ch] text-[2.75rem] sm:text-[3.5rem] md:text-4xl lg:text-6xl xl:text-7xl">
+                <h1 className="max-w-[20ch] text-[2.75rem] sm:text-[3.5rem] md:text-4xl lg:text-6xl xl:text-[4rem]">
                   도구는 아는데, 어떻게 쓰는지는 모른다.
                 </h1>
                 <p className="mt-6 max-w-[62ch] text-lg text-(--chat-fg) sm:text-xl md:text-lg lg:text-xl">
