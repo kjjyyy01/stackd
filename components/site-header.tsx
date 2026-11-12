@@ -1,11 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import markHeader from "@/app/mark-header.png";
+
 import { createClient } from "@/lib/supabase/server";
 import { signInWithGitHub } from "@/app/auth/actions";
 import { Button } from "@/components/ui/button";
 import MobileNav from "@/components/mobile-nav";
 import UserMenu from "@/components/user-menu";
+
+// 헤더 로고 기준 크기 (데스크톱, 사용자 지정) — 헤더 88px, 위아래 여백 12. 모바일·태블릿은 className에서 축소
+const LOGO_W = 200;
+const LOGO_H = 64;
 
 // 데스크톱·모바일 내비 공용 로그인 폼 — 배치 여백만 className으로 다름
 function LoginForm({ className }: { className?: string }) {
@@ -28,25 +33,23 @@ export default async function SiteHeader() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/85 backdrop-blur-sm">
-      <div className="container-page flex h-16 items-center justify-between gap-4">
-        {/* 록업 = 마크(PNG) + 워드마크(실제 텍스트) — 텍스트라 검색·복사·리더 모두 유효 */}
+      <div className="container-page flex h-16 items-center justify-between gap-4 md:h-19 lg:h-22">
+        {/* 로고 = mark-header PNG 1장(마크+워드마크 록업). 접근명은 링크 aria-label */}
         <Link
           href="/"
           aria-label="Stackd 홈"
-          className="flex items-center gap-2 rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="flex items-center rounded-sm outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
           <Image
             src={markHeader}
             alt=""
-            width={26}
-            height={32}
+            width={LOGO_W}
+            height={LOGO_H}
             priority
-            className="h-8 w-[26px]"
+            // 로고 높이: 모바일 44(헤더 64)·태블릿 52(헤더 76)·데스크톱 64(헤더 88), 여백 10~12. 가로는 200:64 비율
+            // 높이를 CSS로 고정해야 Tailwind 기본 img height:auto를 이긴다 / object-contain = 비율 차이에도 안 찌그러짐
+            className="h-11 w-[138px] object-contain md:h-13 md:w-[163px] lg:h-16 lg:w-[200px]"
           />
-          {/* W2 워드마크 — Sans 600, 액센트는 마지막 d 하나에만 (로고 시스템) */}
-          <span className="font-sans text-3xl leading-none font-semibold tracking-tight">
-            stack<span className="text-primary">d</span>
-          </span>
         </Link>
 
         {/* 데스크톱 내비 — lg 이상. 공개 링크는 서버 HTML, 계정 항목은 UserMenu 안 */}
